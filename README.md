@@ -1,2 +1,2 @@
 # controle-financeiro
-Sistema de controle financeiro pessoa;
+Sistema de controle financeiro pessoal;
