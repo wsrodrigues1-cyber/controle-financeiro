@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sistema pessoal para controle de gastos mensais.">
+  <meta name="description" content="Sistema pessoal para controle de receitas e gastos mensais.">
   <title>Meu Controle Financeiro</title>
   <style>
     :root {
@@ -56,7 +56,7 @@
     }
 
     .app-shell {
-      width: min(1180px, calc(100% - 32px));
+      width: min(1280px, calc(100% - 32px));
       margin: 0 auto;
       padding: 28px 0 44px;
     }
@@ -142,6 +142,16 @@
 
     .button-primary:hover {
       background: var(--primary-dark);
+    }
+
+    .button-income {
+      border-color: var(--success);
+      background: var(--success);
+      color: #ffffff;
+    }
+
+    .button-income:hover {
+      background: #166534;
     }
 
     .button-secondary {
@@ -255,7 +265,7 @@
 
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 14px;
       margin-bottom: 18px;
     }
@@ -354,6 +364,74 @@
 
     .progress-fill.danger {
       background: #dc2626;
+    }
+
+    .income-panel {
+      margin-bottom: 18px;
+      padding: 20px;
+    }
+
+    .income-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .income-row {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr) auto auto;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 13px 14px;
+      background: var(--surface-soft);
+    }
+
+    .income-date {
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 650;
+    }
+
+    .income-title {
+      font-weight: 750;
+    }
+
+    .income-subtitle {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .income-amount {
+      white-space: nowrap;
+      color: var(--success);
+      font-weight: 800;
+    }
+
+    .income-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .income-empty {
+      display: none;
+      border: 1px dashed var(--border);
+      border-radius: 13px;
+      padding: 22px 16px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .income-empty.visible {
+      display: block;
+    }
+
+    .income-empty p {
+      margin: 0 0 12px;
+      font-size: 0.88rem;
     }
 
     .content-grid {
@@ -773,7 +851,7 @@
       opacity: 1;
     }
 
-    .mobile-add-button {
+    .mobile-action-bar {
       display: none;
     }
 
@@ -793,7 +871,7 @@
 
     @media (max-width: 680px) {
       .app-shell {
-        width: min(100% - 20px, 1180px);
+        width: min(100% - 20px, 1280px);
         padding-top: 18px;
         padding-bottom: 94px;
       }
@@ -806,7 +884,8 @@
         display: none;
       }
 
-      .top-actions .button-primary {
+      .top-actions #addIncomeButton,
+      .top-actions #addExpenseButton {
         display: none;
       }
 
@@ -951,6 +1030,35 @@
         min-height: 32px;
       }
 
+      .income-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+          "date amount"
+          "details details"
+          "actions actions";
+        gap: 7px 12px;
+        padding: 14px;
+      }
+
+      .income-date {
+        grid-area: date;
+        font-size: 0.78rem;
+      }
+
+      .income-details {
+        grid-area: details;
+      }
+
+      .income-amount {
+        grid-area: amount;
+        justify-self: end;
+      }
+
+      .income-actions {
+        grid-area: actions;
+        padding-top: 5px;
+      }
+
       .form-grid {
         grid-template-columns: 1fr;
       }
@@ -984,16 +1092,32 @@
         flex: 1;
       }
 
-      .mobile-add-button {
+      .mobile-action-bar {
         position: fixed;
         z-index: 30;
-        right: 18px;
-        bottom: 18px;
-        display: inline-flex;
-        min-height: 52px;
-        border-radius: 999px;
-        padding: 12px 18px;
-        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.32);
+        right: 10px;
+        bottom: 10px;
+        left: 10px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        border: 1px solid rgba(228, 231, 236, 0.92);
+        border-radius: 17px;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 14px 30px rgba(16, 24, 40, 0.18);
+        backdrop-filter: blur(12px);
+      }
+
+      .mobile-action-bar .button {
+        min-height: 50px;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-size: 0.86rem;
+      }
+
+      .toast {
+        bottom: 84px;
       }
     }
 
@@ -1015,7 +1139,7 @@
         <div class="brand-mark" aria-hidden="true">R$</div>
         <div>
           <h1>Meu Controle Financeiro</h1>
-          <p>Gastos mensais de forma simples e visual.</p>
+          <p>Receitas e gastos mensais de forma simples e visual.</p>
         </div>
       </div>
 
@@ -1031,6 +1155,10 @@
         <button class="button button-secondary" id="incomeButton" type="button" title="Configurar salário">
           <span aria-hidden="true">⚙</span>
           <span class="button-text">Salário</span>
+        </button>
+        <button class="button button-income" id="addIncomeButton" type="button">
+          <span aria-hidden="true">＋</span>
+          Adicionar receita
         </button>
         <button class="button button-primary" id="addExpenseButton" type="button">
           <span aria-hidden="true">＋</span>
@@ -1070,6 +1198,12 @@
         </article>
 
         <article class="panel summary-card">
+          <span class="summary-label">Receitas extras</span>
+          <strong class="summary-value positive" id="extraIncomeValue">R$ 0,00</strong>
+          <span class="summary-note" id="incomeCountNote">Nenhuma receita extra</span>
+        </article>
+
+        <article class="panel summary-card">
           <span class="summary-label">Gastos do mês</span>
           <strong class="summary-value" id="expensesValue">R$ 0,00</strong>
           <span class="summary-note" id="expenseCountNote">Nenhum gasto registrado</span>
@@ -1078,7 +1212,7 @@
         <article class="panel summary-card">
           <span class="summary-label">Saldo disponível</span>
           <strong class="summary-value" id="balanceValue">R$ 0,00</strong>
-          <span class="summary-note">Salário menos gastos</span>
+          <span class="summary-note">Salário + receitas extras menos gastos</span>
         </article>
 
         <article class="panel summary-card">
@@ -1091,13 +1225,27 @@
       <section class="panel budget-panel" aria-label="Uso do orçamento">
         <div class="budget-header">
           <div>
-            <h2>Uso do orçamento mensal</h2>
-            <p id="budgetDescription">Configure seu salário para acompanhar o orçamento.</p>
+            <h2>Uso da renda mensal</h2>
+            <p id="budgetDescription">Configure seu salário ou adicione uma receita para acompanhar o mês.</p>
           </div>
           <strong class="budget-percentage" id="budgetPercentage">0%</strong>
         </div>
         <div class="progress-track" aria-hidden="true">
           <div class="progress-fill" id="budgetProgress"></div>
+        </div>
+      </section>
+
+      <section class="panel income-panel" aria-label="Receitas extras do mês">
+        <div class="section-heading">
+          <div>
+            <h2>Receitas extras do mês</h2>
+            <p>Registre valores recebidos além do salário fixo.</p>
+          </div>
+        </div>
+        <div class="income-list" id="incomeList"></div>
+        <div class="income-empty" id="incomeEmpty">
+          <p>Nenhuma receita extra registrada neste mês.</p>
+          <button class="button button-income" id="emptyIncomeAddButton" type="button">Adicionar receita</button>
         </div>
       </section>
 
@@ -1159,10 +1307,16 @@
     </main>
   </div>
 
-  <button class="button button-primary mobile-add-button" id="mobileAddButton" type="button">
-    <span aria-hidden="true">＋</span>
-    Adicionar gasto
-  </button>
+  <div class="mobile-action-bar" aria-label="Ações rápidas">
+    <button class="button button-income" id="mobileAddIncomeButton" type="button">
+      <span aria-hidden="true">＋</span>
+      Receita
+    </button>
+    <button class="button button-primary" id="mobileAddButton" type="button">
+      <span aria-hidden="true">＋</span>
+      Gasto
+    </button>
+  </div>
 
   <dialog id="expenseDialog">
     <form id="expenseForm">
@@ -1254,6 +1408,43 @@
     </form>
   </dialog>
 
+  <dialog id="extraIncomeDialog">
+    <form id="extraIncomeForm">
+      <div class="dialog-header">
+        <div>
+          <h2 id="extraIncomeDialogTitle">Adicionar receita</h2>
+          <p>Registre um valor recebido além do salário mensal.</p>
+        </div>
+        <button class="icon-button" id="closeExtraIncomeDialogButton" type="button" aria-label="Fechar">×</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="field field-full">
+            <label for="extraIncomeDescriptionInput">Descrição</label>
+            <input class="field-control" id="extraIncomeDescriptionInput" type="text" maxlength="80" placeholder="Exemplo: Trabalho freelance" required>
+          </div>
+          <div class="field">
+            <label for="extraIncomeAmountInput">Valor recebido</label>
+            <input class="field-control" id="extraIncomeAmountInput" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0,00" required>
+          </div>
+          <div class="field">
+            <label for="extraIncomeDateInput">Data do recebimento</label>
+            <input class="field-control" id="extraIncomeDateInput" type="date" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="button button-danger" id="deleteFromIncomeEditButton" type="button">Excluir</button>
+        <div class="dialog-actions-right">
+          <button class="button button-secondary" id="cancelExtraIncomeButton" type="button">Cancelar</button>
+          <button class="button button-income" type="submit" id="saveExtraIncomeButton">Salvar receita</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
   <dialog id="incomeDialog">
     <form id="incomeForm">
       <div class="dialog-header">
@@ -1327,8 +1518,9 @@
     };
 
     const defaultState = () => ({
-      version: 1,
+      version: 2,
       salaryCents: 0,
+      incomes: [],
       expenses: [],
       recurringRules: [],
       recurringOverrides: {}
@@ -1337,7 +1529,9 @@
     let state = loadState();
     let currentMonth = getCurrentMonthKey();
     let currentItems = [];
+    let currentIncomeItems = [];
     let editContext = null;
+    let incomeEditContext = null;
     let deleteContext = null;
     let toastTimer = null;
 
@@ -1345,6 +1539,8 @@
     const monthPicker = document.getElementById("monthPicker");
     const setupBanner = document.getElementById("setupBanner");
     const salaryValue = document.getElementById("salaryValue");
+    const extraIncomeValue = document.getElementById("extraIncomeValue");
+    const incomeCountNote = document.getElementById("incomeCountNote");
     const expensesValue = document.getElementById("expensesValue");
     const balanceValue = document.getElementById("balanceValue");
     const committedValue = document.getElementById("committedValue");
@@ -1359,6 +1555,8 @@
     const emptyStateTitle = document.getElementById("emptyStateTitle");
     const emptyStateText = document.getElementById("emptyStateText");
     const breakdownList = document.getElementById("breakdownList");
+    const incomeList = document.getElementById("incomeList");
+    const incomeEmpty = document.getElementById("incomeEmpty");
     const searchInput = document.getElementById("searchInput");
     const categoryFilter = document.getElementById("categoryFilter");
 
@@ -1381,6 +1579,14 @@
     const singleScopeLabel = document.getElementById("singleScopeLabel");
     const futureScopeLabel = document.getElementById("futureScopeLabel");
     const deleteFromEditButton = document.getElementById("deleteFromEditButton");
+
+    const extraIncomeDialog = document.getElementById("extraIncomeDialog");
+    const extraIncomeForm = document.getElementById("extraIncomeForm");
+    const extraIncomeDialogTitle = document.getElementById("extraIncomeDialogTitle");
+    const extraIncomeDescriptionInput = document.getElementById("extraIncomeDescriptionInput");
+    const extraIncomeAmountInput = document.getElementById("extraIncomeAmountInput");
+    const extraIncomeDateInput = document.getElementById("extraIncomeDateInput");
+    const deleteFromIncomeEditButton = document.getElementById("deleteFromIncomeEditButton");
 
     const incomeDialog = document.getElementById("incomeDialog");
     const incomeForm = document.getElementById("incomeForm");
@@ -1426,6 +1632,12 @@
       ].forEach((id) => document.getElementById(id).addEventListener("click", openNewExpenseDialog));
 
       [
+        "addIncomeButton",
+        "mobileAddIncomeButton",
+        "emptyIncomeAddButton"
+      ].forEach((id) => document.getElementById(id).addEventListener("click", openNewExtraIncomeDialog));
+
+      [
         "incomeButton",
         "setupIncomeButton",
         "editIncomeCardButton"
@@ -1433,6 +1645,8 @@
 
       document.getElementById("closeExpenseDialogButton").addEventListener("click", () => expenseDialog.close());
       document.getElementById("cancelExpenseButton").addEventListener("click", () => expenseDialog.close());
+      document.getElementById("closeExtraIncomeDialogButton").addEventListener("click", () => extraIncomeDialog.close());
+      document.getElementById("cancelExtraIncomeButton").addEventListener("click", () => extraIncomeDialog.close());
       document.getElementById("closeIncomeDialogButton").addEventListener("click", () => incomeDialog.close());
       document.getElementById("cancelIncomeButton").addEventListener("click", () => incomeDialog.close());
       document.getElementById("closeDeleteDialogButton").addEventListener("click", () => deleteDialog.close());
@@ -1445,11 +1659,17 @@
       installmentCountInput.addEventListener("input", updateInstallmentPreview);
 
       expenseForm.addEventListener("submit", handleExpenseSubmit);
+      extraIncomeForm.addEventListener("submit", handleExtraIncomeSubmit);
       incomeForm.addEventListener("submit", handleIncomeSubmit);
       deleteFromEditButton.addEventListener("click", () => {
         if (!editContext) return;
         expenseDialog.close();
-        openDeleteDialog(editContext.item);
+        openDeleteDialog(editContext.item, "expense");
+      });
+      deleteFromIncomeEditButton.addEventListener("click", () => {
+        if (!incomeEditContext) return;
+        extraIncomeDialog.close();
+        openDeleteDialog(incomeEditContext.item, "income");
       });
 
       searchInput.addEventListener("input", renderTransactions);
@@ -1466,7 +1686,22 @@
         }
 
         if (button.dataset.action === "delete") {
-          openDeleteDialog(item);
+          openDeleteDialog(item, "expense");
+        }
+      });
+
+      incomeList.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-income-action]");
+        if (!button) return;
+        const item = currentIncomeItems.find((candidate) => candidate.id === button.dataset.id);
+        if (!item) return;
+
+        if (button.dataset.incomeAction === "edit") {
+          openEditExtraIncomeDialog(item);
+        }
+
+        if (button.dataset.incomeAction === "delete") {
+          openDeleteDialog(item, "income");
         }
       });
 
@@ -1488,45 +1723,75 @@
       monthTitle.textContent = formatMonth(currentMonth);
       monthPicker.value = currentMonth;
       currentItems = getItemsForMonth(currentMonth).sort(sortByDateThenDescription);
+      currentIncomeItems = getIncomeItemsForMonth(currentMonth).sort(sortByDateThenDescription);
       renderSummary();
+      renderIncomeList();
       renderTransactions();
       renderBreakdown();
       setupBanner.classList.toggle("visible", state.salaryCents <= 0);
     }
 
     function renderSummary() {
-      const total = currentItems.reduce((sum, item) => sum + item.amountCents, 0);
+      const expenseTotal = currentItems.reduce((sum, item) => sum + item.amountCents, 0);
+      const extraIncomeTotal = currentIncomeItems.reduce((sum, item) => sum + item.amountCents, 0);
       const salary = state.salaryCents;
-      const balance = salary - total;
-      const percentage = salary > 0 ? (total / salary) * 100 : 0;
+      const totalIncome = salary + extraIncomeTotal;
+      const balance = totalIncome - expenseTotal;
+      const percentage = totalIncome > 0 ? (expenseTotal / totalIncome) * 100 : 0;
 
       salaryValue.textContent = formatCurrency(salary);
-      expensesValue.textContent = formatCurrency(total);
+      extraIncomeValue.textContent = formatCurrency(extraIncomeTotal);
+      expensesValue.textContent = formatCurrency(expenseTotal);
       balanceValue.textContent = formatCurrency(balance);
-      balanceValue.classList.toggle("positive", balance >= 0 && salary > 0);
+      balanceValue.classList.toggle("positive", balance >= 0 && totalIncome > 0);
       balanceValue.classList.toggle("negative", balance < 0);
 
-      committedValue.textContent = salary > 0 ? `${formatPercentage(percentage)}%` : "0%";
+      incomeCountNote.textContent = currentIncomeItems.length === 0
+        ? "Nenhuma receita extra"
+        : `${currentIncomeItems.length} ${currentIncomeItems.length === 1 ? "receita registrada" : "receitas registradas"}`;
+
+      committedValue.textContent = totalIncome > 0 ? `${formatPercentage(percentage)}%` : "0%";
       committedValue.classList.toggle("negative", percentage > 100);
-      committedNote.textContent = salary > 0
+      committedNote.textContent = totalIncome > 0
         ? percentage > 100
-          ? "Orçamento ultrapassado"
-          : "Do salário mensal"
-        : "Configure seu salário";
+          ? "Renda do mês ultrapassada"
+          : "Da renda total do mês"
+        : "Configure sua renda mensal";
 
       expenseCountNote.textContent = currentItems.length === 0
         ? "Nenhum gasto registrado"
         : `${currentItems.length} ${currentItems.length === 1 ? "lançamento" : "lançamentos"}`;
 
-      budgetPercentage.textContent = salary > 0 ? `${formatPercentage(percentage)}%` : "0%";
-      budgetDescription.textContent = salary > 0
-        ? `${formatCurrency(total)} utilizados de ${formatCurrency(salary)}.`
-        : "Configure seu salário para acompanhar o orçamento.";
+      budgetPercentage.textContent = totalIncome > 0 ? `${formatPercentage(percentage)}%` : "0%";
+      budgetDescription.textContent = totalIncome > 0
+        ? `${formatCurrency(expenseTotal)} utilizados de ${formatCurrency(totalIncome)} disponíveis neste mês.`
+        : "Configure seu salário ou adicione uma receita para acompanhar o mês.";
 
-      const visualPercentage = salary > 0 ? Math.min(percentage, 100) : 0;
+      const visualPercentage = totalIncome > 0 ? Math.min(percentage, 100) : 0;
       budgetProgress.style.width = `${visualPercentage}%`;
       budgetProgress.classList.toggle("warning", percentage >= 80 && percentage <= 100);
       budgetProgress.classList.toggle("danger", percentage > 100);
+    }
+
+    function renderIncomeList() {
+      const hasIncome = currentIncomeItems.length > 0;
+      incomeList.style.display = hasIncome ? "grid" : "none";
+      incomeEmpty.classList.toggle("visible", !hasIncome);
+
+      incomeList.innerHTML = currentIncomeItems.map((item) => `
+        <div class="income-row">
+          <div class="income-date">${escapeHtml(formatDate(item.date))}</div>
+          <div class="income-details">
+            <div class="income-title">${escapeHtml(item.description)}</div>
+            <div class="income-subtitle">Receita extra</div>
+          </div>
+          <div class="income-amount">+ ${escapeHtml(formatCurrency(item.amountCents))}</div>
+          <div class="income-actions">
+            <button class="button button-secondary button-small" type="button" data-income-action="edit" data-id="${escapeHtml(item.id)}">Editar</button>
+            <button class="button button-ghost button-small" type="button" data-income-action="delete" data-id="${escapeHtml(item.id)}" aria-label="Excluir ${escapeHtml(item.description)}">×</button>
+          </div>
+        </div>
+      `).join("");
     }
 
     function renderTransactions() {
@@ -1615,6 +1880,65 @@
           </div>
         `;
       }).join("");
+    }
+
+    function openNewExtraIncomeDialog() {
+      incomeEditContext = null;
+      extraIncomeForm.reset();
+      extraIncomeDialogTitle.textContent = "Adicionar receita";
+      document.getElementById("saveExtraIncomeButton").textContent = "Salvar receita";
+      deleteFromIncomeEditButton.style.visibility = "hidden";
+      extraIncomeDateInput.value = suggestedDateForCurrentMonth();
+      extraIncomeDialog.showModal();
+      setTimeout(() => extraIncomeDescriptionInput.focus(), 30);
+    }
+
+    function openEditExtraIncomeDialog(item) {
+      incomeEditContext = { item };
+      extraIncomeForm.reset();
+      extraIncomeDialogTitle.textContent = "Editar receita";
+      document.getElementById("saveExtraIncomeButton").textContent = "Salvar alterações";
+      deleteFromIncomeEditButton.style.visibility = "visible";
+      extraIncomeDescriptionInput.value = item.description;
+      extraIncomeAmountInput.value = (item.amountCents / 100).toFixed(2);
+      extraIncomeDateInput.value = item.date;
+      extraIncomeDialog.showModal();
+      setTimeout(() => extraIncomeDescriptionInput.focus(), 30);
+    }
+
+    function handleExtraIncomeSubmit(event) {
+      event.preventDefault();
+
+      const description = extraIncomeDescriptionInput.value.trim();
+      const amountCents = getInputCents(extraIncomeAmountInput);
+      const date = extraIncomeDateInput.value;
+
+      if (!description || amountCents <= 0 || !isValidDateString(date)) {
+        showToast("Revise os campos da receita antes de salvar.");
+        return;
+      }
+
+      if (incomeEditContext) {
+        const income = state.incomes.find((candidate) => candidate.id === incomeEditContext.item.id);
+        if (!income) return;
+        Object.assign(income, { description, amountCents, date });
+      } else {
+        state.incomes.push({
+          id: createId(),
+          description,
+          amountCents,
+          date,
+          createdAt: new Date().toISOString()
+        });
+      }
+
+      saveState();
+      extraIncomeDialog.close();
+      currentMonth = date.slice(0, 7);
+      monthPicker.value = currentMonth;
+      render();
+      showToast(incomeEditContext ? "Receita atualizada com sucesso." : "Receita adicionada com sucesso.");
+      incomeEditContext = null;
     }
 
     function openNewExpenseDialog() {
@@ -1908,8 +2232,18 @@
       });
     }
 
-    function openDeleteDialog(item) {
-      deleteContext = { item };
+    function openDeleteDialog(item, entity = "expense") {
+      deleteContext = { item, entity };
+
+      if (entity === "income") {
+        deleteFutureChoice.style.display = "none";
+        deleteDialogSubtitle.textContent = "Confirme a exclusão desta receita.";
+        deleteDialogText.textContent = `Você está excluindo “${item.description}”. Esta ação não poderá ser desfeita.`;
+        deleteSingleChoice.textContent = "Excluir receita";
+        deleteDialog.showModal();
+        return;
+      }
+
       deleteFutureChoice.style.display = item.kind === "single" ? "none" : "inline-flex";
 
       if (item.kind === "single") {
@@ -1934,26 +2268,31 @@
     function executeDelete(scope) {
       if (!deleteContext) return;
       const item = deleteContext.item;
+      const entity = deleteContext.entity;
 
-      if (item.kind === "single") {
-        state.expenses = state.expenses.filter((expense) => expense.id !== item.id);
-      }
-
-      if (item.kind === "installment") {
-        if (scope === "single") {
+      if (entity === "income") {
+        state.incomes = state.incomes.filter((income) => income.id !== item.id);
+      } else {
+        if (item.kind === "single") {
           state.expenses = state.expenses.filter((expense) => expense.id !== item.id);
-        } else {
-          state.expenses = state.expenses.filter((expense) => !(
-            expense.seriesId === item.seriesId && expense.installmentIndex >= item.installmentIndex
-          ));
         }
-      }
 
-      if (item.kind === "recurring") {
-        if (scope === "single") {
-          state.recurringOverrides[overrideKey(item.ruleId, item.occurrenceMonth)] = { deleted: true };
-        } else {
-          stopRecurringFromMonth(item.ruleId, item.occurrenceMonth);
+        if (item.kind === "installment") {
+          if (scope === "single") {
+            state.expenses = state.expenses.filter((expense) => expense.id !== item.id);
+          } else {
+            state.expenses = state.expenses.filter((expense) => !(
+              expense.seriesId === item.seriesId && expense.installmentIndex >= item.installmentIndex
+            ));
+          }
+        }
+
+        if (item.kind === "recurring") {
+          if (scope === "single") {
+            state.recurringOverrides[overrideKey(item.ruleId, item.occurrenceMonth)] = { deleted: true };
+          } else {
+            stopRecurringFromMonth(item.ruleId, item.occurrenceMonth);
+          }
         }
       }
 
@@ -1961,7 +2300,7 @@
       deleteDialog.close();
       deleteContext = null;
       render();
-      showToast("Lançamento excluído.");
+      showToast(entity === "income" ? "Receita excluída." : "Lançamento excluído.");
     }
 
     function stopRecurringFromMonth(ruleId, monthKey) {
@@ -1985,6 +2324,12 @@
           delete state.recurringOverrides[key];
         }
       });
+    }
+
+    function getIncomeItemsForMonth(monthKey) {
+      return state.incomes
+        .filter((income) => income.date.slice(0, 7) === monthKey)
+        .map((income) => ({ ...income }));
     }
 
     function getItemsForMonth(monthKey) {
@@ -2097,8 +2442,9 @@
 
     function normalizeImportedState(candidate) {
       return {
-        version: 1,
+        version: 2,
         salaryCents: Number.isFinite(candidate.salaryCents) ? Math.max(0, Math.round(candidate.salaryCents)) : 0,
+        incomes: Array.isArray(candidate.incomes) ? candidate.incomes.filter(Boolean) : [],
         expenses: candidate.expenses.filter(Boolean),
         recurringRules: candidate.recurringRules.filter(Boolean),
         recurringOverrides: candidate.recurringOverrides || {}
