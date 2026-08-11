@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Sistema pessoal para controle de receitas e gastos mensais.">
+  <meta name="description" content="Sistema pessoal para controle de receitas, gastos e reservas mensais.">
   <title>Meu Controle Financeiro</title>
   <style>
     :root {
@@ -18,6 +18,9 @@
       --primary-soft: #eff6ff;
       --success: #15803d;
       --success-soft: #ecfdf3;
+      --reserve: #0f766e;
+      --reserve-dark: #115e59;
+      --reserve-soft: #f0fdfa;
       --warning: #b45309;
       --warning-soft: #fffbeb;
       --danger: #b42318;
@@ -63,6 +66,7 @@
 
     .topbar {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 20px;
@@ -102,7 +106,14 @@
 
     .top-actions {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .top-action-group {
+      display: flex;
+      align-items: center;
       justify-content: flex-end;
       gap: 10px;
     }
@@ -152,6 +163,16 @@
 
     .button-income:hover {
       background: #166534;
+    }
+
+    .button-reserve {
+      border-color: var(--reserve);
+      background: var(--reserve);
+      color: #ffffff;
+    }
+
+    .button-reserve:hover {
+      background: var(--reserve-dark);
     }
 
     .button-secondary {
@@ -265,7 +286,7 @@
 
     .summary-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 14px;
       margin-bottom: 18px;
     }
@@ -406,6 +427,16 @@
     .income-amount {
       white-space: nowrap;
       color: var(--success);
+      font-weight: 800;
+    }
+
+    .reserve-value,
+    .reserve-amount {
+      color: var(--reserve);
+    }
+
+    .reserve-amount {
+      white-space: nowrap;
       font-weight: 800;
     }
 
@@ -885,6 +916,7 @@
       }
 
       .top-actions #addIncomeButton,
+      .top-actions #addReserveButton,
       .top-actions #addExpenseButton {
         display: none;
       }
@@ -1099,7 +1131,7 @@
         bottom: 10px;
         left: 10px;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 8px;
         border: 1px solid rgba(228, 231, 236, 0.92);
         border-radius: 17px;
@@ -1110,10 +1142,11 @@
       }
 
       .mobile-action-bar .button {
+        min-width: 0;
         min-height: 50px;
         border-radius: 12px;
-        padding: 10px 12px;
-        font-size: 0.86rem;
+        padding: 10px 8px;
+        font-size: 0.8rem;
       }
 
       .toast {
@@ -1139,31 +1172,39 @@
         <div class="brand-mark" aria-hidden="true">R$</div>
         <div>
           <h1>Meu Controle Financeiro</h1>
-          <p>Receitas e gastos mensais de forma simples e visual.</p>
+          <p>Receitas, gastos e reservas mensais de forma simples e visual.</p>
         </div>
       </div>
 
       <div class="top-actions">
-        <button class="button button-secondary" id="backupButton" type="button" title="Exportar backup">
-          <span aria-hidden="true">↓</span>
-          <span class="button-text">Backup</span>
-        </button>
-        <button class="button button-secondary" id="importButton" type="button" title="Importar backup">
-          <span aria-hidden="true">↑</span>
-          <span class="button-text">Importar</span>
-        </button>
-        <button class="button button-secondary" id="incomeButton" type="button" title="Configurar salário">
-          <span aria-hidden="true">⚙</span>
-          <span class="button-text">Salário</span>
-        </button>
-        <button class="button button-income" id="addIncomeButton" type="button">
-          <span aria-hidden="true">＋</span>
-          Adicionar receita
-        </button>
-        <button class="button button-primary" id="addExpenseButton" type="button">
-          <span aria-hidden="true">＋</span>
-          Adicionar gasto
-        </button>
+        <div class="top-action-group utility-actions">
+          <button class="button button-secondary" id="backupButton" type="button" title="Exportar backup">
+            <span aria-hidden="true">↓</span>
+            <span class="button-text">Backup</span>
+          </button>
+          <button class="button button-secondary" id="importButton" type="button" title="Importar backup">
+            <span aria-hidden="true">↑</span>
+            <span class="button-text">Importar</span>
+          </button>
+          <button class="button button-secondary" id="incomeButton" type="button" title="Configurar salário">
+            <span aria-hidden="true">⚙</span>
+            <span class="button-text">Salário</span>
+          </button>
+        </div>
+        <div class="top-action-group entry-actions">
+          <button class="button button-income" id="addIncomeButton" type="button">
+            <span aria-hidden="true">＋</span>
+            Adicionar receita
+          </button>
+          <button class="button button-reserve" id="addReserveButton" type="button">
+            <span aria-hidden="true">＋</span>
+            Adicionar reserva
+          </button>
+          <button class="button button-primary" id="addExpenseButton" type="button">
+            <span aria-hidden="true">＋</span>
+            Adicionar gasto
+          </button>
+        </div>
       </div>
     </header>
 
@@ -1204,6 +1245,12 @@
         </article>
 
         <article class="panel summary-card">
+          <span class="summary-label">Reserva do mês</span>
+          <strong class="summary-value reserve-value" id="reserveMonthValue">R$ 0,00</strong>
+          <span class="summary-note" id="reserveCountNote">Nenhum valor reservado</span>
+        </article>
+
+        <article class="panel summary-card">
           <span class="summary-label">Gastos do mês</span>
           <strong class="summary-value" id="expensesValue">R$ 0,00</strong>
           <span class="summary-note" id="expenseCountNote">Nenhum gasto registrado</span>
@@ -1212,7 +1259,7 @@
         <article class="panel summary-card">
           <span class="summary-label">Saldo disponível</span>
           <strong class="summary-value" id="balanceValue">R$ 0,00</strong>
-          <span class="summary-note">Salário + receitas extras menos gastos</span>
+          <span class="summary-note">Salário + receitas extras menos gastos e reservas</span>
         </article>
 
         <article class="panel summary-card">
@@ -1246,6 +1293,20 @@
         <div class="income-empty" id="incomeEmpty">
           <p>Nenhuma receita extra registrada neste mês.</p>
           <button class="button button-income" id="emptyIncomeAddButton" type="button">Adicionar receita</button>
+        </div>
+      </section>
+
+      <section class="panel income-panel" aria-label="Reservas do mês">
+        <div class="section-heading">
+          <div>
+            <h2>Reservas do mês</h2>
+            <p>Registre valores separados para sua reserva financeira.</p>
+          </div>
+        </div>
+        <div class="income-list" id="reserveList"></div>
+        <div class="income-empty" id="reserveEmpty">
+          <p>Nenhuma reserva registrada neste mês.</p>
+          <button class="button button-reserve" id="emptyReserveAddButton" type="button">Adicionar reserva</button>
         </div>
       </section>
 
@@ -1311,6 +1372,10 @@
     <button class="button button-income" id="mobileAddIncomeButton" type="button">
       <span aria-hidden="true">＋</span>
       Receita
+    </button>
+    <button class="button button-reserve" id="mobileAddReserveButton" type="button">
+      <span aria-hidden="true">＋</span>
+      Reserva
     </button>
     <button class="button button-primary" id="mobileAddButton" type="button">
       <span aria-hidden="true">＋</span>
@@ -1445,6 +1510,43 @@
     </form>
   </dialog>
 
+  <dialog id="reserveDialog">
+    <form id="reserveForm">
+      <div class="dialog-header">
+        <div>
+          <h2 id="reserveDialogTitle">Adicionar reserva</h2>
+          <p>Registre um valor separado para sua reserva financeira.</p>
+        </div>
+        <button class="icon-button" id="closeReserveDialogButton" type="button" aria-label="Fechar">×</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="field field-full">
+            <label for="reserveDescriptionInput">Descrição</label>
+            <input class="field-control" id="reserveDescriptionInput" type="text" maxlength="80" placeholder="Exemplo: Reserva de emergência" required>
+          </div>
+          <div class="field">
+            <label for="reserveAmountInput">Valor reservado</label>
+            <input class="field-control" id="reserveAmountInput" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0,00" required>
+          </div>
+          <div class="field">
+            <label for="reserveDateInput">Data da reserva</label>
+            <input class="field-control" id="reserveDateInput" type="date" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="button button-danger" id="deleteFromReserveEditButton" type="button">Excluir</button>
+        <div class="dialog-actions-right">
+          <button class="button button-secondary" id="cancelReserveButton" type="button">Cancelar</button>
+          <button class="button button-reserve" type="submit" id="saveReserveButton">Salvar reserva</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
   <dialog id="incomeDialog">
     <form id="incomeForm">
       <div class="dialog-header">
@@ -1518,9 +1620,10 @@
     };
 
     const defaultState = () => ({
-      version: 2,
+      version: 3,
       salaryCents: 0,
       incomes: [],
+      reserves: [],
       expenses: [],
       recurringRules: [],
       recurringOverrides: {}
@@ -1530,8 +1633,10 @@
     let currentMonth = getCurrentMonthKey();
     let currentItems = [];
     let currentIncomeItems = [];
+    let currentReserveItems = [];
     let editContext = null;
     let incomeEditContext = null;
+    let reserveEditContext = null;
     let deleteContext = null;
     let toastTimer = null;
 
@@ -1541,6 +1646,8 @@
     const salaryValue = document.getElementById("salaryValue");
     const extraIncomeValue = document.getElementById("extraIncomeValue");
     const incomeCountNote = document.getElementById("incomeCountNote");
+    const reserveMonthValue = document.getElementById("reserveMonthValue");
+    const reserveCountNote = document.getElementById("reserveCountNote");
     const expensesValue = document.getElementById("expensesValue");
     const balanceValue = document.getElementById("balanceValue");
     const committedValue = document.getElementById("committedValue");
@@ -1557,6 +1664,8 @@
     const breakdownList = document.getElementById("breakdownList");
     const incomeList = document.getElementById("incomeList");
     const incomeEmpty = document.getElementById("incomeEmpty");
+    const reserveList = document.getElementById("reserveList");
+    const reserveEmpty = document.getElementById("reserveEmpty");
     const searchInput = document.getElementById("searchInput");
     const categoryFilter = document.getElementById("categoryFilter");
 
@@ -1587,6 +1696,14 @@
     const extraIncomeAmountInput = document.getElementById("extraIncomeAmountInput");
     const extraIncomeDateInput = document.getElementById("extraIncomeDateInput");
     const deleteFromIncomeEditButton = document.getElementById("deleteFromIncomeEditButton");
+
+    const reserveDialog = document.getElementById("reserveDialog");
+    const reserveForm = document.getElementById("reserveForm");
+    const reserveDialogTitle = document.getElementById("reserveDialogTitle");
+    const reserveDescriptionInput = document.getElementById("reserveDescriptionInput");
+    const reserveAmountInput = document.getElementById("reserveAmountInput");
+    const reserveDateInput = document.getElementById("reserveDateInput");
+    const deleteFromReserveEditButton = document.getElementById("deleteFromReserveEditButton");
 
     const incomeDialog = document.getElementById("incomeDialog");
     const incomeForm = document.getElementById("incomeForm");
@@ -1638,6 +1755,12 @@
       ].forEach((id) => document.getElementById(id).addEventListener("click", openNewExtraIncomeDialog));
 
       [
+        "addReserveButton",
+        "mobileAddReserveButton",
+        "emptyReserveAddButton"
+      ].forEach((id) => document.getElementById(id).addEventListener("click", openNewReserveDialog));
+
+      [
         "incomeButton",
         "setupIncomeButton",
         "editIncomeCardButton"
@@ -1647,6 +1770,8 @@
       document.getElementById("cancelExpenseButton").addEventListener("click", () => expenseDialog.close());
       document.getElementById("closeExtraIncomeDialogButton").addEventListener("click", () => extraIncomeDialog.close());
       document.getElementById("cancelExtraIncomeButton").addEventListener("click", () => extraIncomeDialog.close());
+      document.getElementById("closeReserveDialogButton").addEventListener("click", () => reserveDialog.close());
+      document.getElementById("cancelReserveButton").addEventListener("click", () => reserveDialog.close());
       document.getElementById("closeIncomeDialogButton").addEventListener("click", () => incomeDialog.close());
       document.getElementById("cancelIncomeButton").addEventListener("click", () => incomeDialog.close());
       document.getElementById("closeDeleteDialogButton").addEventListener("click", () => deleteDialog.close());
@@ -1660,6 +1785,7 @@
 
       expenseForm.addEventListener("submit", handleExpenseSubmit);
       extraIncomeForm.addEventListener("submit", handleExtraIncomeSubmit);
+      reserveForm.addEventListener("submit", handleReserveSubmit);
       incomeForm.addEventListener("submit", handleIncomeSubmit);
       deleteFromEditButton.addEventListener("click", () => {
         if (!editContext) return;
@@ -1670,6 +1796,11 @@
         if (!incomeEditContext) return;
         extraIncomeDialog.close();
         openDeleteDialog(incomeEditContext.item, "income");
+      });
+      deleteFromReserveEditButton.addEventListener("click", () => {
+        if (!reserveEditContext) return;
+        reserveDialog.close();
+        openDeleteDialog(reserveEditContext.item, "reserve");
       });
 
       searchInput.addEventListener("input", renderTransactions);
@@ -1705,6 +1836,21 @@
         }
       });
 
+      reserveList.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-reserve-action]");
+        if (!button) return;
+        const item = currentReserveItems.find((candidate) => candidate.id === button.dataset.id);
+        if (!item) return;
+
+        if (button.dataset.reserveAction === "edit") {
+          openEditReserveDialog(item);
+        }
+
+        if (button.dataset.reserveAction === "delete") {
+          openDeleteDialog(item, "reserve");
+        }
+      });
+
       deleteSingleChoice.addEventListener("click", () => executeDelete("single"));
       deleteFutureChoice.addEventListener("click", () => executeDelete("future"));
 
@@ -1724,8 +1870,10 @@
       monthPicker.value = currentMonth;
       currentItems = getItemsForMonth(currentMonth).sort(sortByDateThenDescription);
       currentIncomeItems = getIncomeItemsForMonth(currentMonth).sort(sortByDateThenDescription);
+      currentReserveItems = getReserveItemsForMonth(currentMonth).sort(sortByDateThenDescription);
       renderSummary();
       renderIncomeList();
+      renderReserveList();
       renderTransactions();
       renderBreakdown();
       setupBanner.classList.toggle("visible", state.salaryCents <= 0);
@@ -1734,13 +1882,17 @@
     function renderSummary() {
       const expenseTotal = currentItems.reduce((sum, item) => sum + item.amountCents, 0);
       const extraIncomeTotal = currentIncomeItems.reduce((sum, item) => sum + item.amountCents, 0);
+      const reserveMonthTotal = currentReserveItems.reduce((sum, item) => sum + item.amountCents, 0);
+      const totalReserve = getTotalReserveCents();
       const salary = state.salaryCents;
       const totalIncome = salary + extraIncomeTotal;
-      const balance = totalIncome - expenseTotal;
-      const percentage = totalIncome > 0 ? (expenseTotal / totalIncome) * 100 : 0;
+      const allocatedTotal = expenseTotal + reserveMonthTotal;
+      const balance = totalIncome - allocatedTotal;
+      const percentage = totalIncome > 0 ? (allocatedTotal / totalIncome) * 100 : 0;
 
       salaryValue.textContent = formatCurrency(salary);
       extraIncomeValue.textContent = formatCurrency(extraIncomeTotal);
+      reserveMonthValue.textContent = formatCurrency(reserveMonthTotal);
       expensesValue.textContent = formatCurrency(expenseTotal);
       balanceValue.textContent = formatCurrency(balance);
       balanceValue.classList.toggle("positive", balance >= 0 && totalIncome > 0);
@@ -1750,12 +1902,16 @@
         ? "Nenhuma receita extra"
         : `${currentIncomeItems.length} ${currentIncomeItems.length === 1 ? "receita registrada" : "receitas registradas"}`;
 
+      reserveCountNote.textContent = currentReserveItems.length === 0
+        ? `Nenhuma neste mês, total acumulado: ${formatCurrency(totalReserve)}`
+        : `${currentReserveItems.length} ${currentReserveItems.length === 1 ? "lançamento" : "lançamentos"}, total acumulado: ${formatCurrency(totalReserve)}`;
+
       committedValue.textContent = totalIncome > 0 ? `${formatPercentage(percentage)}%` : "0%";
       committedValue.classList.toggle("negative", percentage > 100);
       committedNote.textContent = totalIncome > 0
         ? percentage > 100
           ? "Renda do mês ultrapassada"
-          : "Da renda total do mês"
+          : "Gastos e reservas da renda total"
         : "Configure sua renda mensal";
 
       expenseCountNote.textContent = currentItems.length === 0
@@ -1764,7 +1920,7 @@
 
       budgetPercentage.textContent = totalIncome > 0 ? `${formatPercentage(percentage)}%` : "0%";
       budgetDescription.textContent = totalIncome > 0
-        ? `${formatCurrency(expenseTotal)} utilizados de ${formatCurrency(totalIncome)} disponíveis neste mês.`
+        ? `${formatCurrency(allocatedTotal)} utilizados ou reservados de ${formatCurrency(totalIncome)} disponíveis neste mês.`
         : "Configure seu salário ou adicione uma receita para acompanhar o mês.";
 
       const visualPercentage = totalIncome > 0 ? Math.min(percentage, 100) : 0;
@@ -1789,6 +1945,27 @@
           <div class="income-actions">
             <button class="button button-secondary button-small" type="button" data-income-action="edit" data-id="${escapeHtml(item.id)}">Editar</button>
             <button class="button button-ghost button-small" type="button" data-income-action="delete" data-id="${escapeHtml(item.id)}" aria-label="Excluir ${escapeHtml(item.description)}">×</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderReserveList() {
+      const hasReserve = currentReserveItems.length > 0;
+      reserveList.style.display = hasReserve ? "grid" : "none";
+      reserveEmpty.classList.toggle("visible", !hasReserve);
+
+      reserveList.innerHTML = currentReserveItems.map((item) => `
+        <div class="income-row">
+          <div class="income-date">${escapeHtml(formatDate(item.date))}</div>
+          <div class="income-details">
+            <div class="income-title">${escapeHtml(item.description)}</div>
+            <div class="income-subtitle">Reserva financeira</div>
+          </div>
+          <div class="reserve-amount">${escapeHtml(formatCurrency(item.amountCents))}</div>
+          <div class="income-actions">
+            <button class="button button-secondary button-small" type="button" data-reserve-action="edit" data-id="${escapeHtml(item.id)}">Editar</button>
+            <button class="button button-ghost button-small" type="button" data-reserve-action="delete" data-id="${escapeHtml(item.id)}" aria-label="Excluir ${escapeHtml(item.description)}">×</button>
           </div>
         </div>
       `).join("");
@@ -1939,6 +2116,65 @@
       render();
       showToast(incomeEditContext ? "Receita atualizada com sucesso." : "Receita adicionada com sucesso.");
       incomeEditContext = null;
+    }
+
+    function openNewReserveDialog() {
+      reserveEditContext = null;
+      reserveForm.reset();
+      reserveDialogTitle.textContent = "Adicionar reserva";
+      document.getElementById("saveReserveButton").textContent = "Salvar reserva";
+      deleteFromReserveEditButton.style.visibility = "hidden";
+      reserveDateInput.value = suggestedDateForCurrentMonth();
+      reserveDialog.showModal();
+      setTimeout(() => reserveDescriptionInput.focus(), 30);
+    }
+
+    function openEditReserveDialog(item) {
+      reserveEditContext = { item };
+      reserveForm.reset();
+      reserveDialogTitle.textContent = "Editar reserva";
+      document.getElementById("saveReserveButton").textContent = "Salvar alterações";
+      deleteFromReserveEditButton.style.visibility = "visible";
+      reserveDescriptionInput.value = item.description;
+      reserveAmountInput.value = (item.amountCents / 100).toFixed(2);
+      reserveDateInput.value = item.date;
+      reserveDialog.showModal();
+      setTimeout(() => reserveDescriptionInput.focus(), 30);
+    }
+
+    function handleReserveSubmit(event) {
+      event.preventDefault();
+
+      const description = reserveDescriptionInput.value.trim();
+      const amountCents = getInputCents(reserveAmountInput);
+      const date = reserveDateInput.value;
+
+      if (!description || amountCents <= 0 || !isValidDateString(date)) {
+        showToast("Revise os campos da reserva antes de salvar.");
+        return;
+      }
+
+      if (reserveEditContext) {
+        const reserve = state.reserves.find((candidate) => candidate.id === reserveEditContext.item.id);
+        if (!reserve) return;
+        Object.assign(reserve, { description, amountCents, date });
+      } else {
+        state.reserves.push({
+          id: createId(),
+          description,
+          amountCents,
+          date,
+          createdAt: new Date().toISOString()
+        });
+      }
+
+      saveState();
+      reserveDialog.close();
+      currentMonth = date.slice(0, 7);
+      monthPicker.value = currentMonth;
+      render();
+      showToast(reserveEditContext ? "Reserva atualizada com sucesso." : "Reserva adicionada com sucesso.");
+      reserveEditContext = null;
     }
 
     function openNewExpenseDialog() {
@@ -2235,11 +2471,14 @@
     function openDeleteDialog(item, entity = "expense") {
       deleteContext = { item, entity };
 
-      if (entity === "income") {
+      if (entity === "income" || entity === "reserve") {
+        const isReserve = entity === "reserve";
         deleteFutureChoice.style.display = "none";
-        deleteDialogSubtitle.textContent = "Confirme a exclusão desta receita.";
+        deleteDialogSubtitle.textContent = isReserve
+          ? "Confirme a exclusão desta reserva."
+          : "Confirme a exclusão desta receita.";
         deleteDialogText.textContent = `Você está excluindo “${item.description}”. Esta ação não poderá ser desfeita.`;
-        deleteSingleChoice.textContent = "Excluir receita";
+        deleteSingleChoice.textContent = isReserve ? "Excluir reserva" : "Excluir receita";
         deleteDialog.showModal();
         return;
       }
@@ -2272,6 +2511,8 @@
 
       if (entity === "income") {
         state.incomes = state.incomes.filter((income) => income.id !== item.id);
+      } else if (entity === "reserve") {
+        state.reserves = state.reserves.filter((reserve) => reserve.id !== item.id);
       } else {
         if (item.kind === "single") {
           state.expenses = state.expenses.filter((expense) => expense.id !== item.id);
@@ -2300,7 +2541,12 @@
       deleteDialog.close();
       deleteContext = null;
       render();
-      showToast(entity === "income" ? "Receita excluída." : "Lançamento excluído.");
+      const deleteMessage = entity === "income"
+        ? "Receita excluída."
+        : entity === "reserve"
+          ? "Reserva excluída."
+          : "Lançamento excluído.";
+      showToast(deleteMessage);
     }
 
     function stopRecurringFromMonth(ruleId, monthKey) {
@@ -2330,6 +2576,16 @@
       return state.incomes
         .filter((income) => income.date.slice(0, 7) === monthKey)
         .map((income) => ({ ...income }));
+    }
+
+    function getReserveItemsForMonth(monthKey) {
+      return state.reserves
+        .filter((reserve) => reserve.date.slice(0, 7) === monthKey)
+        .map((reserve) => ({ ...reserve }));
+    }
+
+    function getTotalReserveCents() {
+      return state.reserves.reduce((sum, reserve) => sum + reserve.amountCents, 0);
     }
 
     function getItemsForMonth(monthKey) {
@@ -2442,9 +2698,10 @@
 
     function normalizeImportedState(candidate) {
       return {
-        version: 2,
+        version: 3,
         salaryCents: Number.isFinite(candidate.salaryCents) ? Math.max(0, Math.round(candidate.salaryCents)) : 0,
         incomes: Array.isArray(candidate.incomes) ? candidate.incomes.filter(Boolean) : [],
+        reserves: Array.isArray(candidate.reserves) ? candidate.reserves.filter(Boolean) : [],
         expenses: candidate.expenses.filter(Boolean),
         recurringRules: candidate.recurringRules.filter(Boolean),
         recurringOverrides: candidate.recurringOverrides || {}
