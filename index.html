@@ -1,0 +1,2253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema pessoal para controle de gastos mensais.">
+  <title>Meu Controle Financeiro</title>
+  <style>
+    :root {
+      --background: #f5f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --text: #172033;
+      --muted: #667085;
+      --border: #e4e7ec;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --success: #15803d;
+      --success-soft: #ecfdf3;
+      --warning: #b45309;
+      --warning-soft: #fffbeb;
+      --danger: #b42318;
+      --danger-soft: #fef3f2;
+      --shadow: 0 12px 30px rgba(16, 24, 40, 0.08);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      color-scheme: light;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--background);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 44px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 46px;
+      height: 46px;
+      place-items: center;
+      border-radius: 14px;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 23px;
+      font-weight: 800;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.25rem, 3vw, 1.7rem);
+      letter-spacing: -0.03em;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      padding: 9px 14px;
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 700;
+      text-decoration: none;
+      transition: 0.18s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid rgba(37, 99, 235, 0.2);
+      outline-offset: 2px;
+    }
+
+    .button-primary {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .button-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .button-secondary {
+      border-color: var(--border);
+      background: var(--surface);
+    }
+
+    .button-ghost {
+      border-color: transparent;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .button-danger {
+      border-color: #fecdca;
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .button-small {
+      min-height: 34px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+    }
+
+    .icon-button {
+      display: inline-grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .month-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+
+    .month-navigation {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .month-copy span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .month-copy strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 1.25rem;
+    }
+
+    #monthPicker {
+      width: 150px;
+      min-height: 40px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 7px 10px;
+      background: var(--surface-soft);
+      color: var(--text);
+    }
+
+    .setup-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      background: var(--primary-soft);
+    }
+
+    .setup-banner.visible {
+      display: flex;
+    }
+
+    .setup-banner strong,
+    .setup-banner span {
+      display: block;
+    }
+
+    .setup-banner span {
+      margin-top: 3px;
+      color: #475467;
+      font-size: 0.9rem;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .summary-card {
+      position: relative;
+      min-height: 144px;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .summary-value {
+      display: block;
+      margin-top: 12px;
+      font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+
+    .summary-note {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .summary-card .edit-income {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+    }
+
+    .positive {
+      color: var(--success);
+    }
+
+    .negative {
+      color: var(--danger);
+    }
+
+    .budget-panel {
+      margin-bottom: 18px;
+      padding: 20px;
+    }
+
+    .budget-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 12px;
+    }
+
+    .budget-header h2,
+    .section-heading h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .budget-header p,
+    .section-heading p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .budget-percentage {
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .progress-track {
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e9eef7;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    .progress-fill.warning {
+      background: #f59e0b;
+    }
+
+    .progress-fill.danger {
+      background: #dc2626;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.75fr) minmax(280px, 0.75fr);
+      align-items: start;
+      gap: 18px;
+    }
+
+    .transactions-panel,
+    .breakdown-panel {
+      padding: 20px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) minmax(170px, 0.45fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .field-control {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 11px;
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 13px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    td {
+      font-size: 0.9rem;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .transaction-title {
+      font-weight: 750;
+    }
+
+    .transaction-subtitle {
+      display: none;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .amount-cell {
+      white-space: nowrap;
+      font-weight: 800;
+    }
+
+    .actions-cell {
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: var(--surface-soft);
+      color: #475467;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .tag-recurring {
+      background: #ecfdf3;
+      color: #027a48;
+    }
+
+    .tag-installment {
+      background: #fffaeb;
+      color: #b54708;
+    }
+
+    .category-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .category-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--dot-color, #98a2b3);
+    }
+
+    .empty-state {
+      display: none;
+      padding: 42px 20px 28px;
+      text-align: center;
+    }
+
+    .empty-state.visible {
+      display: block;
+    }
+
+    .empty-state-icon {
+      display: grid;
+      width: 56px;
+      height: 56px;
+      place-items: center;
+      margin: 0 auto 12px;
+      border-radius: 18px;
+      background: var(--primary-soft);
+      font-size: 25px;
+    }
+
+    .empty-state h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .empty-state p {
+      max-width: 360px;
+      margin: 7px auto 16px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .breakdown-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .breakdown-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 7px;
+      font-size: 0.86rem;
+    }
+
+    .breakdown-item-header strong {
+      font-size: 0.84rem;
+    }
+
+    .mini-track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #eef2f6;
+    }
+
+    .mini-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--category-color, var(--primary));
+    }
+
+    .breakdown-empty {
+      padding: 20px 0 8px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.88rem;
+    }
+
+    .privacy-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.65);
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    dialog {
+      width: min(620px, calc(100% - 28px));
+      max-height: calc(100vh - 30px);
+      overflow: auto;
+      border: 0;
+      border-radius: 20px;
+      padding: 0;
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 30px 80px rgba(16, 24, 40, 0.25);
+    }
+
+    dialog::backdrop {
+      background: rgba(15, 23, 42, 0.48);
+      backdrop-filter: blur(3px);
+    }
+
+    .dialog-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 22px 22px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dialog-header h2 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .dialog-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .dialog-body {
+      padding: 20px 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field-full {
+      grid-column: 1 / -1;
+    }
+
+    .field label,
+    .fieldset-label {
+      color: #344054;
+      font-size: 0.84rem;
+      font-weight: 750;
+    }
+
+    .field-hint {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .expense-types {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .expense-type-option {
+      position: relative;
+    }
+
+    .expense-type-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .expense-type-option label {
+      display: grid;
+      min-height: 74px;
+      place-content: center;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      background: var(--surface-soft);
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 750;
+      transition: 0.16s ease;
+    }
+
+    .expense-type-option input:checked + label {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.08);
+    }
+
+    .conditional-field {
+      display: none;
+    }
+
+    .conditional-field.visible {
+      display: grid;
+    }
+
+    .installment-preview {
+      display: none;
+      grid-column: 1 / -1;
+      border: 1px solid #fde68a;
+      border-radius: 11px;
+      padding: 11px 13px;
+      background: var(--warning-soft);
+      color: #92400e;
+      font-size: 0.84rem;
+    }
+
+    .installment-preview.visible {
+      display: block;
+    }
+
+    .scope-box {
+      display: none;
+      grid-column: 1 / -1;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 13px;
+      background: var(--primary-soft);
+    }
+
+    .scope-box.visible {
+      display: block;
+    }
+
+    .scope-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .scope-options label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.84rem;
+      font-weight: 650;
+    }
+
+    .dialog-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 22px 22px;
+    }
+
+    .dialog-actions-right {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    .delete-choice-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .delete-choice-grid .button {
+      width: 100%;
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 100;
+      right: 20px;
+      bottom: 20px;
+      max-width: min(380px, calc(100% - 40px));
+      transform: translateY(20px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 15px;
+      background: #101828;
+      color: #ffffff;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.2s ease;
+      font-size: 0.88rem;
+      font-weight: 650;
+    }
+
+    .toast.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .mobile-add-button {
+      display: none;
+    }
+
+    @media (max-width: 930px) {
+      .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .breakdown-panel {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .app-shell {
+        width: min(100% - 20px, 1180px);
+        padding-top: 18px;
+        padding-bottom: 94px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .brand p {
+        display: none;
+      }
+
+      .top-actions .button-primary {
+        display: none;
+      }
+
+      .top-actions .button span.button-text {
+        display: none;
+      }
+
+      .month-panel {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .month-navigation {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      #monthPicker {
+        width: 100%;
+      }
+
+      .setup-banner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .summary-card {
+        min-height: 128px;
+        padding: 16px;
+      }
+
+      .summary-value {
+        font-size: 1.3rem;
+      }
+
+      .budget-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .table-wrap {
+        overflow: visible;
+      }
+
+      table,
+      thead,
+      tbody,
+      tr,
+      td {
+        display: block;
+        width: 100%;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tbody {
+        display: grid;
+        gap: 10px;
+      }
+
+      tbody tr {
+        position: relative;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        background: var(--surface-soft);
+      }
+
+      tbody td {
+        border: 0;
+        padding: 3px 0;
+      }
+
+      tbody td:nth-child(1) {
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+
+      tbody td:nth-child(3) {
+        margin-top: 7px;
+      }
+
+      tbody td:nth-child(4) {
+        margin-top: 5px;
+      }
+
+      .transaction-subtitle {
+        display: block;
+      }
+
+      .transaction-title {
+        padding-right: 112px;
+      }
+
+      .amount-cell {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+      }
+
+      .actions-cell {
+        position: absolute;
+        right: 10px;
+        bottom: 9px;
+      }
+
+      .actions-cell .button-small {
+        min-height: 32px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .field-full,
+      .installment-preview,
+      .scope-box {
+        grid-column: auto;
+      }
+
+      .expense-types {
+        grid-template-columns: 1fr;
+      }
+
+      .expense-type-option label {
+        min-height: 48px;
+      }
+
+      .dialog-actions {
+        align-items: stretch;
+        flex-direction: column-reverse;
+      }
+
+      .dialog-actions-right {
+        width: 100%;
+        margin-left: 0;
+      }
+
+      .dialog-actions-right .button,
+      .dialog-actions > .button {
+        flex: 1;
+      }
+
+      .mobile-add-button {
+        position: fixed;
+        z-index: 30;
+        right: 18px;
+        bottom: 18px;
+        display: inline-flex;
+        min-height: 52px;
+        border-radius: 999px;
+        padding: 12px 18px;
+        box-shadow: 0 14px 30px rgba(37, 99, 235, 0.32);
+      }
+    }
+
+    @media (max-width: 430px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-card {
+        min-height: 112px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">R$</div>
+        <div>
+          <h1>Meu Controle Financeiro</h1>
+          <p>Gastos mensais de forma simples e visual.</p>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="button button-secondary" id="backupButton" type="button" title="Exportar backup">
+          <span aria-hidden="true">↓</span>
+          <span class="button-text">Backup</span>
+        </button>
+        <button class="button button-secondary" id="importButton" type="button" title="Importar backup">
+          <span aria-hidden="true">↑</span>
+          <span class="button-text">Importar</span>
+        </button>
+        <button class="button button-secondary" id="incomeButton" type="button" title="Configurar salário">
+          <span aria-hidden="true">⚙</span>
+          <span class="button-text">Salário</span>
+        </button>
+        <button class="button button-primary" id="addExpenseButton" type="button">
+          <span aria-hidden="true">＋</span>
+          Adicionar gasto
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel month-panel" aria-label="Selecionar mês">
+        <div class="month-copy">
+          <span>Mês de referência</span>
+          <strong id="monthTitle">Mês atual</strong>
+        </div>
+        <div class="month-navigation">
+          <button class="icon-button" id="previousMonthButton" type="button" aria-label="Mês anterior">‹</button>
+          <input id="monthPicker" type="month" aria-label="Escolher mês">
+          <button class="icon-button" id="nextMonthButton" type="button" aria-label="Próximo mês">›</button>
+          <button class="button button-secondary button-small" id="currentMonthButton" type="button">Hoje</button>
+        </div>
+      </section>
+
+      <section class="setup-banner" id="setupBanner">
+        <div>
+          <strong>Comece configurando seu salário mensal</strong>
+          <span>Ele será usado como orçamento fixo para calcular o saldo disponível de todos os meses.</span>
+        </div>
+        <button class="button button-primary" id="setupIncomeButton" type="button">Definir salário</button>
+      </section>
+
+      <section class="summary-grid" aria-label="Resumo financeiro">
+        <article class="panel summary-card">
+          <span class="summary-label">Salário mensal</span>
+          <strong class="summary-value" id="salaryValue">R$ 0,00</strong>
+          <span class="summary-note">Orçamento fixo mensal</span>
+          <button class="icon-button edit-income" id="editIncomeCardButton" type="button" aria-label="Editar salário">✎</button>
+        </article>
+
+        <article class="panel summary-card">
+          <span class="summary-label">Gastos do mês</span>
+          <strong class="summary-value" id="expensesValue">R$ 0,00</strong>
+          <span class="summary-note" id="expenseCountNote">Nenhum gasto registrado</span>
+        </article>
+
+        <article class="panel summary-card">
+          <span class="summary-label">Saldo disponível</span>
+          <strong class="summary-value" id="balanceValue">R$ 0,00</strong>
+          <span class="summary-note">Salário menos gastos</span>
+        </article>
+
+        <article class="panel summary-card">
+          <span class="summary-label">Renda comprometida</span>
+          <strong class="summary-value" id="committedValue">0%</strong>
+          <span class="summary-note" id="committedNote">Configure seu salário</span>
+        </article>
+      </section>
+
+      <section class="panel budget-panel" aria-label="Uso do orçamento">
+        <div class="budget-header">
+          <div>
+            <h2>Uso do orçamento mensal</h2>
+            <p id="budgetDescription">Configure seu salário para acompanhar o orçamento.</p>
+          </div>
+          <strong class="budget-percentage" id="budgetPercentage">0%</strong>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" id="budgetProgress"></div>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <section class="panel transactions-panel">
+          <div class="section-heading">
+            <div>
+              <h2>Gastos do mês</h2>
+              <p>Inclua, edite ou exclua seus lançamentos.</p>
+            </div>
+          </div>
+
+          <div class="filters">
+            <input class="field-control" id="searchInput" type="search" placeholder="Buscar por descrição">
+            <select class="field-control" id="categoryFilter" aria-label="Filtrar por categoria">
+              <option value="">Todas as categorias</option>
+            </select>
+          </div>
+
+          <div class="table-wrap" id="transactionsTableWrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Descrição</th>
+                  <th>Categoria</th>
+                  <th>Tipo</th>
+                  <th>Valor</th>
+                  <th aria-label="Ações"></th>
+                </tr>
+              </thead>
+              <tbody id="transactionsBody"></tbody>
+            </table>
+          </div>
+
+          <div class="empty-state" id="emptyState">
+            <div class="empty-state-icon" aria-hidden="true">🧾</div>
+            <h3 id="emptyStateTitle">Nenhum gasto neste mês</h3>
+            <p id="emptyStateText">Adicione seu primeiro gasto para começar a acompanhar o orçamento mensal.</p>
+            <button class="button button-primary" id="emptyAddButton" type="button">Adicionar gasto</button>
+          </div>
+        </section>
+
+        <aside class="panel breakdown-panel">
+          <div class="section-heading">
+            <div>
+              <h2>Por categoria</h2>
+              <p>Distribuição dos gastos no mês.</p>
+            </div>
+          </div>
+          <div class="breakdown-list" id="breakdownList"></div>
+        </aside>
+      </section>
+
+      <div class="privacy-note">
+        <span aria-hidden="true">🔒</span>
+        <span>Seus lançamentos ficam armazenados somente neste navegador. Exporte um backup regularmente, principalmente antes de limpar os dados do navegador ou trocar de dispositivo.</span>
+      </div>
+    </main>
+  </div>
+
+  <button class="button button-primary mobile-add-button" id="mobileAddButton" type="button">
+    <span aria-hidden="true">＋</span>
+    Adicionar gasto
+  </button>
+
+  <dialog id="expenseDialog">
+    <form id="expenseForm">
+      <div class="dialog-header">
+        <div>
+          <h2 id="expenseDialogTitle">Adicionar gasto</h2>
+          <p id="expenseDialogSubtitle">Preencha os dados do lançamento.</p>
+        </div>
+        <button class="icon-button" id="closeExpenseDialogButton" type="button" aria-label="Fechar">×</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="field field-full">
+            <span class="fieldset-label">Tipo de gasto</span>
+            <div class="expense-types" id="expenseTypeOptions">
+              <div class="expense-type-option">
+                <input id="typeSingle" type="radio" name="expenseType" value="single" checked>
+                <label for="typeSingle">Gasto único</label>
+              </div>
+              <div class="expense-type-option">
+                <input id="typeInstallment" type="radio" name="expenseType" value="installment">
+                <label for="typeInstallment">Compra parcelada</label>
+              </div>
+              <div class="expense-type-option">
+                <input id="typeRecurring" type="radio" name="expenseType" value="recurring">
+                <label for="typeRecurring">Recorrente mensal</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="field field-full">
+            <label for="descriptionInput">Descrição</label>
+            <input class="field-control" id="descriptionInput" type="text" maxlength="80" placeholder="Exemplo: Aluguel" required>
+          </div>
+
+          <div class="field">
+            <label for="categoryInput">Categoria</label>
+            <select class="field-control" id="categoryInput" required></select>
+          </div>
+
+          <div class="field">
+            <label id="amountLabel" for="amountInput">Valor do gasto</label>
+            <input class="field-control" id="amountInput" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0,00" required>
+          </div>
+
+          <div class="field">
+            <label id="dateLabel" for="dateInput">Data do gasto</label>
+            <input class="field-control" id="dateInput" type="date" required>
+          </div>
+
+          <div class="field conditional-field" id="installmentCountField">
+            <label for="installmentCountInput">Quantidade de parcelas</label>
+            <input class="field-control" id="installmentCountInput" type="number" min="2" max="120" step="1" value="2">
+            <span class="field-hint">As parcelas serão incluídas automaticamente nos meses seguintes.</span>
+          </div>
+
+          <div class="field conditional-field" id="recurringEndField">
+            <label for="recurringEndInput">Último mês, opcional</label>
+            <input class="field-control" id="recurringEndInput" type="month">
+            <span class="field-hint">Deixe vazio para manter o gasto sem data final.</span>
+          </div>
+
+          <div class="installment-preview" id="installmentPreview"></div>
+
+          <div class="scope-box" id="editScopeBox">
+            <span class="fieldset-label" id="scopeLabel">Aplicar alteração em:</span>
+            <div class="scope-options">
+              <label>
+                <input type="radio" name="editScope" value="single" checked>
+                <span id="singleScopeLabel">Somente este lançamento</span>
+              </label>
+              <label>
+                <input type="radio" name="editScope" value="future">
+                <span id="futureScopeLabel">Este e os próximos</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="button button-danger" id="deleteFromEditButton" type="button">Excluir</button>
+        <div class="dialog-actions-right">
+          <button class="button button-secondary" id="cancelExpenseButton" type="button">Cancelar</button>
+          <button class="button button-primary" type="submit" id="saveExpenseButton">Salvar gasto</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="incomeDialog">
+    <form id="incomeForm">
+      <div class="dialog-header">
+        <div>
+          <h2>Configurar salário mensal</h2>
+          <p>Este valor será usado como orçamento fixo em todos os meses.</p>
+        </div>
+        <button class="icon-button" id="closeIncomeDialogButton" type="button" aria-label="Fechar">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="field">
+          <label for="salaryInput">Valor líquido mensal</label>
+          <input class="field-control" id="salaryInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00" required>
+          <span class="field-hint">Você poderá alterar este valor a qualquer momento.</span>
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <div class="dialog-actions-right">
+          <button class="button button-secondary" id="cancelIncomeButton" type="button">Cancelar</button>
+          <button class="button button-primary" type="submit">Salvar salário</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="deleteDialog">
+    <div class="dialog-header">
+      <div>
+        <h2>Excluir lançamento</h2>
+        <p id="deleteDialogSubtitle">Escolha como deseja aplicar a exclusão.</p>
+      </div>
+      <button class="icon-button" id="closeDeleteDialogButton" type="button" aria-label="Fechar">×</button>
+    </div>
+    <div class="dialog-body">
+      <p id="deleteDialogText">Esta ação não poderá ser desfeita.</p>
+      <div class="delete-choice-grid">
+        <button class="button button-danger" id="deleteSingleChoice" type="button">Excluir este lançamento</button>
+        <button class="button button-danger" id="deleteFutureChoice" type="button">Excluir este e os próximos</button>
+      </div>
+    </div>
+    <div class="dialog-actions">
+      <div class="dialog-actions-right">
+        <button class="button button-secondary" id="cancelDeleteButton" type="button">Cancelar</button>
+      </div>
+    </div>
+  </dialog>
+
+  <input id="importFileInput" type="file" accept="application/json,.json" hidden>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    "use strict";
+
+    const STORAGE_KEY = "meu-controle-financeiro-v1";
+    const CATEGORIES = [
+      "Moradia",
+      "Transporte",
+      "Lazer",
+      "Cartão de Crédito",
+      "Educação",
+      "Outros"
+    ];
+
+    const CATEGORY_COLORS = {
+      "Moradia": "#2563eb",
+      "Transporte": "#7c3aed",
+      "Lazer": "#f59e0b",
+      "Cartão de Crédito": "#e11d48",
+      "Educação": "#16a34a",
+      "Outros": "#64748b"
+    };
+
+    const defaultState = () => ({
+      version: 1,
+      salaryCents: 0,
+      expenses: [],
+      recurringRules: [],
+      recurringOverrides: {}
+    });
+
+    let state = loadState();
+    let currentMonth = getCurrentMonthKey();
+    let currentItems = [];
+    let editContext = null;
+    let deleteContext = null;
+    let toastTimer = null;
+
+    const monthTitle = document.getElementById("monthTitle");
+    const monthPicker = document.getElementById("monthPicker");
+    const setupBanner = document.getElementById("setupBanner");
+    const salaryValue = document.getElementById("salaryValue");
+    const expensesValue = document.getElementById("expensesValue");
+    const balanceValue = document.getElementById("balanceValue");
+    const committedValue = document.getElementById("committedValue");
+    const committedNote = document.getElementById("committedNote");
+    const expenseCountNote = document.getElementById("expenseCountNote");
+    const budgetDescription = document.getElementById("budgetDescription");
+    const budgetPercentage = document.getElementById("budgetPercentage");
+    const budgetProgress = document.getElementById("budgetProgress");
+    const transactionsBody = document.getElementById("transactionsBody");
+    const transactionsTableWrap = document.getElementById("transactionsTableWrap");
+    const emptyState = document.getElementById("emptyState");
+    const emptyStateTitle = document.getElementById("emptyStateTitle");
+    const emptyStateText = document.getElementById("emptyStateText");
+    const breakdownList = document.getElementById("breakdownList");
+    const searchInput = document.getElementById("searchInput");
+    const categoryFilter = document.getElementById("categoryFilter");
+
+    const expenseDialog = document.getElementById("expenseDialog");
+    const expenseForm = document.getElementById("expenseForm");
+    const expenseDialogTitle = document.getElementById("expenseDialogTitle");
+    const expenseDialogSubtitle = document.getElementById("expenseDialogSubtitle");
+    const descriptionInput = document.getElementById("descriptionInput");
+    const categoryInput = document.getElementById("categoryInput");
+    const amountInput = document.getElementById("amountInput");
+    const amountLabel = document.getElementById("amountLabel");
+    const dateInput = document.getElementById("dateInput");
+    const dateLabel = document.getElementById("dateLabel");
+    const installmentCountField = document.getElementById("installmentCountField");
+    const installmentCountInput = document.getElementById("installmentCountInput");
+    const recurringEndField = document.getElementById("recurringEndField");
+    const recurringEndInput = document.getElementById("recurringEndInput");
+    const installmentPreview = document.getElementById("installmentPreview");
+    const editScopeBox = document.getElementById("editScopeBox");
+    const singleScopeLabel = document.getElementById("singleScopeLabel");
+    const futureScopeLabel = document.getElementById("futureScopeLabel");
+    const deleteFromEditButton = document.getElementById("deleteFromEditButton");
+
+    const incomeDialog = document.getElementById("incomeDialog");
+    const incomeForm = document.getElementById("incomeForm");
+    const salaryInput = document.getElementById("salaryInput");
+
+    const deleteDialog = document.getElementById("deleteDialog");
+    const deleteDialogSubtitle = document.getElementById("deleteDialogSubtitle");
+    const deleteDialogText = document.getElementById("deleteDialogText");
+    const deleteSingleChoice = document.getElementById("deleteSingleChoice");
+    const deleteFutureChoice = document.getElementById("deleteFutureChoice");
+
+    const importFileInput = document.getElementById("importFileInput");
+    const toast = document.getElementById("toast");
+
+    initialize();
+
+    function initialize() {
+      populateCategoryOptions();
+      bindEvents();
+      monthPicker.value = currentMonth;
+      render();
+    }
+
+    function bindEvents() {
+      document.getElementById("previousMonthButton").addEventListener("click", () => changeMonth(-1));
+      document.getElementById("nextMonthButton").addEventListener("click", () => changeMonth(1));
+      document.getElementById("currentMonthButton").addEventListener("click", () => {
+        currentMonth = getCurrentMonthKey();
+        monthPicker.value = currentMonth;
+        render();
+      });
+      monthPicker.addEventListener("change", () => {
+        if (monthPicker.value) {
+          currentMonth = monthPicker.value;
+          render();
+        }
+      });
+
+      [
+        "addExpenseButton",
+        "mobileAddButton",
+        "emptyAddButton"
+      ].forEach((id) => document.getElementById(id).addEventListener("click", openNewExpenseDialog));
+
+      [
+        "incomeButton",
+        "setupIncomeButton",
+        "editIncomeCardButton"
+      ].forEach((id) => document.getElementById(id).addEventListener("click", openIncomeDialog));
+
+      document.getElementById("closeExpenseDialogButton").addEventListener("click", () => expenseDialog.close());
+      document.getElementById("cancelExpenseButton").addEventListener("click", () => expenseDialog.close());
+      document.getElementById("closeIncomeDialogButton").addEventListener("click", () => incomeDialog.close());
+      document.getElementById("cancelIncomeButton").addEventListener("click", () => incomeDialog.close());
+      document.getElementById("closeDeleteDialogButton").addEventListener("click", () => deleteDialog.close());
+      document.getElementById("cancelDeleteButton").addEventListener("click", () => deleteDialog.close());
+
+      document.querySelectorAll('input[name="expenseType"]').forEach((input) => {
+        input.addEventListener("change", updateExpenseFormFields);
+      });
+      amountInput.addEventListener("input", updateInstallmentPreview);
+      installmentCountInput.addEventListener("input", updateInstallmentPreview);
+
+      expenseForm.addEventListener("submit", handleExpenseSubmit);
+      incomeForm.addEventListener("submit", handleIncomeSubmit);
+      deleteFromEditButton.addEventListener("click", () => {
+        if (!editContext) return;
+        expenseDialog.close();
+        openDeleteDialog(editContext.item);
+      });
+
+      searchInput.addEventListener("input", renderTransactions);
+      categoryFilter.addEventListener("change", renderTransactions);
+
+      transactionsBody.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-action]");
+        if (!button) return;
+        const item = currentItems.find((candidate) => candidate.displayId === button.dataset.id);
+        if (!item) return;
+
+        if (button.dataset.action === "edit") {
+          openEditExpenseDialog(item);
+        }
+
+        if (button.dataset.action === "delete") {
+          openDeleteDialog(item);
+        }
+      });
+
+      deleteSingleChoice.addEventListener("click", () => executeDelete("single"));
+      deleteFutureChoice.addEventListener("click", () => executeDelete("future"));
+
+      document.getElementById("backupButton").addEventListener("click", exportBackup);
+      document.getElementById("importButton").addEventListener("click", () => importFileInput.click());
+      importFileInput.addEventListener("change", importBackup);
+    }
+
+    function populateCategoryOptions() {
+      const options = CATEGORIES.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("");
+      categoryInput.innerHTML = options;
+      categoryFilter.insertAdjacentHTML("beforeend", options);
+    }
+
+    function render() {
+      monthTitle.textContent = formatMonth(currentMonth);
+      monthPicker.value = currentMonth;
+      currentItems = getItemsForMonth(currentMonth).sort(sortByDateThenDescription);
+      renderSummary();
+      renderTransactions();
+      renderBreakdown();
+      setupBanner.classList.toggle("visible", state.salaryCents <= 0);
+    }
+
+    function renderSummary() {
+      const total = currentItems.reduce((sum, item) => sum + item.amountCents, 0);
+      const salary = state.salaryCents;
+      const balance = salary - total;
+      const percentage = salary > 0 ? (total / salary) * 100 : 0;
+
+      salaryValue.textContent = formatCurrency(salary);
+      expensesValue.textContent = formatCurrency(total);
+      balanceValue.textContent = formatCurrency(balance);
+      balanceValue.classList.toggle("positive", balance >= 0 && salary > 0);
+      balanceValue.classList.toggle("negative", balance < 0);
+
+      committedValue.textContent = salary > 0 ? `${formatPercentage(percentage)}%` : "0%";
+      committedValue.classList.toggle("negative", percentage > 100);
+      committedNote.textContent = salary > 0
+        ? percentage > 100
+          ? "Orçamento ultrapassado"
+          : "Do salário mensal"
+        : "Configure seu salário";
+
+      expenseCountNote.textContent = currentItems.length === 0
+        ? "Nenhum gasto registrado"
+        : `${currentItems.length} ${currentItems.length === 1 ? "lançamento" : "lançamentos"}`;
+
+      budgetPercentage.textContent = salary > 0 ? `${formatPercentage(percentage)}%` : "0%";
+      budgetDescription.textContent = salary > 0
+        ? `${formatCurrency(total)} utilizados de ${formatCurrency(salary)}.`
+        : "Configure seu salário para acompanhar o orçamento.";
+
+      const visualPercentage = salary > 0 ? Math.min(percentage, 100) : 0;
+      budgetProgress.style.width = `${visualPercentage}%`;
+      budgetProgress.classList.toggle("warning", percentage >= 80 && percentage <= 100);
+      budgetProgress.classList.toggle("danger", percentage > 100);
+    }
+
+    function renderTransactions() {
+      const searchTerm = normalizeText(searchInput.value.trim());
+      const category = categoryFilter.value;
+      const visibleItems = currentItems.filter((item) => {
+        const matchesSearch = !searchTerm || normalizeText(item.description).includes(searchTerm);
+        const matchesCategory = !category || item.category === category;
+        return matchesSearch && matchesCategory;
+      });
+
+      const hasAnyItems = currentItems.length > 0;
+      const hasVisibleItems = visibleItems.length > 0;
+
+      transactionsTableWrap.style.display = hasVisibleItems ? "block" : "none";
+      emptyState.classList.toggle("visible", !hasVisibleItems);
+
+      if (!hasVisibleItems && hasAnyItems) {
+        emptyStateTitle.textContent = "Nenhum resultado encontrado";
+        emptyStateText.textContent = "Ajuste a busca ou o filtro de categoria para visualizar seus gastos.";
+        document.getElementById("emptyAddButton").style.display = "none";
+      } else {
+        emptyStateTitle.textContent = "Nenhum gasto neste mês";
+        emptyStateText.textContent = "Adicione seu primeiro gasto para começar a acompanhar o orçamento mensal.";
+        document.getElementById("emptyAddButton").style.display = "inline-flex";
+      }
+
+      transactionsBody.innerHTML = visibleItems.map((item) => {
+        const typeTag = getTypeTag(item);
+        const categoryColor = CATEGORY_COLORS[item.category] || CATEGORY_COLORS.Outros;
+        return `
+          <tr>
+            <td>${escapeHtml(formatDate(item.date))}</td>
+            <td>
+              <div class="transaction-title">${escapeHtml(item.description)}</div>
+              <div class="transaction-subtitle">${escapeHtml(item.category)} · ${escapeHtml(typeTag.label)}</div>
+            </td>
+            <td>
+              <span class="category-chip">
+                <span class="category-dot" style="--dot-color: ${categoryColor}"></span>
+                ${escapeHtml(item.category)}
+              </span>
+            </td>
+            <td><span class="tag ${typeTag.className}">${escapeHtml(typeTag.label)}</span></td>
+            <td class="amount-cell">${escapeHtml(formatCurrency(item.amountCents))}</td>
+            <td class="actions-cell">
+              <button class="button button-secondary button-small" type="button" data-action="edit" data-id="${escapeHtml(item.displayId)}">Editar</button>
+              <button class="button button-ghost button-small" type="button" data-action="delete" data-id="${escapeHtml(item.displayId)}" aria-label="Excluir ${escapeHtml(item.description)}">×</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderBreakdown() {
+      const total = currentItems.reduce((sum, item) => sum + item.amountCents, 0);
+      const grouped = CATEGORIES.map((category) => ({
+        category,
+        total: currentItems
+          .filter((item) => item.category === category)
+          .reduce((sum, item) => sum + item.amountCents, 0)
+      }))
+        .filter((item) => item.total > 0)
+        .sort((a, b) => b.total - a.total);
+
+      if (grouped.length === 0) {
+        breakdownList.innerHTML = '<div class="breakdown-empty">As categorias aparecerão quando houver gastos no mês.</div>';
+        return;
+      }
+
+      breakdownList.innerHTML = grouped.map((item) => {
+        const percentage = total > 0 ? (item.total / total) * 100 : 0;
+        const color = CATEGORY_COLORS[item.category] || CATEGORY_COLORS.Outros;
+        return `
+          <div class="breakdown-item">
+            <div class="breakdown-item-header">
+              <span class="category-chip">
+                <span class="category-dot" style="--dot-color: ${color}"></span>
+                ${escapeHtml(item.category)}
+              </span>
+              <strong>${escapeHtml(formatCurrency(item.total))}</strong>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" style="width: ${percentage.toFixed(2)}%; --category-color: ${color}"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function openNewExpenseDialog() {
+      editContext = null;
+      expenseForm.reset();
+      document.getElementById("typeSingle").checked = true;
+      categoryInput.value = CATEGORIES[0];
+      dateInput.value = suggestedDateForCurrentMonth();
+      dateInput.min = "";
+      dateInput.max = "";
+      recurringEndInput.value = "";
+      installmentCountInput.value = "2";
+      expenseDialogTitle.textContent = "Adicionar gasto";
+      expenseDialogSubtitle.textContent = "Preencha os dados do lançamento.";
+      document.getElementById("saveExpenseButton").textContent = "Salvar gasto";
+      document.getElementById("expenseTypeOptions").style.pointerEvents = "auto";
+      document.querySelectorAll('input[name="expenseType"]').forEach((input) => input.disabled = false);
+      editScopeBox.classList.remove("visible");
+      deleteFromEditButton.style.visibility = "hidden";
+      updateExpenseFormFields();
+      expenseDialog.showModal();
+      setTimeout(() => descriptionInput.focus(), 30);
+    }
+
+    function openEditExpenseDialog(item) {
+      editContext = { item };
+      expenseForm.reset();
+      expenseDialogTitle.textContent = "Editar gasto";
+      expenseDialogSubtitle.textContent = "Atualize os dados do lançamento.";
+      document.getElementById("saveExpenseButton").textContent = "Salvar alterações";
+      deleteFromEditButton.style.visibility = "visible";
+      descriptionInput.value = item.description;
+      categoryInput.value = item.category;
+      amountInput.value = (item.amountCents / 100).toFixed(2);
+      dateInput.value = item.date;
+
+      const typeInput = document.querySelector(`input[name="expenseType"][value="${item.kind}"]`);
+      if (typeInput) typeInput.checked = true;
+      document.querySelectorAll('input[name="expenseType"]').forEach((input) => input.disabled = true);
+      document.getElementById("expenseTypeOptions").style.pointerEvents = "none";
+
+      recurringEndInput.value = "";
+      editScopeBox.classList.toggle("visible", item.kind !== "single");
+      document.querySelector('input[name="editScope"][value="single"]').checked = true;
+
+      if (item.kind === "installment") {
+        singleScopeLabel.textContent = "Somente esta parcela";
+        futureScopeLabel.textContent = "Esta e as próximas parcelas";
+        amountLabel.textContent = "Valor desta parcela";
+        dateLabel.textContent = "Data desta parcela";
+        constrainDateToMonth(item.date.slice(0, 7));
+      } else if (item.kind === "recurring") {
+        singleScopeLabel.textContent = "Somente este mês";
+        futureScopeLabel.textContent = "Este e os próximos meses";
+        amountLabel.textContent = "Valor mensal";
+        dateLabel.textContent = "Data deste mês";
+        constrainDateToMonth(item.occurrenceMonth);
+      } else {
+        amountLabel.textContent = "Valor do gasto";
+        dateLabel.textContent = "Data do gasto";
+        dateInput.min = "";
+        dateInput.max = "";
+      }
+
+      updateExpenseFormFields();
+      expenseDialog.showModal();
+      setTimeout(() => descriptionInput.focus(), 30);
+    }
+
+    function updateExpenseFormFields() {
+      const type = getSelectedExpenseType();
+      const isEditing = Boolean(editContext);
+
+      installmentCountField.classList.toggle("visible", type === "installment" && !isEditing);
+      recurringEndField.classList.toggle("visible", type === "recurring" && !isEditing);
+      installmentPreview.classList.toggle("visible", type === "installment" && !isEditing);
+
+      if (!isEditing) {
+        if (type === "installment") {
+          amountLabel.textContent = "Valor total da compra";
+          dateLabel.textContent = "Data da primeira parcela";
+        } else if (type === "recurring") {
+          amountLabel.textContent = "Valor mensal";
+          dateLabel.textContent = "Data do primeiro pagamento";
+        } else {
+          amountLabel.textContent = "Valor do gasto";
+          dateLabel.textContent = "Data do gasto";
+        }
+      }
+
+      updateInstallmentPreview();
+    }
+
+    function updateInstallmentPreview() {
+      const type = getSelectedExpenseType();
+      if (type !== "installment" || editContext) return;
+
+      const totalCents = getInputCents(amountInput);
+      const count = Number.parseInt(installmentCountInput.value, 10);
+
+      if (totalCents > 0 && count >= 2) {
+        const base = Math.floor(totalCents / count);
+        const remainder = totalCents - base * count;
+        const first = base + (remainder > 0 ? 1 : 0);
+        installmentPreview.textContent = `${count} parcelas, aproximadamente ${formatCurrency(first)} por mês. O sistema ajustará os centavos para manter o valor total exato.`;
+      } else {
+        installmentPreview.textContent = "Informe o valor total e a quantidade de parcelas para visualizar a divisão mensal.";
+      }
+    }
+
+    function handleExpenseSubmit(event) {
+      event.preventDefault();
+
+      const description = descriptionInput.value.trim();
+      const category = categoryInput.value;
+      const amountCents = getInputCents(amountInput);
+      const date = dateInput.value;
+
+      if (!description || !CATEGORIES.includes(category) || amountCents <= 0 || !isValidDateString(date)) {
+        showToast("Revise os campos obrigatórios antes de salvar.");
+        return;
+      }
+
+      if (editContext) {
+        saveEditedExpense({ description, category, amountCents, date });
+        return;
+      }
+
+      const type = getSelectedExpenseType();
+
+      if (type === "single") {
+        state.expenses.push({
+          id: createId(),
+          kind: "single",
+          description,
+          category,
+          amountCents,
+          date,
+          createdAt: new Date().toISOString()
+        });
+      }
+
+      if (type === "installment") {
+        const count = Number.parseInt(installmentCountInput.value, 10);
+        if (!Number.isInteger(count) || count < 2 || count > 120) {
+          showToast("Informe uma quantidade de parcelas entre 2 e 120.");
+          return;
+        }
+        createInstallmentSeries({ description, category, totalCents: amountCents, date, count });
+      }
+
+      if (type === "recurring") {
+        const startMonth = date.slice(0, 7);
+        const endMonth = recurringEndInput.value || null;
+        if (endMonth && endMonth < startMonth) {
+          showToast("O último mês não pode ser anterior ao primeiro pagamento.");
+          return;
+        }
+
+        state.recurringRules.push({
+          id: createId(),
+          seriesId: createId(),
+          kind: "recurring",
+          description,
+          category,
+          amountCents,
+          day: Number(date.slice(8, 10)),
+          startMonth,
+          endMonth,
+          createdAt: new Date().toISOString()
+        });
+      }
+
+      saveState();
+      expenseDialog.close();
+      currentMonth = date.slice(0, 7);
+      monthPicker.value = currentMonth;
+      render();
+      showToast(type === "installment" ? "Parcelas incluídas nos meses correspondentes." : "Gasto adicionado com sucesso.");
+    }
+
+    function saveEditedExpense(values) {
+      const item = editContext.item;
+      const scope = document.querySelector('input[name="editScope"]:checked')?.value || "single";
+
+      if (item.kind === "single") {
+        const expense = state.expenses.find((candidate) => candidate.id === item.id);
+        if (!expense) return;
+        Object.assign(expense, values);
+      }
+
+      if (item.kind === "installment") {
+        if (values.date.slice(0, 7) !== item.date.slice(0, 7)) {
+          showToast("Ao editar parcelas, mantenha a data dentro do mesmo mês.");
+          return;
+        }
+
+        if (scope === "single") {
+          const expense = state.expenses.find((candidate) => candidate.id === item.id);
+          if (!expense) return;
+          Object.assign(expense, values);
+        } else {
+          const dateChanged = values.date !== item.date;
+          const newDay = Number(values.date.slice(8, 10));
+          state.expenses
+            .filter((candidate) => candidate.seriesId === item.seriesId && candidate.installmentIndex >= item.installmentIndex)
+            .forEach((expense) => {
+              expense.description = values.description;
+              expense.category = values.category;
+              expense.amountCents = values.amountCents;
+              if (dateChanged) {
+                expense.date = dateForMonth(expense.date.slice(0, 7), newDay);
+              }
+            });
+        }
+      }
+
+      if (item.kind === "recurring") {
+        if (values.date.slice(0, 7) !== item.occurrenceMonth) {
+          showToast("Ao editar um recorrente, mantenha a data dentro do mesmo mês.");
+          return;
+        }
+
+        if (scope === "single") {
+          state.recurringOverrides[overrideKey(item.ruleId, item.occurrenceMonth)] = {
+            deleted: false,
+            description: values.description,
+            category: values.category,
+            amountCents: values.amountCents,
+            date: values.date
+          };
+        } else {
+          editRecurringFromMonth(item, values);
+        }
+      }
+
+      saveState();
+      expenseDialog.close();
+      render();
+      showToast("Alterações salvas com sucesso.");
+    }
+
+    function createInstallmentSeries({ description, category, totalCents, date, count }) {
+      const seriesId = createId();
+      const baseAmount = Math.floor(totalCents / count);
+      const remainder = totalCents - baseAmount * count;
+
+      for (let index = 0; index < count; index += 1) {
+        state.expenses.push({
+          id: createId(),
+          seriesId,
+          kind: "installment",
+          description,
+          category,
+          amountCents: baseAmount + (index < remainder ? 1 : 0),
+          date: addMonthsToDate(date, index),
+          installmentIndex: index + 1,
+          installmentCount: count,
+          createdAt: new Date().toISOString()
+        });
+      }
+    }
+
+    function editRecurringFromMonth(item, values) {
+      const ruleIndex = state.recurringRules.findIndex((rule) => rule.id === item.ruleId);
+      if (ruleIndex === -1) return;
+
+      const oldRule = state.recurringRules[ruleIndex];
+      const oldEndMonth = oldRule.endMonth;
+      const previous = addMonthsToMonthKey(item.occurrenceMonth, -1);
+
+      clearOverridesFromMonth(oldRule.id, item.occurrenceMonth);
+
+      if (item.occurrenceMonth <= oldRule.startMonth) {
+        state.recurringRules.splice(ruleIndex, 1);
+      } else {
+        oldRule.endMonth = previous;
+      }
+
+      state.recurringRules.push({
+        id: createId(),
+        seriesId: oldRule.seriesId || createId(),
+        kind: "recurring",
+        description: values.description,
+        category: values.category,
+        amountCents: values.amountCents,
+        day: values.date === item.date ? oldRule.day : Number(values.date.slice(8, 10)),
+        startMonth: item.occurrenceMonth,
+        endMonth: oldEndMonth,
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    function openDeleteDialog(item) {
+      deleteContext = { item };
+      deleteFutureChoice.style.display = item.kind === "single" ? "none" : "inline-flex";
+
+      if (item.kind === "single") {
+        deleteDialogSubtitle.textContent = "Confirme a exclusão deste gasto.";
+        deleteDialogText.textContent = `Você está excluindo “${item.description}”. Esta ação não poderá ser desfeita.`;
+        deleteSingleChoice.textContent = "Excluir gasto";
+      } else if (item.kind === "installment") {
+        deleteDialogSubtitle.textContent = "Escolha quais parcelas deseja excluir.";
+        deleteDialogText.textContent = `Parcela ${item.installmentIndex} de ${item.installmentCount}, ${item.description}.`;
+        deleteSingleChoice.textContent = "Excluir somente esta parcela";
+        deleteFutureChoice.textContent = "Excluir esta e as próximas parcelas";
+      } else {
+        deleteDialogSubtitle.textContent = "Escolha como aplicar a exclusão.";
+        deleteDialogText.textContent = `Gasto recorrente “${item.description}” em ${formatMonth(item.occurrenceMonth)}.`;
+        deleteSingleChoice.textContent = "Excluir somente deste mês";
+        deleteFutureChoice.textContent = "Excluir deste mês em diante";
+      }
+
+      deleteDialog.showModal();
+    }
+
+    function executeDelete(scope) {
+      if (!deleteContext) return;
+      const item = deleteContext.item;
+
+      if (item.kind === "single") {
+        state.expenses = state.expenses.filter((expense) => expense.id !== item.id);
+      }
+
+      if (item.kind === "installment") {
+        if (scope === "single") {
+          state.expenses = state.expenses.filter((expense) => expense.id !== item.id);
+        } else {
+          state.expenses = state.expenses.filter((expense) => !(
+            expense.seriesId === item.seriesId && expense.installmentIndex >= item.installmentIndex
+          ));
+        }
+      }
+
+      if (item.kind === "recurring") {
+        if (scope === "single") {
+          state.recurringOverrides[overrideKey(item.ruleId, item.occurrenceMonth)] = { deleted: true };
+        } else {
+          stopRecurringFromMonth(item.ruleId, item.occurrenceMonth);
+        }
+      }
+
+      saveState();
+      deleteDialog.close();
+      deleteContext = null;
+      render();
+      showToast("Lançamento excluído.");
+    }
+
+    function stopRecurringFromMonth(ruleId, monthKey) {
+      const ruleIndex = state.recurringRules.findIndex((rule) => rule.id === ruleId);
+      if (ruleIndex === -1) return;
+      const rule = state.recurringRules[ruleIndex];
+
+      clearOverridesFromMonth(rule.id, monthKey);
+
+      if (monthKey <= rule.startMonth) {
+        state.recurringRules.splice(ruleIndex, 1);
+      } else {
+        rule.endMonth = addMonthsToMonthKey(monthKey, -1);
+      }
+    }
+
+    function clearOverridesFromMonth(ruleId, monthKey) {
+      Object.keys(state.recurringOverrides).forEach((key) => {
+        const [keyRuleId, keyMonth] = key.split("|");
+        if (keyRuleId === ruleId && keyMonth >= monthKey) {
+          delete state.recurringOverrides[key];
+        }
+      });
+    }
+
+    function getItemsForMonth(monthKey) {
+      const concreteItems = state.expenses
+        .filter((expense) => expense.date.slice(0, 7) === monthKey)
+        .map((expense) => ({
+          ...expense,
+          displayId: `expense:${expense.id}`
+        }));
+
+      const recurringItems = state.recurringRules
+        .filter((rule) => ruleAppliesToMonth(rule, monthKey))
+        .map((rule) => {
+          const override = state.recurringOverrides[overrideKey(rule.id, monthKey)];
+          if (override?.deleted) return null;
+
+          return {
+            id: `recurring:${rule.id}:${monthKey}`,
+            displayId: `recurring:${rule.id}:${monthKey}`,
+            ruleId: rule.id,
+            seriesId: rule.seriesId,
+            kind: "recurring",
+            occurrenceMonth: monthKey,
+            description: override?.description ?? rule.description,
+            category: override?.category ?? rule.category,
+            amountCents: override?.amountCents ?? rule.amountCents,
+            date: override?.date ?? dateForMonth(monthKey, rule.day)
+          };
+        })
+        .filter(Boolean);
+
+      return [...concreteItems, ...recurringItems];
+    }
+
+    function ruleAppliesToMonth(rule, monthKey) {
+      return rule.startMonth <= monthKey && (!rule.endMonth || rule.endMonth >= monthKey);
+    }
+
+    function handleIncomeSubmit(event) {
+      event.preventDefault();
+      const salaryCents = getInputCents(salaryInput, true);
+      if (salaryCents < 0) {
+        showToast("Informe um valor de salário válido.");
+        return;
+      }
+      state.salaryCents = salaryCents;
+      saveState();
+      incomeDialog.close();
+      render();
+      showToast("Salário mensal atualizado.");
+    }
+
+    function openIncomeDialog() {
+      salaryInput.value = state.salaryCents > 0 ? (state.salaryCents / 100).toFixed(2) : "";
+      incomeDialog.showModal();
+      setTimeout(() => salaryInput.focus(), 30);
+    }
+
+    function exportBackup() {
+      const backup = {
+        app: "Meu Controle Financeiro",
+        exportedAt: new Date().toISOString(),
+        data: state
+      };
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `backup-financas-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showToast("Backup exportado com sucesso.");
+    }
+
+    async function importBackup(event) {
+      const file = event.target.files?.[0];
+      event.target.value = "";
+      if (!file) return;
+
+      try {
+        const parsed = JSON.parse(await file.text());
+        const importedState = parsed.data || parsed;
+        if (!isValidImportedState(importedState)) {
+          throw new Error("Estrutura inválida");
+        }
+
+        const confirmed = window.confirm("A importação substituirá os dados atuais deste navegador. Deseja continuar?");
+        if (!confirmed) return;
+
+        state = normalizeImportedState(importedState);
+        saveState();
+        render();
+        showToast("Backup importado com sucesso.");
+      } catch (error) {
+        console.error(error);
+        showToast("Não foi possível importar este arquivo de backup.");
+      }
+    }
+
+    function isValidImportedState(candidate) {
+      return candidate
+        && typeof candidate === "object"
+        && Array.isArray(candidate.expenses)
+        && Array.isArray(candidate.recurringRules)
+        && candidate.recurringOverrides
+        && typeof candidate.recurringOverrides === "object";
+    }
+
+    function normalizeImportedState(candidate) {
+      return {
+        version: 1,
+        salaryCents: Number.isFinite(candidate.salaryCents) ? Math.max(0, Math.round(candidate.salaryCents)) : 0,
+        expenses: candidate.expenses.filter(Boolean),
+        recurringRules: candidate.recurringRules.filter(Boolean),
+        recurringOverrides: candidate.recurringOverrides || {}
+      };
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return defaultState();
+        const parsed = JSON.parse(raw);
+        return isValidImportedState(parsed) ? normalizeImportedState(parsed) : defaultState();
+      } catch (error) {
+        console.error("Falha ao carregar os dados locais", error);
+        return defaultState();
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (error) {
+        console.error("Falha ao salvar os dados locais", error);
+        showToast("Não foi possível salvar os dados neste navegador.");
+      }
+    }
+
+    function changeMonth(offset) {
+      currentMonth = addMonthsToMonthKey(currentMonth, offset);
+      monthPicker.value = currentMonth;
+      render();
+    }
+
+    function getSelectedExpenseType() {
+      return document.querySelector('input[name="expenseType"]:checked')?.value || "single";
+    }
+
+    function getTypeTag(item) {
+      if (item.kind === "installment") {
+        return {
+          label: `Parcela ${item.installmentIndex}/${item.installmentCount}`,
+          className: "tag-installment"
+        };
+      }
+      if (item.kind === "recurring") {
+        return { label: "Recorrente", className: "tag-recurring" };
+      }
+      return { label: "Único", className: "" };
+    }
+
+    function getInputCents(input, allowZero = false) {
+      const value = Number(input.value);
+      if (!Number.isFinite(value)) return allowZero ? 0 : -1;
+      const cents = Math.round(value * 100);
+      return allowZero ? Math.max(0, cents) : cents;
+    }
+
+    function constrainDateToMonth(monthKey) {
+      dateInput.min = `${monthKey}-01`;
+      dateInput.max = `${monthKey}-${String(daysInMonth(monthKey)).padStart(2, "0")}`;
+    }
+
+    function suggestedDateForCurrentMonth() {
+      const today = new Date();
+      const todayMonth = getCurrentMonthKey();
+      if (currentMonth === todayMonth) {
+        return toDateString(today.getFullYear(), today.getMonth() + 1, today.getDate());
+      }
+      return `${currentMonth}-01`;
+    }
+
+    function getCurrentMonthKey() {
+      const now = new Date();
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+    }
+
+    function addMonthsToMonthKey(monthKey, offset) {
+      const [year, month] = monthKey.split("-").map(Number);
+      const date = new Date(year, month - 1 + offset, 1);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    }
+
+    function addMonthsToDate(dateString, offset) {
+      const [year, month, day] = dateString.split("-").map(Number);
+      const target = new Date(year, month - 1 + offset, 1);
+      const safeDay = Math.min(day, new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate());
+      return toDateString(target.getFullYear(), target.getMonth() + 1, safeDay);
+    }
+
+    function dateForMonth(monthKey, day) {
+      const safeDay = Math.min(Math.max(Number(day) || 1, 1), daysInMonth(monthKey));
+      return `${monthKey}-${String(safeDay).padStart(2, "0")}`;
+    }
+
+    function daysInMonth(monthKey) {
+      const [year, month] = monthKey.split("-").map(Number);
+      return new Date(year, month, 0).getDate();
+    }
+
+    function toDateString(year, month, day) {
+      return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    }
+
+    function isValidDateString(value) {
+      return /^\d{4}-\d{2}-\d{2}$/.test(value);
+    }
+
+    function formatCurrency(cents) {
+      return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      }).format((Number(cents) || 0) / 100);
+    }
+
+    function formatMonth(monthKey) {
+      const [year, month] = monthKey.split("-").map(Number);
+      const formatted = new Intl.DateTimeFormat("pt-BR", {
+        month: "long",
+        year: "numeric"
+      }).format(new Date(year, month - 1, 1));
+      return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    }
+
+    function formatDate(dateString) {
+      const [year, month, day] = dateString.split("-").map(Number);
+      return new Intl.DateTimeFormat("pt-BR").format(new Date(year, month - 1, day));
+    }
+
+    function formatPercentage(value) {
+      return new Intl.NumberFormat("pt-BR", {
+        maximumFractionDigits: 1
+      }).format(value);
+    }
+
+    function sortByDateThenDescription(a, b) {
+      return a.date.localeCompare(b.date) || a.description.localeCompare(b.description, "pt-BR");
+    }
+
+    function normalizeText(value) {
+      return String(value)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    }
+
+    function overrideKey(ruleId, monthKey) {
+      return `${ruleId}|${monthKey}`;
+    }
+
+    function createId() {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+      return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function showToast(message) {
+      clearTimeout(toastTimer);
+      toast.textContent = message;
+      toast.classList.add("visible");
+      toastTimer = setTimeout(() => toast.classList.remove("visible"), 2800);
+    }
+  </script>
+</body>
+</html>
