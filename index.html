@@ -880,7 +880,15 @@
       }
 
       tbody tr {
-        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+          "date amount"
+          "description description"
+          "category type"
+          "actions actions";
+        column-gap: 12px;
+        row-gap: 6px;
         border: 1px solid var(--border);
         border-radius: 14px;
         padding: 14px;
@@ -888,41 +896,55 @@
       }
 
       tbody td {
+        width: auto;
         border: 0;
-        padding: 3px 0;
+        padding: 0;
       }
 
       tbody td:nth-child(1) {
+        grid-area: date;
         color: var(--muted);
         font-size: 0.78rem;
       }
 
+      tbody td:nth-child(2) {
+        grid-area: description;
+      }
+
       tbody td:nth-child(3) {
-        margin-top: 7px;
+        grid-area: category;
+        margin-top: 2px;
       }
 
       tbody td:nth-child(4) {
-        margin-top: 5px;
+        grid-area: type;
+        justify-self: end;
+        margin-top: 2px;
       }
 
       .transaction-subtitle {
-        display: block;
+        display: none;
       }
 
       .transaction-title {
-        padding-right: 112px;
+        padding-right: 0;
+        font-size: 1rem;
       }
 
       .amount-cell {
-        position: absolute;
-        top: 14px;
-        right: 14px;
+        grid-area: amount;
+        position: static;
+        justify-self: end;
+        text-align: right;
       }
 
       .actions-cell {
-        position: absolute;
-        right: 10px;
-        bottom: 9px;
+        grid-area: actions;
+        position: static;
+        display: flex;
+        justify-content: flex-end;
+        gap: 4px;
+        padding-top: 7px;
       }
 
       .actions-cell .button-small {
