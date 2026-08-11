@@ -1163,6 +1163,676 @@
         min-height: 112px;
       }
     }
+
+
+    /* Dashboard and navigation */
+    .app-view[hidden] {
+      display: none !important;
+    }
+
+    .view-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px;
+      margin-bottom: 20px;
+      box-shadow: none;
+    }
+
+    .view-tab {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 0;
+      border-radius: 12px;
+      padding: 9px 16px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .view-tab.active {
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+
+    .dashboard-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+
+    .dashboard-title h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 4vw, 2.25rem);
+      letter-spacing: -0.04em;
+    }
+
+    .dashboard-title p {
+      max-width: 680px;
+      margin: 7px 0 0;
+      color: var(--muted);
+    }
+
+    .dashboard-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .dashboard-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 5px;
+      background: var(--surface);
+    }
+
+    .dashboard-control label {
+      padding-left: 7px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .dashboard-control select {
+      min-height: 34px;
+      border: 0;
+      border-radius: 8px;
+      padding: 4px 8px;
+      background: var(--surface-soft);
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .segmented-control {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 4px;
+      background: var(--surface);
+    }
+
+    .segment-button {
+      min-height: 34px;
+      border: 0;
+      border-radius: 8px;
+      padding: 6px 11px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .segment-button.active {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .dashboard-period-note {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      background: var(--primary-soft);
+      color: #1e3a8a;
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .dashboard-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .dashboard-summary-card {
+      position: relative;
+      min-height: 126px;
+      padding: 19px;
+      overflow: hidden;
+    }
+
+    .dashboard-summary-card::after {
+      content: "";
+      position: absolute;
+      right: -22px;
+      bottom: -32px;
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: rgba(37, 99, 235, 0.06);
+    }
+
+    .dashboard-summary-card.reserve-highlight {
+      border-color: #99f6e4;
+      background: linear-gradient(135deg, #ffffff 0%, var(--reserve-soft) 100%);
+    }
+
+    .dashboard-summary-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .dashboard-summary-value {
+      display: block;
+      margin-top: 9px;
+      font-size: clamp(1.35rem, 3vw, 1.85rem);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+
+    .dashboard-summary-note {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .dashboard-chart-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .dashboard-panel {
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .dashboard-panel + .dashboard-panel,
+    .dashboard-wide-panel + .dashboard-wide-panel {
+      margin-top: 0;
+    }
+
+    .dashboard-panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .dashboard-panel-header h3 {
+      margin: 0;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .dashboard-panel-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .dashboard-month-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .dashboard-month-nav .icon-button {
+      width: 34px;
+      height: 34px;
+    }
+
+    .donut-layout {
+      display: grid;
+      grid-template-columns: minmax(210px, 0.8fr) minmax(240px, 1.2fr);
+      align-items: center;
+      gap: 24px;
+      min-height: 290px;
+    }
+
+    .donut-wrap {
+      display: grid;
+      place-items: center;
+    }
+
+    .donut-chart {
+      position: relative;
+      display: grid;
+      width: min(250px, 78vw);
+      aspect-ratio: 1;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(var(--border) 0 100%);
+      transition: background 0.25s ease;
+    }
+
+    .donut-chart::before {
+      content: "";
+      position: absolute;
+      width: 62%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--surface);
+      box-shadow: inset 0 0 0 1px var(--border);
+    }
+
+    .donut-center {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 3px;
+      text-align: center;
+    }
+
+    .donut-center span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .donut-center strong {
+      font-size: clamp(1.15rem, 3vw, 1.55rem);
+      letter-spacing: -0.04em;
+    }
+
+    .donut-legend {
+      display: grid;
+      gap: 7px;
+    }
+
+    .donut-legend-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 8px;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+    }
+
+    .donut-legend-item:hover {
+      border-color: var(--border);
+      background: var(--surface-soft);
+    }
+
+    .legend-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+
+    .donut-legend-name {
+      min-width: 0;
+      overflow: hidden;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .donut-legend-value {
+      display: grid;
+      justify-items: end;
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .donut-legend-value small {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .chart-empty {
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .focus-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 11px;
+      margin-top: 8px;
+    }
+
+    .focus-summary-item {
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 14px;
+      background: var(--surface-soft);
+    }
+
+    .focus-summary-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .focus-summary-item strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 1.08rem;
+      letter-spacing: -0.02em;
+    }
+
+    .focus-summary-actions {
+      display: grid;
+      gap: 9px;
+      margin-top: 15px;
+    }
+
+    .dashboard-wide-panel {
+      padding: 20px;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .chart-meta {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .chart-scroll {
+      overflow-x: auto;
+      padding: 5px 2px 8px;
+      scrollbar-width: thin;
+    }
+
+    .cashflow-chart {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(64px, 1fr));
+      align-items: end;
+      gap: 11px;
+      min-width: 980px;
+      height: 300px;
+      padding: 16px 8px 0;
+      border-bottom: 1px solid var(--border);
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 58px,
+        rgba(148, 163, 184, 0.18) 59px,
+        transparent 60px
+      );
+    }
+
+    .cashflow-month {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 8px;
+      height: 100%;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: var(--text);
+    }
+
+    .cashflow-month:hover .cashflow-bar-shell {
+      border-color: #93c5fd;
+      background: rgba(239, 246, 255, 0.72);
+    }
+
+    .cashflow-month.not-included {
+      opacity: 0.36;
+    }
+
+    .cashflow-bars {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(20px, 1fr));
+      align-items: end;
+      gap: 5px;
+      min-height: 0;
+    }
+
+    .cashflow-bar-column {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 5px;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .cashflow-bar-shell {
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: flex-start;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 8px 8px 3px 3px;
+      background: rgba(248, 250, 252, 0.82);
+      transition: 0.18s ease;
+    }
+
+    .cashflow-segment {
+      display: block;
+      min-height: 0;
+      width: 100%;
+    }
+
+    .cashflow-bar-caption {
+      color: var(--muted);
+      font-size: 0.68rem;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .cashflow-month-label {
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 15px;
+      margin-top: 14px;
+    }
+
+    .chart-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .chart-legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+    }
+
+    .reserve-chart-container {
+      min-width: 980px;
+    }
+
+    .reserve-chart-container svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .reserve-chart-caption {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .salary-month-context {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 11px 12px;
+      margin-bottom: 15px;
+      background: var(--primary-soft);
+      color: #1e3a8a;
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: var(--surface-soft);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .checkbox-row input {
+      width: 17px;
+      height: 17px;
+      margin-top: 2px;
+      accent-color: var(--primary);
+    }
+
+    .dashboard-positive {
+      color: var(--success);
+    }
+
+    .dashboard-negative {
+      color: var(--danger);
+    }
+
+    @media (max-width: 980px) {
+      .dashboard-header {
+        flex-direction: column;
+      }
+
+      .dashboard-controls {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .dashboard-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .dashboard-chart-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .view-tabs {
+        position: sticky;
+        top: 8px;
+        z-index: 15;
+      }
+
+      .view-tab {
+        flex: 1;
+        padding-inline: 9px;
+        font-size: 0.86rem;
+      }
+
+      .dashboard-header {
+        gap: 15px;
+      }
+
+      .dashboard-controls,
+      .dashboard-control,
+      .segmented-control {
+        width: 100%;
+      }
+
+      .dashboard-control {
+        justify-content: space-between;
+      }
+
+      .segment-button {
+        flex: 1;
+      }
+
+      .dashboard-period-note {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .dashboard-summary-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-summary-card {
+        min-height: 108px;
+      }
+
+      .dashboard-panel,
+      .dashboard-wide-panel {
+        padding: 16px;
+      }
+
+      .dashboard-panel-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .dashboard-month-nav {
+        width: 100%;
+      }
+
+      .dashboard-month-nav .button {
+        flex: 1;
+      }
+
+      .donut-layout {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .focus-summary-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .focus-summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1208,7 +1878,167 @@
       </div>
     </header>
 
+    <nav class="view-tabs panel" aria-label="Navegação principal">
+      <button class="view-tab active" id="dashboardTabButton" type="button" aria-selected="true">
+        <span aria-hidden="true">▦</span>
+        Visão geral
+      </button>
+      <button class="view-tab" id="monthlyTabButton" type="button" aria-selected="false">
+        <span aria-hidden="true">☷</span>
+        Lançamentos mensais
+      </button>
+    </nav>
+
     <main>
+
+      <section class="app-view" id="dashboardView" aria-labelledby="dashboardTitle">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            <h2 id="dashboardTitle">Visão geral</h2>
+            <p>Acompanhe o ano, compare receitas e gastos e veja o crescimento da sua reserva.</p>
+          </div>
+          <div class="dashboard-controls">
+            <div class="dashboard-control">
+              <label for="dashboardYearSelect">Ano</label>
+              <select id="dashboardYearSelect" aria-label="Selecionar ano do dashboard"></select>
+            </div>
+            <div class="segmented-control" aria-label="Tipo de visão">
+              <button class="segment-button active" type="button" data-dashboard-mode="actual">Realizado</button>
+              <button class="segment-button" type="button" data-dashboard-mode="projection">Projeção anual</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-period-note">
+          <span id="dashboardPeriodDescription">Resumo do ano atual.</span>
+          <button class="button button-secondary button-small" id="dashboardEditSalaryButton" type="button">Editar salário do mês</button>
+        </div>
+
+        <section class="dashboard-summary-grid" aria-label="Resumo anual">
+          <article class="panel dashboard-summary-card">
+            <span class="dashboard-summary-label">Receitas no período</span>
+            <strong class="dashboard-summary-value dashboard-positive" id="annualIncomeValue">R$ 0,00</strong>
+            <span class="dashboard-summary-note">Salários e receitas extras</span>
+          </article>
+          <article class="panel dashboard-summary-card">
+            <span class="dashboard-summary-label">Gastos no período</span>
+            <strong class="dashboard-summary-value" id="annualExpensesValue">R$ 0,00</strong>
+            <span class="dashboard-summary-note">Todos os gastos registrados</span>
+          </article>
+          <article class="panel dashboard-summary-card">
+            <span class="dashboard-summary-label">Saldo antes da reserva</span>
+            <strong class="dashboard-summary-value" id="annualNetValue">R$ 0,00</strong>
+            <span class="dashboard-summary-note">Receitas menos gastos</span>
+          </article>
+          <article class="panel dashboard-summary-card">
+            <span class="dashboard-summary-label">Reservado no período</span>
+            <strong class="dashboard-summary-value reserve-value" id="annualReserveValue">R$ 0,00</strong>
+            <span class="dashboard-summary-note">Valores adicionados à reserva</span>
+          </article>
+          <article class="panel dashboard-summary-card">
+            <span class="dashboard-summary-label">Disponível após reservas</span>
+            <strong class="dashboard-summary-value" id="annualAvailableValue">R$ 0,00</strong>
+            <span class="dashboard-summary-note">Receitas menos gastos e reservas</span>
+          </article>
+          <article class="panel dashboard-summary-card reserve-highlight">
+            <span class="dashboard-summary-label">Total da reserva</span>
+            <strong class="dashboard-summary-value reserve-value" id="dashboardTotalReserveValue">R$ 0,00</strong>
+            <span class="dashboard-summary-note" id="dashboardTotalReserveNote">Saldo acumulado até o período</span>
+          </article>
+        </section>
+
+        <section class="dashboard-chart-grid">
+          <article class="panel dashboard-panel">
+            <div class="dashboard-panel-header">
+              <div>
+                <h3>Gastos por categoria</h3>
+                <p id="donutMonthLabel">Mês atual</p>
+              </div>
+              <div class="dashboard-month-nav" aria-label="Navegar entre meses do gráfico">
+                <button class="icon-button" id="dashboardPreviousMonthButton" type="button" aria-label="Mês anterior">‹</button>
+                <button class="button button-secondary button-small" id="dashboardCurrentMonthButton" type="button">Hoje</button>
+                <button class="icon-button" id="dashboardNextMonthButton" type="button" aria-label="Próximo mês">›</button>
+              </div>
+            </div>
+            <div class="donut-layout">
+              <div class="donut-wrap">
+                <div class="donut-chart" id="donutChart" role="img" aria-label="Distribuição dos gastos por categoria">
+                  <div class="donut-center">
+                    <span>Total gasto</span>
+                    <strong id="donutTotalValue">R$ 0,00</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="donut-legend" id="donutLegend"></div>
+            </div>
+          </article>
+
+          <article class="panel dashboard-panel">
+            <div class="dashboard-panel-header">
+              <div>
+                <h3 id="focusMonthLabel">Resumo do mês</h3>
+                <p>Valores do mês selecionado no gráfico.</p>
+              </div>
+            </div>
+            <div class="focus-summary-grid">
+              <div class="focus-summary-item">
+                <span>Receitas</span>
+                <strong class="dashboard-positive" id="focusIncomeValue">R$ 0,00</strong>
+              </div>
+              <div class="focus-summary-item">
+                <span>Gastos</span>
+                <strong id="focusExpensesValue">R$ 0,00</strong>
+              </div>
+              <div class="focus-summary-item">
+                <span>Reserva</span>
+                <strong class="reserve-value" id="focusReserveValue">R$ 0,00</strong>
+              </div>
+              <div class="focus-summary-item">
+                <span>Disponível</span>
+                <strong id="focusAvailableValue">R$ 0,00</strong>
+              </div>
+            </div>
+            <div class="focus-summary-actions">
+              <button class="button button-primary" id="openFocusedMonthButton" type="button">Abrir lançamentos deste mês</button>
+              <button class="button button-secondary" id="focusEditSalaryButton" type="button">Editar salário deste mês</button>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel dashboard-wide-panel">
+          <div class="dashboard-panel-header">
+            <div>
+              <h3>Receitas e gastos mês a mês</h3>
+              <p>Em cada mês, a coluna R mostra receitas e a coluna G mostra gastos empilhados.</p>
+            </div>
+            <span class="chart-meta" id="cashflowChartScale">Escala automática</span>
+          </div>
+          <div class="chart-scroll">
+            <div class="cashflow-chart" id="cashflowChart" aria-label="Comparação mensal entre receitas e gastos"></div>
+          </div>
+          <div class="chart-legend" id="cashflowLegend"></div>
+        </section>
+
+        <section class="panel dashboard-wide-panel">
+          <div class="dashboard-panel-header">
+            <div>
+              <h3>Evolução da reserva</h3>
+              <p>A linha mostra o total acumulado e as barras mostram quanto foi reservado em cada mês.</p>
+            </div>
+          </div>
+          <div class="chart-scroll">
+            <div class="reserve-chart-container" id="reserveEvolutionChart" aria-label="Evolução mensal da reserva"></div>
+          </div>
+          <p class="reserve-chart-caption" id="reserveChartCaption"></p>
+        </section>
+
+        <div class="privacy-note">
+          <span aria-hidden="true">🔒</span>
+          <span>O dashboard usa os mesmos dados salvos neste navegador. Exporte um backup regularmente para proteger seu histórico.</span>
+        </div>
+      </section>
+
+      <section class="app-view" id="monthlyView" aria-label="Lançamentos mensais" hidden>
       <section class="panel month-panel" aria-label="Selecionar mês">
         <div class="month-copy">
           <span>Mês de referência</span>
@@ -1232,9 +2062,9 @@
 
       <section class="summary-grid" aria-label="Resumo financeiro">
         <article class="panel summary-card">
-          <span class="summary-label">Salário mensal</span>
+          <span class="summary-label" id="salaryLabel">Salário do mês</span>
           <strong class="summary-value" id="salaryValue">R$ 0,00</strong>
-          <span class="summary-note">Orçamento fixo mensal</span>
+          <span class="summary-note" id="salaryNote">Salário padrão mensal</span>
           <button class="icon-button edit-income" id="editIncomeCardButton" type="button" aria-label="Editar salário">✎</button>
         </article>
 
@@ -1365,6 +2195,7 @@
         <span aria-hidden="true">🔒</span>
         <span>Seus lançamentos ficam armazenados somente neste navegador. Exporte um backup regularmente, principalmente antes de limpar os dados do navegador ou trocar de dispositivo.</span>
       </div>
+      </section>
     </main>
   </div>
 
@@ -1551,19 +2382,28 @@
     <form id="incomeForm">
       <div class="dialog-header">
         <div>
-          <h2>Configurar salário mensal</h2>
-          <p>Este valor será usado como orçamento fixo em todos os meses.</p>
+          <h2 id="salaryDialogTitle">Configurar salário mensal</h2>
+          <p id="salaryDialogSubtitle">Defina o salário do mês selecionado.</p>
         </div>
         <button class="icon-button" id="closeIncomeDialogButton" type="button" aria-label="Fechar">×</button>
       </div>
       <div class="dialog-body">
-        <div class="field">
-          <label for="salaryInput">Valor líquido mensal</label>
-          <input class="field-control" id="salaryInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00" required>
-          <span class="field-hint">Você poderá alterar este valor a qualquer momento.</span>
+        <div class="salary-month-context">
+          <span>Mês em edição</span>
+          <strong id="salaryDialogMonth">Mês atual</strong>
         </div>
+        <div class="field">
+          <label for="salaryInput">Valor líquido do salário</label>
+          <input class="field-control" id="salaryInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00" required>
+          <span class="field-hint" id="salaryDefaultHint">O salário padrão será usado quando o mês não tiver um ajuste próprio.</span>
+        </div>
+        <label class="checkbox-row">
+          <input id="salaryDefaultCheckbox" type="checkbox">
+          <span>Usar este valor como novo salário padrão em todos os meses sem ajuste próprio, inclusive meses anteriores e futuros.</span>
+        </label>
       </div>
       <div class="dialog-actions">
+        <button class="button button-secondary" id="resetSalaryOverrideButton" type="button">Usar padrão neste mês</button>
         <div class="dialog-actions-right">
           <button class="button button-secondary" id="cancelIncomeButton" type="button">Cancelar</button>
           <button class="button button-primary" type="submit">Salvar salário</button>
@@ -1620,8 +2460,9 @@
     };
 
     const defaultState = () => ({
-      version: 3,
+      version: 4,
       salaryCents: 0,
+      salaryOverrides: {},
       incomes: [],
       reserves: [],
       expenses: [],
@@ -1631,6 +2472,9 @@
 
     let state = loadState();
     let currentMonth = getCurrentMonthKey();
+    let dashboardYear = Number(currentMonth.slice(0, 4));
+    let dashboardMode = "actual";
+    let activeView = "dashboard";
     let currentItems = [];
     let currentIncomeItems = [];
     let currentReserveItems = [];
@@ -1640,10 +2484,40 @@
     let deleteContext = null;
     let toastTimer = null;
 
+    const dashboardView = document.getElementById("dashboardView");
+    const monthlyView = document.getElementById("monthlyView");
+    const dashboardTabButton = document.getElementById("dashboardTabButton");
+    const monthlyTabButton = document.getElementById("monthlyTabButton");
+    const dashboardYearSelect = document.getElementById("dashboardYearSelect");
+    const dashboardPeriodDescription = document.getElementById("dashboardPeriodDescription");
+    const annualIncomeValue = document.getElementById("annualIncomeValue");
+    const annualExpensesValue = document.getElementById("annualExpensesValue");
+    const annualNetValue = document.getElementById("annualNetValue");
+    const annualReserveValue = document.getElementById("annualReserveValue");
+    const annualAvailableValue = document.getElementById("annualAvailableValue");
+    const dashboardTotalReserveValue = document.getElementById("dashboardTotalReserveValue");
+    const dashboardTotalReserveNote = document.getElementById("dashboardTotalReserveNote");
+    const donutMonthLabel = document.getElementById("donutMonthLabel");
+    const donutChart = document.getElementById("donutChart");
+    const donutTotalValue = document.getElementById("donutTotalValue");
+    const donutLegend = document.getElementById("donutLegend");
+    const focusMonthLabel = document.getElementById("focusMonthLabel");
+    const focusIncomeValue = document.getElementById("focusIncomeValue");
+    const focusExpensesValue = document.getElementById("focusExpensesValue");
+    const focusReserveValue = document.getElementById("focusReserveValue");
+    const focusAvailableValue = document.getElementById("focusAvailableValue");
+    const cashflowChart = document.getElementById("cashflowChart");
+    const cashflowLegend = document.getElementById("cashflowLegend");
+    const cashflowChartScale = document.getElementById("cashflowChartScale");
+    const reserveEvolutionChart = document.getElementById("reserveEvolutionChart");
+    const reserveChartCaption = document.getElementById("reserveChartCaption");
+
     const monthTitle = document.getElementById("monthTitle");
     const monthPicker = document.getElementById("monthPicker");
     const setupBanner = document.getElementById("setupBanner");
+    const salaryLabel = document.getElementById("salaryLabel");
     const salaryValue = document.getElementById("salaryValue");
+    const salaryNote = document.getElementById("salaryNote");
     const extraIncomeValue = document.getElementById("extraIncomeValue");
     const incomeCountNote = document.getElementById("incomeCountNote");
     const reserveMonthValue = document.getElementById("reserveMonthValue");
@@ -1707,7 +2581,13 @@
 
     const incomeDialog = document.getElementById("incomeDialog");
     const incomeForm = document.getElementById("incomeForm");
+    const salaryDialogTitle = document.getElementById("salaryDialogTitle");
+    const salaryDialogSubtitle = document.getElementById("salaryDialogSubtitle");
+    const salaryDialogMonth = document.getElementById("salaryDialogMonth");
     const salaryInput = document.getElementById("salaryInput");
+    const salaryDefaultCheckbox = document.getElementById("salaryDefaultCheckbox");
+    const salaryDefaultHint = document.getElementById("salaryDefaultHint");
+    const resetSalaryOverrideButton = document.getElementById("resetSalaryOverrideButton");
 
     const deleteDialog = document.getElementById("deleteDialog");
     const deleteDialogSubtitle = document.getElementById("deleteDialogSubtitle");
@@ -1724,6 +2604,8 @@
       populateCategoryOptions();
       bindEvents();
       monthPicker.value = currentMonth;
+      populateDashboardYearOptions();
+      setActiveView(window.location.hash === "#mensal" ? "monthly" : "dashboard", false);
       render();
     }
 
@@ -1854,6 +2736,52 @@
       deleteSingleChoice.addEventListener("click", () => executeDelete("single"));
       deleteFutureChoice.addEventListener("click", () => executeDelete("future"));
 
+      dashboardTabButton.addEventListener("click", () => setActiveView("dashboard"));
+      monthlyTabButton.addEventListener("click", () => setActiveView("monthly"));
+      window.addEventListener("hashchange", () => {
+        setActiveView(window.location.hash === "#mensal" ? "monthly" : "dashboard", false);
+      });
+
+      dashboardYearSelect.addEventListener("change", () => {
+        dashboardYear = Number(dashboardYearSelect.value) || new Date().getFullYear();
+        currentMonth = `${dashboardYear}-${currentMonth.slice(5, 7)}`;
+        monthPicker.value = currentMonth;
+        render();
+      });
+
+      document.querySelectorAll("[data-dashboard-mode]").forEach((button) => {
+        button.addEventListener("click", () => {
+          dashboardMode = button.dataset.dashboardMode === "projection" ? "projection" : "actual";
+          renderDashboard();
+        });
+      });
+
+      document.getElementById("dashboardPreviousMonthButton").addEventListener("click", () => changeDashboardFocusMonth(-1));
+      document.getElementById("dashboardNextMonthButton").addEventListener("click", () => changeDashboardFocusMonth(1));
+      document.getElementById("dashboardCurrentMonthButton").addEventListener("click", () => {
+        currentMonth = getCurrentMonthKey();
+        dashboardYear = Number(currentMonth.slice(0, 4));
+        monthPicker.value = currentMonth;
+        render();
+      });
+
+      ["dashboardEditSalaryButton", "focusEditSalaryButton"].forEach((id) => {
+        document.getElementById(id).addEventListener("click", openIncomeDialog);
+      });
+      document.getElementById("openFocusedMonthButton").addEventListener("click", () => openMonthFromDashboard(currentMonth));
+
+      cashflowChart.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-month]");
+        if (button) openMonthFromDashboard(button.dataset.month);
+      });
+
+      donutLegend.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-dashboard-category]");
+        if (button) openMonthFromDashboard(currentMonth, button.dataset.dashboardCategory);
+      });
+
+      resetSalaryOverrideButton.addEventListener("click", resetSalaryOverrideForCurrentMonth);
+
       document.getElementById("backupButton").addEventListener("click", exportBackup);
       document.getElementById("importButton").addEventListener("click", () => importFileInput.click());
       importFileInput.addEventListener("change", importBackup);
@@ -1876,6 +2804,7 @@
       renderReserveList();
       renderTransactions();
       renderBreakdown();
+      renderDashboard();
       setupBanner.classList.toggle("visible", state.salaryCents <= 0);
     }
 
@@ -1883,14 +2812,18 @@
       const expenseTotal = currentItems.reduce((sum, item) => sum + item.amountCents, 0);
       const extraIncomeTotal = currentIncomeItems.reduce((sum, item) => sum + item.amountCents, 0);
       const reserveMonthTotal = currentReserveItems.reduce((sum, item) => sum + item.amountCents, 0);
-      const totalReserve = getTotalReserveCents();
-      const salary = state.salaryCents;
+      const totalReserve = getTotalReserveCentsThroughMonth(currentMonth);
+      const salary = getSalaryForMonth(currentMonth);
       const totalIncome = salary + extraIncomeTotal;
       const allocatedTotal = expenseTotal + reserveMonthTotal;
       const balance = totalIncome - allocatedTotal;
       const percentage = totalIncome > 0 ? (allocatedTotal / totalIncome) * 100 : 0;
 
+      salaryLabel.textContent = `Salário de ${formatMonthShort(currentMonth)}`;
       salaryValue.textContent = formatCurrency(salary);
+      salaryNote.textContent = hasSalaryOverride(currentMonth)
+        ? "Valor ajustado somente para este mês"
+        : "Salário padrão mensal";
       extraIncomeValue.textContent = formatCurrency(extraIncomeTotal);
       reserveMonthValue.textContent = formatCurrency(reserveMonthTotal);
       expensesValue.textContent = formatCurrency(expenseTotal);
@@ -2584,8 +3517,10 @@
         .map((reserve) => ({ ...reserve }));
     }
 
-    function getTotalReserveCents() {
-      return state.reserves.reduce((sum, reserve) => sum + reserve.amountCents, 0);
+    function getTotalReserveCentsThroughMonth(monthKey) {
+      return state.reserves
+        .filter((reserve) => reserve.date.slice(0, 7) <= monthKey)
+        .reduce((sum, reserve) => sum + reserve.amountCents, 0);
     }
 
     function getItemsForMonth(monthKey) {
@@ -2624,6 +3559,370 @@
       return rule.startMonth <= monthKey && (!rule.endMonth || rule.endMonth >= monthKey);
     }
 
+
+    function setActiveView(view, updateHash = true) {
+      activeView = view === "monthly" ? "monthly" : "dashboard";
+      dashboardView.hidden = activeView !== "dashboard";
+      monthlyView.hidden = activeView !== "monthly";
+      dashboardTabButton.classList.toggle("active", activeView === "dashboard");
+      monthlyTabButton.classList.toggle("active", activeView === "monthly");
+      dashboardTabButton.setAttribute("aria-selected", String(activeView === "dashboard"));
+      monthlyTabButton.setAttribute("aria-selected", String(activeView === "monthly"));
+
+      if (updateHash) {
+        const hash = activeView === "monthly" ? "#mensal" : "#visao-geral";
+        if (window.location.hash !== hash) history.replaceState(null, "", hash);
+      }
+
+      if (activeView === "dashboard") renderDashboard();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function openMonthFromDashboard(monthKey, category = "") {
+      currentMonth = monthKey;
+      dashboardYear = Number(monthKey.slice(0, 4));
+      monthPicker.value = currentMonth;
+      searchInput.value = "";
+      categoryFilter.value = CATEGORIES.includes(category) ? category : "";
+      render();
+      setActiveView("monthly");
+    }
+
+    function changeDashboardFocusMonth(offset) {
+      currentMonth = addMonthsToMonthKey(currentMonth, offset);
+      dashboardYear = Number(currentMonth.slice(0, 4));
+      monthPicker.value = currentMonth;
+      render();
+    }
+
+    function populateDashboardYearOptions() {
+      const currentYear = new Date().getFullYear();
+      const years = new Set([currentYear, dashboardYear]);
+
+      state.expenses.forEach((item) => years.add(Number(item.date?.slice(0, 4))));
+      state.incomes.forEach((item) => years.add(Number(item.date?.slice(0, 4))));
+      state.reserves.forEach((item) => years.add(Number(item.date?.slice(0, 4))));
+      state.recurringRules.forEach((rule) => {
+        years.add(Number(rule.startMonth?.slice(0, 4)));
+        if (rule.endMonth) years.add(Number(rule.endMonth.slice(0, 4)));
+      });
+      Object.keys(state.salaryOverrides || {}).forEach((monthKey) => years.add(Number(monthKey.slice(0, 4))));
+
+      const validYears = [...years].filter(Number.isFinite);
+      const minYear = Math.min(currentYear - 3, ...validYears);
+      const maxYear = Math.max(currentYear + 3, ...validYears);
+      const options = [];
+      for (let year = maxYear; year >= minYear; year -= 1) {
+        options.push(`<option value="${year}">${year}</option>`);
+      }
+      dashboardYearSelect.innerHTML = options.join("");
+      dashboardYearSelect.value = String(dashboardYear);
+    }
+
+    function getSalaryForMonth(monthKey) {
+      if (hasSalaryOverride(monthKey)) {
+        return Math.max(0, Math.round(Number(state.salaryOverrides[monthKey]) || 0));
+      }
+      return Math.max(0, Math.round(Number(state.salaryCents) || 0));
+    }
+
+    function hasSalaryOverride(monthKey) {
+      return Object.prototype.hasOwnProperty.call(state.salaryOverrides || {}, monthKey);
+    }
+
+    function getMonthFinancials(monthKey) {
+      const expenses = getItemsForMonth(monthKey);
+      const incomes = getIncomeItemsForMonth(monthKey);
+      const reserves = getReserveItemsForMonth(monthKey);
+      const expenseByCategory = Object.fromEntries(CATEGORIES.map((category) => [category, 0]));
+
+      expenses.forEach((item) => {
+        if (Object.prototype.hasOwnProperty.call(expenseByCategory, item.category)) {
+          expenseByCategory[item.category] += item.amountCents;
+        } else {
+          expenseByCategory.Outros += item.amountCents;
+        }
+      });
+
+      const salaryCents = getSalaryForMonth(monthKey);
+      const extraIncomeCents = incomes.reduce((sum, item) => sum + item.amountCents, 0);
+      const expenseCents = expenses.reduce((sum, item) => sum + item.amountCents, 0);
+      const reserveCents = reserves.reduce((sum, item) => sum + item.amountCents, 0);
+      const incomeCents = salaryCents + extraIncomeCents;
+
+      return {
+        monthKey,
+        salaryCents,
+        extraIncomeCents,
+        incomeCents,
+        expenseCents,
+        reserveCents,
+        availableCents: incomeCents - expenseCents - reserveCents,
+        netBeforeReserveCents: incomeCents - expenseCents,
+        expenseByCategory
+      };
+    }
+
+    function getYearFinancials(year) {
+      return Array.from({ length: 12 }, (_, index) => {
+        const monthKey = `${year}-${String(index + 1).padStart(2, "0")}`;
+        const metrics = getMonthFinancials(monthKey);
+        return {
+          ...metrics,
+          included: dashboardMode === "projection" || monthKey <= getCurrentMonthKey()
+        };
+      });
+    }
+
+    function renderDashboard() {
+      populateDashboardYearOptions();
+      dashboardYearSelect.value = String(dashboardYear);
+      document.querySelectorAll("[data-dashboard-mode]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.dashboardMode === dashboardMode);
+      });
+
+      const yearMetrics = getYearFinancials(dashboardYear);
+      const includedMetrics = yearMetrics.filter((item) => item.included);
+      const totals = includedMetrics.reduce((accumulator, item) => {
+        accumulator.incomeCents += item.incomeCents;
+        accumulator.expenseCents += item.expenseCents;
+        accumulator.reserveCents += item.reserveCents;
+        return accumulator;
+      }, { incomeCents: 0, expenseCents: 0, reserveCents: 0 });
+
+      const netCents = totals.incomeCents - totals.expenseCents;
+      const availableCents = netCents - totals.reserveCents;
+      const yearStartMonth = `${dashboardYear}-01`;
+      const openingReserveCents = getReserveTotalBeforeMonth(yearStartMonth);
+      const endingReserveCents = openingReserveCents + totals.reserveCents;
+
+      annualIncomeValue.textContent = formatCurrency(totals.incomeCents);
+      annualExpensesValue.textContent = formatCurrency(totals.expenseCents);
+      annualNetValue.textContent = formatCurrency(netCents);
+      annualReserveValue.textContent = formatCurrency(totals.reserveCents);
+      annualAvailableValue.textContent = formatCurrency(availableCents);
+      dashboardTotalReserveValue.textContent = formatCurrency(endingReserveCents);
+      dashboardTotalReserveNote.textContent = dashboardMode === "projection"
+        ? `Estimativa ao final de ${dashboardYear}`
+        : `Acumulado até ${getDashboardPeriodEndLabel(dashboardYear)}`;
+
+      [annualNetValue, annualAvailableValue].forEach((element) => {
+        element.classList.toggle("dashboard-positive", Number(element === annualNetValue ? netCents : availableCents) >= 0);
+        element.classList.toggle("dashboard-negative", Number(element === annualNetValue ? netCents : availableCents) < 0);
+      });
+
+      dashboardPeriodDescription.textContent = getDashboardPeriodDescription(dashboardYear);
+      document.getElementById("dashboardEditSalaryButton").textContent = `Editar salário de ${formatMonthShort(currentMonth)}`;
+
+      renderDonutDashboard();
+      renderFocusMonthSummary();
+      renderCashflowChart(yearMetrics);
+      renderReserveEvolutionChart(yearMetrics, openingReserveCents);
+    }
+
+    function getDashboardPeriodDescription(year) {
+      const currentYear = new Date().getFullYear();
+      if (dashboardMode === "projection") {
+        return `Projeção de janeiro a dezembro de ${year}, incluindo salário padrão, parcelas e recorrências futuras.`;
+      }
+      if (year < currentYear) return `Realizado de janeiro a dezembro de ${year}.`;
+      if (year > currentYear) return `Ainda não há meses realizados em ${year}. Use a projeção anual para visualizar os valores planejados.`;
+      return `Realizado de janeiro a ${formatMonthName(getCurrentMonthKey())} de ${year}.`;
+    }
+
+    function getDashboardPeriodEndLabel(year) {
+      const currentYear = new Date().getFullYear();
+      if (dashboardMode === "projection" || year < currentYear) return `dezembro de ${year}`;
+      if (year > currentYear) return `dezembro de ${year - 1}`;
+      return formatMonth(getCurrentMonthKey()).toLowerCase();
+    }
+
+    function renderDonutDashboard() {
+      const metrics = getMonthFinancials(currentMonth);
+      const categoryItems = CATEGORIES.map((category) => ({
+        category,
+        amountCents: metrics.expenseByCategory[category],
+        color: CATEGORY_COLORS[category]
+      })).filter((item) => item.amountCents > 0);
+
+      donutMonthLabel.textContent = formatMonth(currentMonth);
+      donutTotalValue.textContent = formatCurrency(metrics.expenseCents);
+      donutChart.setAttribute("aria-label", `Gastos de ${formatMonth(currentMonth)} por categoria, total ${formatCurrency(metrics.expenseCents)}`);
+
+      if (metrics.expenseCents <= 0) {
+        donutChart.style.background = "conic-gradient(var(--border) 0 100%)";
+        donutLegend.innerHTML = '<div class="chart-empty">Nenhum gasto registrado neste mês.</div>';
+        return;
+      }
+
+      let start = 0;
+      const gradients = categoryItems.map((item) => {
+        const percentage = (item.amountCents / metrics.expenseCents) * 100;
+        const end = start + percentage;
+        const segment = `${item.color} ${start.toFixed(3)}% ${end.toFixed(3)}%`;
+        start = end;
+        return segment;
+      });
+      donutChart.style.background = `conic-gradient(${gradients.join(", ")})`;
+
+      donutLegend.innerHTML = categoryItems.map((item) => {
+        const percentage = (item.amountCents / metrics.expenseCents) * 100;
+        return `
+          <button class="donut-legend-item" type="button" data-dashboard-category="${escapeHtml(item.category)}" title="Abrir gastos de ${escapeHtml(item.category)}">
+            <span class="legend-dot" style="background:${item.color}"></span>
+            <span class="donut-legend-name">${escapeHtml(item.category)}</span>
+            <span class="donut-legend-value">
+              ${escapeHtml(formatCurrency(item.amountCents))}
+              <small>${escapeHtml(formatPercentage(percentage))}%</small>
+            </span>
+          </button>`;
+      }).join("");
+    }
+
+    function renderFocusMonthSummary() {
+      const metrics = getMonthFinancials(currentMonth);
+      focusMonthLabel.textContent = formatMonth(currentMonth);
+      focusIncomeValue.textContent = formatCurrency(metrics.incomeCents);
+      focusExpensesValue.textContent = formatCurrency(metrics.expenseCents);
+      focusReserveValue.textContent = formatCurrency(metrics.reserveCents);
+      focusAvailableValue.textContent = formatCurrency(metrics.availableCents);
+      focusAvailableValue.classList.toggle("dashboard-positive", metrics.availableCents >= 0);
+      focusAvailableValue.classList.toggle("dashboard-negative", metrics.availableCents < 0);
+      document.getElementById("focusEditSalaryButton").textContent = `Editar salário de ${formatMonthShort(currentMonth)}`;
+    }
+
+    function renderCashflowChart(yearMetrics) {
+      const displayMetrics = yearMetrics.map((item) => item.included ? item : {
+        ...item,
+        salaryCents: 0,
+        extraIncomeCents: 0,
+        incomeCents: 0,
+        expenseCents: 0,
+        expenseByCategory: Object.fromEntries(CATEGORIES.map((category) => [category, 0]))
+      });
+      const maxCents = Math.max(1, ...displayMetrics.flatMap((item) => [item.incomeCents, item.expenseCents]));
+      cashflowChartScale.textContent = `Maior total mensal: ${formatCurrency(maxCents)}`;
+
+      cashflowChart.innerHTML = displayMetrics.map((item) => {
+        const incomeSegments = [
+          { label: "Salário", amountCents: item.salaryCents, color: "#15803d" },
+          { label: "Receitas extras", amountCents: item.extraIncomeCents, color: "#86efac" }
+        ];
+        const expenseSegments = CATEGORIES.map((category) => ({
+          label: category,
+          amountCents: item.expenseByCategory[category],
+          color: CATEGORY_COLORS[category]
+        }));
+        const monthName = formatMonthShort(item.monthKey);
+        const className = item.included ? "" : " not-included";
+        return `
+          <button class="cashflow-month${className}" type="button" data-month="${item.monthKey}" aria-label="Abrir ${escapeHtml(formatMonth(item.monthKey))}">
+            <span class="cashflow-bars">
+              <span class="cashflow-bar-column">
+                <span class="cashflow-bar-shell" title="Receitas: ${escapeHtml(formatCurrency(item.incomeCents))}">
+                  ${renderCashflowSegments(incomeSegments, maxCents)}
+                </span>
+                <span class="cashflow-bar-caption">R</span>
+              </span>
+              <span class="cashflow-bar-column">
+                <span class="cashflow-bar-shell" title="Gastos: ${escapeHtml(formatCurrency(item.expenseCents))}">
+                  ${renderCashflowSegments(expenseSegments, maxCents)}
+                </span>
+                <span class="cashflow-bar-caption">G</span>
+              </span>
+            </span>
+            <span class="cashflow-month-label">${escapeHtml(monthName)}</span>
+          </button>`;
+      }).join("");
+
+      const legendItems = [
+        { label: "Salário", color: "#15803d" },
+        { label: "Receitas extras", color: "#86efac" },
+        ...CATEGORIES.map((category) => ({ label: category, color: CATEGORY_COLORS[category] }))
+      ];
+      cashflowLegend.innerHTML = legendItems.map((item) => `
+        <span class="chart-legend-item">
+          <span class="chart-legend-swatch" style="background:${item.color}"></span>
+          ${escapeHtml(item.label)}
+        </span>`).join("");
+    }
+
+    function renderCashflowSegments(segments, maxCents) {
+      return segments.filter((segment) => segment.amountCents > 0).map((segment) => {
+        const height = Math.max(0.8, (segment.amountCents / maxCents) * 100);
+        return `<span class="cashflow-segment" style="height:${height.toFixed(3)}%;background:${segment.color}" title="${escapeHtml(segment.label)}: ${escapeHtml(formatCurrency(segment.amountCents))}"></span>`;
+      }).join("");
+    }
+
+    function renderReserveEvolutionChart(yearMetrics, openingReserveCents) {
+      const displayMetrics = yearMetrics.map((item) => item.included ? item : { ...item, reserveCents: 0 });
+      let cumulative = openingReserveCents;
+      const cumulativeValues = displayMetrics.map((item) => {
+        cumulative += item.reserveCents;
+        return cumulative;
+      });
+
+      const monthlyMax = Math.max(1, ...displayMetrics.map((item) => item.reserveCents));
+      const cumulativeMax = Math.max(1, ...cumulativeValues, openingReserveCents);
+      const width = 1200;
+      const left = 66;
+      const right = 28;
+      const plotWidth = width - left - right;
+      const step = plotWidth / 12;
+      const lineTop = 30;
+      const lineBottom = 160;
+      const barTop = 205;
+      const barBottom = 300;
+      const xFor = (index) => left + step * index + step / 2;
+      const lineY = (value) => lineBottom - (value / cumulativeMax) * (lineBottom - lineTop);
+      const barHeight = (value) => (value / monthlyMax) * (barBottom - barTop);
+
+      const points = cumulativeValues.map((value, index) => `${xFor(index).toFixed(1)},${lineY(value).toFixed(1)}`).join(" ");
+      const gridLines = [0, 0.5, 1].map((ratio) => {
+        const y = lineBottom - ratio * (lineBottom - lineTop);
+        return `<line x1="${left}" y1="${y}" x2="${width - right}" y2="${y}" stroke="#e2e8f0" stroke-width="1" />`;
+      }).join("");
+      const bars = displayMetrics.map((item, index) => {
+        const height = barHeight(item.reserveCents);
+        const x = xFor(index) - 17;
+        const y = barBottom - height;
+        return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="34" height="${height.toFixed(1)}" rx="6" fill="#0f766e" opacity="0.84"><title>${escapeHtml(formatMonth(item.monthKey))}, reservado: ${escapeHtml(formatCurrency(item.reserveCents))}</title></rect>`;
+      }).join("");
+      const circles = cumulativeValues.map((value, index) => `<circle cx="${xFor(index).toFixed(1)}" cy="${lineY(value).toFixed(1)}" r="5" fill="#2563eb" stroke="#ffffff" stroke-width="3"><title>${escapeHtml(formatMonth(displayMetrics[index].monthKey))}, total acumulado: ${escapeHtml(formatCurrency(value))}</title></circle>`).join("");
+      const labels = displayMetrics.map((item, index) => `<text x="${xFor(index).toFixed(1)}" y="332" text-anchor="middle" fill="#667085" font-size="14" font-weight="700">${escapeHtml(formatMonthShort(item.monthKey))}</text>`).join("");
+
+      reserveEvolutionChart.innerHTML = `
+        <svg viewBox="0 0 ${width} 350" role="img" aria-label="Evolução da reserva em ${dashboardYear}">
+          <text x="${left}" y="18" fill="#667085" font-size="14" font-weight="800">TOTAL ACUMULADO</text>
+          ${gridLines}
+          <polyline points="${points}" fill="none" stroke="#2563eb" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+          ${circles}
+          <line x1="${left}" y1="${barBottom}" x2="${width - right}" y2="${barBottom}" stroke="#cbd5e1" stroke-width="1" />
+          <text x="${left}" y="194" fill="#667085" font-size="14" font-weight="800">RESERVADO NO MÊS</text>
+          ${bars}
+          ${labels}
+        </svg>`;
+
+      const addedCents = displayMetrics.reduce((sum, item) => sum + item.reserveCents, 0);
+      const endingCents = openingReserveCents + addedCents;
+      reserveChartCaption.textContent = `Saldo inicial: ${formatCurrency(openingReserveCents)}. Adicionado no período: ${formatCurrency(addedCents)}. Saldo ao final: ${formatCurrency(endingCents)}.`;
+    }
+
+    function getReserveTotalBeforeMonth(monthKey) {
+      return state.reserves
+        .filter((item) => item.date?.slice(0, 7) < monthKey)
+        .reduce((sum, item) => sum + item.amountCents, 0);
+    }
+
+    function resetSalaryOverrideForCurrentMonth() {
+      if (!hasSalaryOverride(currentMonth)) return;
+      delete state.salaryOverrides[currentMonth];
+      saveState();
+      incomeDialog.close();
+      render();
+      showToast(`Salário padrão restaurado para ${formatMonth(currentMonth)}.`);
+    }
+
     function handleIncomeSubmit(event) {
       event.preventDefault();
       const salaryCents = getInputCents(salaryInput, true);
@@ -2631,15 +3930,34 @@
         showToast("Informe um valor de salário válido.");
         return;
       }
-      state.salaryCents = salaryCents;
+
+      if (salaryDefaultCheckbox.checked) {
+        state.salaryCents = salaryCents;
+        delete state.salaryOverrides[currentMonth];
+      } else {
+        state.salaryOverrides[currentMonth] = salaryCents;
+      }
+
       saveState();
       incomeDialog.close();
       render();
-      showToast("Salário mensal atualizado.");
+      showToast(salaryDefaultCheckbox.checked
+        ? "Salário padrão atualizado. Ajustes mensais existentes foram mantidos."
+        : `Salário de ${formatMonth(currentMonth)} atualizado.`);
     }
 
     function openIncomeDialog() {
-      salaryInput.value = state.salaryCents > 0 ? (state.salaryCents / 100).toFixed(2) : "";
+      const salaryCents = getSalaryForMonth(currentMonth);
+      const overrideExists = hasSalaryOverride(currentMonth);
+      salaryDialogTitle.textContent = `Editar salário de ${formatMonth(currentMonth)}`;
+      salaryDialogSubtitle.textContent = overrideExists
+        ? "Este mês possui um valor próprio, diferente do salário padrão."
+        : "O salário padrão está sendo aplicado neste mês.";
+      salaryDialogMonth.textContent = formatMonth(currentMonth);
+      salaryInput.value = salaryCents > 0 ? (salaryCents / 100).toFixed(2) : "";
+      salaryDefaultCheckbox.checked = state.salaryCents <= 0;
+      salaryDefaultHint.textContent = `Salário padrão atual: ${formatCurrency(state.salaryCents)}.`;
+      resetSalaryOverrideButton.style.visibility = overrideExists ? "visible" : "hidden";
       incomeDialog.showModal();
       setTimeout(() => salaryInput.focus(), 30);
     }
@@ -2698,8 +4016,11 @@
 
     function normalizeImportedState(candidate) {
       return {
-        version: 3,
+        version: 4,
         salaryCents: Number.isFinite(candidate.salaryCents) ? Math.max(0, Math.round(candidate.salaryCents)) : 0,
+        salaryOverrides: candidate.salaryOverrides && typeof candidate.salaryOverrides === "object"
+          ? Object.fromEntries(Object.entries(candidate.salaryOverrides).map(([monthKey, value]) => [monthKey, Math.max(0, Math.round(Number(value) || 0))]))
+          : {},
         incomes: Array.isArray(candidate.incomes) ? candidate.incomes.filter(Boolean) : [],
         reserves: Array.isArray(candidate.reserves) ? candidate.reserves.filter(Boolean) : [],
         expenses: candidate.expenses.filter(Boolean),
@@ -2823,6 +4144,20 @@
         year: "numeric"
       }).format(new Date(year, month - 1, 1));
       return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    }
+
+    function formatMonthShort(monthKey) {
+      const [year, month] = monthKey.split("-").map(Number);
+      return new Intl.DateTimeFormat("pt-BR", { month: "short" })
+        .format(new Date(year, month - 1, 1))
+        .replace(".", "")
+        .replace(/^./, (character) => character.toUpperCase());
+    }
+
+    function formatMonthName(monthKey) {
+      const [year, month] = monthKey.split("-").map(Number);
+      return new Intl.DateTimeFormat("pt-BR", { month: "long" })
+        .format(new Date(year, month - 1, 1));
     }
 
     function formatDate(dateString) {
