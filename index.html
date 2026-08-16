@@ -2254,6 +2254,12 @@
             <select class="field-control" id="categoryInput" required></select>
           </div>
 
+          <div class="field field-full conditional-field" id="customCategoryField">
+            <label for="customCategoryInput">Nome da categoria</label>
+            <input class="field-control" id="customCategoryInput" type="text" maxlength="40" placeholder="Exemplo: Pets">
+            <span class="field-hint">Ao selecionar Outros, informe o nome que deseja usar para esta categoria.</span>
+          </div>
+
           <div class="field">
             <label id="amountLabel" for="amountInput">Valor do gasto</label>
             <input class="field-control" id="amountInput" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0,00" required>
@@ -2447,6 +2453,7 @@
       "Lazer",
       "Cartão de Crédito",
       "Educação",
+      "Saúde",
       "Outros"
     ];
 
@@ -2456,8 +2463,20 @@
       "Lazer": "#f59e0b",
       "Cartão de Crédito": "#e11d48",
       "Educação": "#16a34a",
+      "Saúde": "#0891b2",
       "Outros": "#64748b"
     };
+
+    const CUSTOM_CATEGORY_COLORS = [
+      "#9333ea",
+      "#ea580c",
+      "#0d9488",
+      "#4f46e5",
+      "#be123c",
+      "#65a30d",
+      "#0369a1",
+      "#a16207"
+    ];
 
     const defaultState = () => ({
       version: 4,
@@ -2549,6 +2568,8 @@
     const expenseDialogSubtitle = document.getElementById("expenseDialogSubtitle");
     const descriptionInput = document.getElementById("descriptionInput");
     const categoryInput = document.getElementById("categoryInput");
+    const customCategoryField = document.getElementById("customCategoryField");
+    const customCategoryInput = document.getElementById("customCategoryInput");
     const amountInput = document.getElementById("amountInput");
     const amountLabel = document.getElementById("amountLabel");
     const dateInput = document.getElementById("dateInput");
@@ -2662,6 +2683,7 @@
       document.querySelectorAll('input[name="expenseType"]').forEach((input) => {
         input.addEventListener("change", updateExpenseFormFields);
       });
+      categoryInput.addEventListener("change", updateCustomCategoryField);
       amountInput.addEventListener("input", updateInstallmentPreview);
       installmentCountInput.addEventListener("input", updateInstallmentPreview);
 
@@ -2790,7 +2812,17 @@
     function populateCategoryOptions() {
       const options = CATEGORIES.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("");
       categoryInput.innerHTML = options;
-      categoryFilter.insertAdjacentHTML("beforeend", options);
+      refreshCategoryFilterOptions();
+    }
+
+    function refreshCategoryFilterOptions() {
+      const selectedCategory = categoryFilter.value;
+      const categories = getAvailableCategories();
+      categoryFilter.innerHTML = [
+        '<option value="">Todas as categorias</option>',
+        ...categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`)
+      ].join("");
+      categoryFilter.value = categories.includes(selectedCategory) ? selectedCategory : "";
     }
 
     function render() {
@@ -2799,6 +2831,7 @@
       currentItems = getItemsForMonth(currentMonth).sort(sortByDateThenDescription);
       currentIncomeItems = getIncomeItemsForMonth(currentMonth).sort(sortByDateThenDescription);
       currentReserveItems = getReserveItemsForMonth(currentMonth).sort(sortByDateThenDescription);
+      refreshCategoryFilterOptions();
       renderSummary();
       renderIncomeList();
       renderReserveList();
@@ -2931,7 +2964,7 @@
 
       transactionsBody.innerHTML = visibleItems.map((item) => {
         const typeTag = getTypeTag(item);
-        const categoryColor = CATEGORY_COLORS[item.category] || CATEGORY_COLORS.Outros;
+        const categoryColor = getCategoryColor(item.category);
         return `
           <tr>
             <td>${escapeHtml(formatDate(item.date))}</td>
@@ -2958,12 +2991,15 @@
 
     function renderBreakdown() {
       const total = currentItems.reduce((sum, item) => sum + item.amountCents, 0);
-      const grouped = CATEGORIES.map((category) => ({
-        category,
-        total: currentItems
-          .filter((item) => item.category === category)
-          .reduce((sum, item) => sum + item.amountCents, 0)
-      }))
+      const totalsByCategory = new Map();
+
+      currentItems.forEach((item) => {
+        const category = normalizeCategoryName(item.category) || "Outros";
+        totalsByCategory.set(category, (totalsByCategory.get(category) || 0) + item.amountCents);
+      });
+
+      const grouped = [...totalsByCategory.entries()]
+        .map(([category, categoryTotal]) => ({ category, total: categoryTotal }))
         .filter((item) => item.total > 0)
         .sort((a, b) => b.total - a.total);
 
@@ -2974,7 +3010,7 @@
 
       breakdownList.innerHTML = grouped.map((item) => {
         const percentage = total > 0 ? (item.total / total) * 100 : 0;
-        const color = CATEGORY_COLORS[item.category] || CATEGORY_COLORS.Outros;
+        const color = getCategoryColor(item.category);
         return `
           <div class="breakdown-item">
             <div class="breakdown-item-header">
@@ -3115,6 +3151,8 @@
       expenseForm.reset();
       document.getElementById("typeSingle").checked = true;
       categoryInput.value = CATEGORIES[0];
+      customCategoryInput.value = "";
+      updateCustomCategoryField();
       dateInput.value = suggestedDateForCurrentMonth();
       dateInput.min = "";
       dateInput.max = "";
@@ -3140,7 +3178,10 @@
       document.getElementById("saveExpenseButton").textContent = "Salvar alterações";
       deleteFromEditButton.style.visibility = "visible";
       descriptionInput.value = item.description;
-      categoryInput.value = item.category;
+      const isStandardCategory = CATEGORIES.includes(item.category);
+      categoryInput.value = isStandardCategory ? item.category : "Outros";
+      customCategoryInput.value = isStandardCategory ? "" : item.category;
+      updateCustomCategoryField();
       amountInput.value = (item.amountCents / 100).toFixed(2);
       dateInput.value = item.date;
 
@@ -3177,6 +3218,13 @@
       setTimeout(() => descriptionInput.focus(), 30);
     }
 
+    function updateCustomCategoryField() {
+      const isOther = categoryInput.value === "Outros";
+      customCategoryField.classList.toggle("visible", isOther);
+      const isLegacyOther = Boolean(editContext && editContext.item.category === "Outros" && !customCategoryInput.value.trim());
+      customCategoryInput.required = isOther && !isLegacyOther;
+    }
+
     function updateExpenseFormFields() {
       const type = getSelectedExpenseType();
       const isEditing = Boolean(editContext);
@@ -3198,6 +3246,7 @@
         }
       }
 
+      updateCustomCategoryField();
       updateInstallmentPreview();
     }
 
@@ -3222,12 +3271,18 @@
       event.preventDefault();
 
       const description = descriptionInput.value.trim();
-      const category = categoryInput.value;
+      const selectedCategory = categoryInput.value;
+      const customCategory = normalizeCategoryName(customCategoryInput.value);
+      const category = selectedCategory === "Outros"
+        ? customCategory || (editContext?.item.category === "Outros" ? "Outros" : "")
+        : selectedCategory;
       const amountCents = getInputCents(amountInput);
       const date = dateInput.value;
 
-      if (!description || !CATEGORIES.includes(category) || amountCents <= 0 || !isValidDateString(date)) {
-        showToast("Revise os campos obrigatórios antes de salvar.");
+      if (!description || !CATEGORIES.includes(selectedCategory) || !category || amountCents <= 0 || !isValidDateString(date)) {
+        showToast(selectedCategory === "Outros" && !category
+          ? "Informe o nome da categoria personalizada."
+          : "Revise os campos obrigatórios antes de salvar.");
         return;
       }
 
@@ -3583,8 +3638,10 @@
       dashboardYear = Number(monthKey.slice(0, 4));
       monthPicker.value = currentMonth;
       searchInput.value = "";
-      categoryFilter.value = CATEGORIES.includes(category) ? category : "";
       render();
+      const availableCategories = getAvailableCategories();
+      categoryFilter.value = availableCategories.includes(category) ? category : "";
+      renderTransactions();
       setActiveView("monthly");
     }
 
@@ -3634,14 +3691,11 @@
       const expenses = getItemsForMonth(monthKey);
       const incomes = getIncomeItemsForMonth(monthKey);
       const reserves = getReserveItemsForMonth(monthKey);
-      const expenseByCategory = Object.fromEntries(CATEGORIES.map((category) => [category, 0]));
+      const expenseByCategory = {};
 
       expenses.forEach((item) => {
-        if (Object.prototype.hasOwnProperty.call(expenseByCategory, item.category)) {
-          expenseByCategory[item.category] += item.amountCents;
-        } else {
-          expenseByCategory.Outros += item.amountCents;
-        }
+        const category = normalizeCategoryName(item.category) || "Outros";
+        expenseByCategory[category] = (expenseByCategory[category] || 0) + item.amountCents;
       });
 
       const salaryCents = getSalaryForMonth(monthKey);
@@ -3739,10 +3793,10 @@
 
     function renderDonutDashboard() {
       const metrics = getMonthFinancials(currentMonth);
-      const categoryItems = CATEGORIES.map((category) => ({
+      const categoryItems = getOrderedCategoryNames(Object.keys(metrics.expenseByCategory)).map((category) => ({
         category,
-        amountCents: metrics.expenseByCategory[category],
-        color: CATEGORY_COLORS[category]
+        amountCents: metrics.expenseByCategory[category] || 0,
+        color: getCategoryColor(category)
       })).filter((item) => item.amountCents > 0);
 
       donutMonthLabel.textContent = formatMonth(currentMonth);
@@ -3798,8 +3852,11 @@
         extraIncomeCents: 0,
         incomeCents: 0,
         expenseCents: 0,
-        expenseByCategory: Object.fromEntries(CATEGORIES.map((category) => [category, 0]))
+        expenseByCategory: {}
       });
+      const expenseCategories = getOrderedCategoryNames(
+        displayMetrics.flatMap((item) => Object.keys(item.expenseByCategory || {}))
+      );
       const maxCents = Math.max(1, ...displayMetrics.flatMap((item) => [item.incomeCents, item.expenseCents]));
       cashflowChartScale.textContent = `Maior total mensal: ${formatCurrency(maxCents)}`;
 
@@ -3808,10 +3865,10 @@
           { label: "Salário", amountCents: item.salaryCents, color: "#15803d" },
           { label: "Receitas extras", amountCents: item.extraIncomeCents, color: "#86efac" }
         ];
-        const expenseSegments = CATEGORIES.map((category) => ({
+        const expenseSegments = expenseCategories.map((category) => ({
           label: category,
-          amountCents: item.expenseByCategory[category],
-          color: CATEGORY_COLORS[category]
+          amountCents: item.expenseByCategory[category] || 0,
+          color: getCategoryColor(category)
         }));
         const monthName = formatMonthShort(item.monthKey);
         const className = item.included ? "" : " not-included";
@@ -3838,7 +3895,7 @@
       const legendItems = [
         { label: "Salário", color: "#15803d" },
         { label: "Receitas extras", color: "#86efac" },
-        ...CATEGORIES.map((category) => ({ label: category, color: CATEGORY_COLORS[category] }))
+        ...expenseCategories.map((category) => ({ label: category, color: getCategoryColor(category) }))
       ];
       cashflowLegend.innerHTML = legendItems.map((item) => `
         <span class="chart-legend-item">
@@ -4054,6 +4111,47 @@
       currentMonth = addMonthsToMonthKey(currentMonth, offset);
       monthPicker.value = currentMonth;
       render();
+    }
+
+    function normalizeCategoryName(value) {
+      return String(value || "").replace(/\s+/g, " ").trim().slice(0, 40);
+    }
+
+    function getAvailableCategories() {
+      const discovered = [];
+      const addCategory = (value) => {
+        const category = normalizeCategoryName(value);
+        if (category) discovered.push(category);
+      };
+
+      state.expenses.forEach((item) => addCategory(item.category));
+      state.recurringRules.forEach((rule) => addCategory(rule.category));
+      Object.values(state.recurringOverrides || {}).forEach((override) => addCategory(override?.category));
+
+      return getOrderedCategoryNames([...CATEGORIES, ...discovered]);
+    }
+
+    function getOrderedCategoryNames(categoryNames) {
+      const unique = [...new Set(categoryNames.map(normalizeCategoryName).filter(Boolean))];
+      const standardWithoutOther = CATEGORIES.filter((category) => category !== "Outros");
+      const standardSet = new Set(CATEGORIES);
+      const custom = unique
+        .filter((category) => !standardSet.has(category))
+        .sort((a, b) => a.localeCompare(b, "pt-BR", { sensitivity: "base" }));
+      const ordered = standardWithoutOther.filter((category) => unique.includes(category));
+      ordered.push(...custom);
+      if (unique.includes("Outros")) ordered.push("Outros");
+      return ordered;
+    }
+
+    function getCategoryColor(category) {
+      if (CATEGORY_COLORS[category]) return CATEGORY_COLORS[category];
+      const normalized = normalizeCategoryName(category);
+      let hash = 0;
+      for (let index = 0; index < normalized.length; index += 1) {
+        hash = ((hash << 5) - hash + normalized.charCodeAt(index)) | 0;
+      }
+      return CUSTOM_CATEGORY_COLORS[Math.abs(hash) % CUSTOM_CATEGORY_COLORS.length] || CATEGORY_COLORS.Outros;
     }
 
     function getSelectedExpenseType() {
