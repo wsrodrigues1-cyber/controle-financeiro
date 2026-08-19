@@ -465,6 +465,98 @@
       font-size: 0.88rem;
     }
 
+    .bulk-select {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 750;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .bulk-select input,
+    .item-selector input {
+      width: 17px;
+      height: 17px;
+      margin: 0;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .item-selector {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+    }
+
+    .income-row.selection-selected {
+      border-color: #93c5fd;
+      background: var(--primary-soft);
+    }
+
+    tbody tr.selection-selected td {
+      background: var(--primary-soft);
+    }
+
+    .selection-summary {
+      position: sticky;
+      z-index: 22;
+      top: 10px;
+      display: grid;
+      grid-template-columns: minmax(170px, 1fr) repeat(3, auto) auto;
+      align-items: center;
+      gap: 14px 20px;
+      margin-bottom: 18px;
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      background: rgba(239, 246, 255, 0.97);
+      box-shadow: 0 10px 26px rgba(37, 99, 235, 0.12);
+      backdrop-filter: blur(10px);
+    }
+
+    .selection-summary[hidden] {
+      display: none !important;
+    }
+
+    .selection-summary-main strong,
+    .selection-summary-main span {
+      display: block;
+    }
+
+    .selection-summary-main strong {
+      font-size: 0.95rem;
+    }
+
+    .selection-summary-main span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.76rem;
+    }
+
+    .selection-summary-metric {
+      display: grid;
+      gap: 1px;
+      min-width: 108px;
+    }
+
+    .selection-summary-metric span {
+      color: var(--muted);
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .selection-summary-metric strong {
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+
     .content-grid {
       display: grid;
       grid-template-columns: minmax(0, 1.75fr) minmax(280px, 0.75fr);
@@ -964,6 +1056,12 @@
         gap: 8px;
       }
 
+      .income-panel .section-heading,
+      .transactions-panel .section-heading {
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
       .filters {
         grid-template-columns: 1fr;
       }
@@ -1149,8 +1247,46 @@
         font-size: 0.8rem;
       }
 
+      .selection-summary {
+        position: fixed;
+        z-index: 29;
+        right: 10px;
+        bottom: 82px;
+        left: 10px;
+        top: auto;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin: 0;
+        padding: 12px;
+      }
+
+      .selection-summary-main {
+        grid-column: 1 / -1;
+      }
+
+      .selection-summary-metric {
+        min-width: 0;
+      }
+
+      .selection-summary-metric strong {
+        font-size: 0.86rem;
+      }
+
+      .selection-summary .button {
+        grid-column: 1 / -1;
+        min-height: 34px;
+      }
+
+      body.selection-mode .app-shell {
+        padding-bottom: 250px;
+      }
+
       .toast {
         bottom: 84px;
+      }
+
+      body.selection-mode .toast {
+        bottom: 242px;
       }
     }
 
@@ -2112,12 +2248,36 @@
         </div>
       </section>
 
+      <section class="selection-summary" id="selectionSummary" aria-live="polite" hidden>
+        <div class="selection-summary-main">
+          <strong id="selectionCount">0 selecionados</strong>
+          <span>Receitas extras e gastos do mês selecionado.</span>
+        </div>
+        <div class="selection-summary-metric">
+          <span>Receitas</span>
+          <strong class="positive" id="selectedIncomeValue">R$ 0,00</strong>
+        </div>
+        <div class="selection-summary-metric">
+          <span>Gastos</span>
+          <strong id="selectedExpenseValue">R$ 0,00</strong>
+        </div>
+        <div class="selection-summary-metric">
+          <span>Saldo</span>
+          <strong id="selectedBalanceValue">R$ 0,00</strong>
+        </div>
+        <button class="button button-secondary button-small" id="clearSelectionButton" type="button">Limpar seleção</button>
+      </section>
+
       <section class="panel income-panel" aria-label="Receitas extras do mês">
         <div class="section-heading">
           <div>
             <h2>Receitas extras do mês</h2>
             <p>Registre valores recebidos além do salário fixo.</p>
           </div>
+          <label class="bulk-select" id="selectAllIncomesLabel">
+            <input id="selectAllIncomesCheckbox" type="checkbox">
+            <span>Selecionar todas</span>
+          </label>
         </div>
         <div class="income-list" id="incomeList"></div>
         <div class="income-empty" id="incomeEmpty">
@@ -2147,6 +2307,10 @@
               <h2>Gastos do mês</h2>
               <p>Inclua, edite ou exclua seus lançamentos.</p>
             </div>
+            <label class="bulk-select" id="selectAllExpensesLabel">
+              <input id="selectAllExpensesCheckbox" type="checkbox">
+              <span>Selecionar visíveis</span>
+            </label>
           </div>
 
           <div class="filters">
@@ -2497,6 +2661,8 @@
     let currentItems = [];
     let currentIncomeItems = [];
     let currentReserveItems = [];
+    const selectedExpenseIds = new Set();
+    const selectedIncomeIds = new Set();
     let editContext = null;
     let incomeEditContext = null;
     let reserveEditContext = null;
@@ -2561,6 +2727,16 @@
     const reserveEmpty = document.getElementById("reserveEmpty");
     const searchInput = document.getElementById("searchInput");
     const categoryFilter = document.getElementById("categoryFilter");
+    const selectionSummary = document.getElementById("selectionSummary");
+    const selectionCount = document.getElementById("selectionCount");
+    const selectedIncomeValue = document.getElementById("selectedIncomeValue");
+    const selectedExpenseValue = document.getElementById("selectedExpenseValue");
+    const selectedBalanceValue = document.getElementById("selectedBalanceValue");
+    const clearSelectionButton = document.getElementById("clearSelectionButton");
+    const selectAllIncomesCheckbox = document.getElementById("selectAllIncomesCheckbox");
+    const selectAllIncomesLabel = document.getElementById("selectAllIncomesLabel");
+    const selectAllExpensesCheckbox = document.getElementById("selectAllExpensesCheckbox");
+    const selectAllExpensesLabel = document.getElementById("selectAllExpensesLabel");
 
     const expenseDialog = document.getElementById("expenseDialog");
     const expenseForm = document.getElementById("expenseForm");
@@ -2634,12 +2810,14 @@
       document.getElementById("previousMonthButton").addEventListener("click", () => changeMonth(-1));
       document.getElementById("nextMonthButton").addEventListener("click", () => changeMonth(1));
       document.getElementById("currentMonthButton").addEventListener("click", () => {
+        resetSelectionState();
         currentMonth = getCurrentMonthKey();
         monthPicker.value = currentMonth;
         render();
       });
       monthPicker.addEventListener("change", () => {
         if (monthPicker.value) {
+          resetSelectionState();
           currentMonth = monthPicker.value;
           render();
         }
@@ -2710,6 +2888,35 @@
       searchInput.addEventListener("input", renderTransactions);
       categoryFilter.addEventListener("change", renderTransactions);
 
+      selectAllExpensesCheckbox.addEventListener("change", () => {
+        getVisibleExpenseItems().forEach((item) => {
+          if (selectAllExpensesCheckbox.checked) selectedExpenseIds.add(item.displayId);
+          else selectedExpenseIds.delete(item.displayId);
+        });
+        renderTransactions();
+        renderSelectionSummary();
+      });
+
+      selectAllIncomesCheckbox.addEventListener("change", () => {
+        currentIncomeItems.forEach((item) => {
+          if (selectAllIncomesCheckbox.checked) selectedIncomeIds.add(item.id);
+          else selectedIncomeIds.delete(item.id);
+        });
+        renderIncomeList();
+        renderSelectionSummary();
+      });
+
+      clearSelectionButton.addEventListener("click", clearSelection);
+
+      transactionsBody.addEventListener("change", (event) => {
+        const checkbox = event.target.closest('input[data-select-expense]');
+        if (!checkbox) return;
+        if (checkbox.checked) selectedExpenseIds.add(checkbox.dataset.selectExpense);
+        else selectedExpenseIds.delete(checkbox.dataset.selectExpense);
+        renderTransactions();
+        renderSelectionSummary();
+      });
+
       transactionsBody.addEventListener("click", (event) => {
         const button = event.target.closest("button[data-action]");
         if (!button) return;
@@ -2723,6 +2930,15 @@
         if (button.dataset.action === "delete") {
           openDeleteDialog(item, "expense");
         }
+      });
+
+      incomeList.addEventListener("change", (event) => {
+        const checkbox = event.target.closest('input[data-select-income]');
+        if (!checkbox) return;
+        if (checkbox.checked) selectedIncomeIds.add(checkbox.dataset.selectIncome);
+        else selectedIncomeIds.delete(checkbox.dataset.selectIncome);
+        renderIncomeList();
+        renderSelectionSummary();
       });
 
       incomeList.addEventListener("click", (event) => {
@@ -2765,6 +2981,7 @@
       });
 
       dashboardYearSelect.addEventListener("change", () => {
+        resetSelectionState();
         dashboardYear = Number(dashboardYearSelect.value) || new Date().getFullYear();
         currentMonth = `${dashboardYear}-${currentMonth.slice(5, 7)}`;
         monthPicker.value = currentMonth;
@@ -2781,6 +2998,7 @@
       document.getElementById("dashboardPreviousMonthButton").addEventListener("click", () => changeDashboardFocusMonth(-1));
       document.getElementById("dashboardNextMonthButton").addEventListener("click", () => changeDashboardFocusMonth(1));
       document.getElementById("dashboardCurrentMonthButton").addEventListener("click", () => {
+        resetSelectionState();
         currentMonth = getCurrentMonthKey();
         dashboardYear = Number(currentMonth.slice(0, 4));
         monthPicker.value = currentMonth;
@@ -2831,12 +3049,14 @@
       currentItems = getItemsForMonth(currentMonth).sort(sortByDateThenDescription);
       currentIncomeItems = getIncomeItemsForMonth(currentMonth).sort(sortByDateThenDescription);
       currentReserveItems = getReserveItemsForMonth(currentMonth).sort(sortByDateThenDescription);
+      pruneSelection();
       refreshCategoryFilterOptions();
       renderSummary();
       renderIncomeList();
       renderReserveList();
       renderTransactions();
       renderBreakdown();
+      renderSelectionSummary();
       renderDashboard();
       setupBanner.classList.toggle("visible", state.salaryCents <= 0);
     }
@@ -2899,10 +3119,18 @@
       const hasIncome = currentIncomeItems.length > 0;
       incomeList.style.display = hasIncome ? "grid" : "none";
       incomeEmpty.classList.toggle("visible", !hasIncome);
+      selectAllIncomesLabel.style.display = hasIncome ? "inline-flex" : "none";
 
-      incomeList.innerHTML = currentIncomeItems.map((item) => `
-        <div class="income-row">
-          <div class="income-date">${escapeHtml(formatDate(item.date))}</div>
+      incomeList.innerHTML = currentIncomeItems.map((item) => {
+        const selected = selectedIncomeIds.has(item.id);
+        return `
+        <div class="income-row${selected ? " selection-selected" : ""}">
+          <div class="income-date">
+            <label class="item-selector">
+              <input type="checkbox" data-select-income="${escapeHtml(item.id)}" ${selected ? "checked" : ""} aria-label="Selecionar receita ${escapeHtml(item.description)}">
+              <span>${escapeHtml(formatDate(item.date))}</span>
+            </label>
+          </div>
           <div class="income-details">
             <div class="income-title">${escapeHtml(item.description)}</div>
             <div class="income-subtitle">Receita extra</div>
@@ -2913,7 +3141,10 @@
             <button class="button button-ghost button-small" type="button" data-income-action="delete" data-id="${escapeHtml(item.id)}" aria-label="Excluir ${escapeHtml(item.description)}">×</button>
           </div>
         </div>
-      `).join("");
+      `;
+      }).join("");
+
+      updateIncomeBulkSelectionControl();
     }
 
     function renderReserveList() {
@@ -2937,20 +3168,24 @@
       `).join("");
     }
 
-    function renderTransactions() {
+    function getVisibleExpenseItems() {
       const searchTerm = normalizeText(searchInput.value.trim());
       const category = categoryFilter.value;
-      const visibleItems = currentItems.filter((item) => {
+      return currentItems.filter((item) => {
         const matchesSearch = !searchTerm || normalizeText(item.description).includes(searchTerm);
         const matchesCategory = !category || item.category === category;
         return matchesSearch && matchesCategory;
       });
+    }
 
+    function renderTransactions() {
+      const visibleItems = getVisibleExpenseItems();
       const hasAnyItems = currentItems.length > 0;
       const hasVisibleItems = visibleItems.length > 0;
 
       transactionsTableWrap.style.display = hasVisibleItems ? "block" : "none";
       emptyState.classList.toggle("visible", !hasVisibleItems);
+      selectAllExpensesLabel.style.display = hasVisibleItems ? "inline-flex" : "none";
 
       if (!hasVisibleItems && hasAnyItems) {
         emptyStateTitle.textContent = "Nenhum resultado encontrado";
@@ -2965,9 +3200,15 @@
       transactionsBody.innerHTML = visibleItems.map((item) => {
         const typeTag = getTypeTag(item);
         const categoryColor = getCategoryColor(item.category);
+        const selected = selectedExpenseIds.has(item.displayId);
         return `
-          <tr>
-            <td>${escapeHtml(formatDate(item.date))}</td>
+          <tr class="${selected ? "selection-selected" : ""}">
+            <td>
+              <label class="item-selector">
+                <input type="checkbox" data-select-expense="${escapeHtml(item.displayId)}" ${selected ? "checked" : ""} aria-label="Selecionar gasto ${escapeHtml(item.description)}">
+                <span>${escapeHtml(formatDate(item.date))}</span>
+              </label>
+            </td>
             <td>
               <div class="transaction-title">${escapeHtml(item.description)}</div>
               <div class="transaction-subtitle">${escapeHtml(item.category)} · ${escapeHtml(typeTag.label)}</div>
@@ -2987,6 +3228,63 @@
           </tr>
         `;
       }).join("");
+
+      updateExpenseBulkSelectionControl(visibleItems);
+    }
+
+    function updateIncomeBulkSelectionControl() {
+      const total = currentIncomeItems.length;
+      const selectedCount = currentIncomeItems.filter((item) => selectedIncomeIds.has(item.id)).length;
+      selectAllIncomesCheckbox.checked = total > 0 && selectedCount === total;
+      selectAllIncomesCheckbox.indeterminate = selectedCount > 0 && selectedCount < total;
+    }
+
+    function updateExpenseBulkSelectionControl(visibleItems = getVisibleExpenseItems()) {
+      const total = visibleItems.length;
+      const selectedCount = visibleItems.filter((item) => selectedExpenseIds.has(item.displayId)).length;
+      selectAllExpensesCheckbox.checked = total > 0 && selectedCount === total;
+      selectAllExpensesCheckbox.indeterminate = selectedCount > 0 && selectedCount < total;
+    }
+
+    function renderSelectionSummary() {
+      const selectedIncomes = currentIncomeItems.filter((item) => selectedIncomeIds.has(item.id));
+      const selectedExpenses = currentItems.filter((item) => selectedExpenseIds.has(item.displayId));
+      const incomeTotal = selectedIncomes.reduce((sum, item) => sum + item.amountCents, 0);
+      const expenseTotal = selectedExpenses.reduce((sum, item) => sum + item.amountCents, 0);
+      const count = selectedIncomes.length + selectedExpenses.length;
+      const balance = incomeTotal - expenseTotal;
+
+      selectionSummary.hidden = count === 0;
+      document.body.classList.toggle("selection-mode", count > 0 && activeView === "monthly");
+      selectionCount.textContent = `${count} ${count === 1 ? "selecionado" : "selecionados"}`;
+      selectedIncomeValue.textContent = `+ ${formatCurrency(incomeTotal)}`;
+      selectedExpenseValue.textContent = `- ${formatCurrency(expenseTotal)}`;
+      selectedBalanceValue.textContent = formatCurrency(balance);
+      selectedBalanceValue.classList.toggle("positive", balance >= 0);
+      selectedBalanceValue.classList.toggle("negative", balance < 0);
+    }
+
+    function pruneSelection() {
+      const validExpenseIds = new Set(currentItems.map((item) => item.displayId));
+      const validIncomeIds = new Set(currentIncomeItems.map((item) => item.id));
+      [...selectedExpenseIds].forEach((id) => {
+        if (!validExpenseIds.has(id)) selectedExpenseIds.delete(id);
+      });
+      [...selectedIncomeIds].forEach((id) => {
+        if (!validIncomeIds.has(id)) selectedIncomeIds.delete(id);
+      });
+    }
+
+    function resetSelectionState() {
+      selectedExpenseIds.clear();
+      selectedIncomeIds.clear();
+    }
+
+    function clearSelection() {
+      resetSelectionState();
+      renderIncomeList();
+      renderTransactions();
+      renderSelectionSummary();
     }
 
     function renderBreakdown() {
@@ -3080,6 +3378,7 @@
 
       saveState();
       extraIncomeDialog.close();
+      if (currentMonth !== date.slice(0, 7)) resetSelectionState();
       currentMonth = date.slice(0, 7);
       monthPicker.value = currentMonth;
       render();
@@ -3139,6 +3438,7 @@
 
       saveState();
       reserveDialog.close();
+      if (currentMonth !== date.slice(0, 7)) resetSelectionState();
       currentMonth = date.slice(0, 7);
       monthPicker.value = currentMonth;
       render();
@@ -3338,6 +3638,7 @@
 
       saveState();
       expenseDialog.close();
+      if (currentMonth !== date.slice(0, 7)) resetSelectionState();
       currentMonth = date.slice(0, 7);
       monthPicker.value = currentMonth;
       render();
@@ -3630,10 +3931,12 @@
       }
 
       if (activeView === "dashboard") renderDashboard();
+      renderSelectionSummary();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function openMonthFromDashboard(monthKey, category = "") {
+      resetSelectionState();
       currentMonth = monthKey;
       dashboardYear = Number(monthKey.slice(0, 4));
       monthPicker.value = currentMonth;
@@ -3646,6 +3949,7 @@
     }
 
     function changeDashboardFocusMonth(offset) {
+      resetSelectionState();
       currentMonth = addMonthsToMonthKey(currentMonth, offset);
       dashboardYear = Number(currentMonth.slice(0, 4));
       monthPicker.value = currentMonth;
@@ -4108,6 +4412,7 @@
     }
 
     function changeMonth(offset) {
+      resetSelectionState();
       currentMonth = addMonthsToMonthKey(currentMonth, offset);
       monthPicker.value = currentMonth;
       render();
