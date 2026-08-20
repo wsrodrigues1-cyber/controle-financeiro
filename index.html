@@ -1969,6 +1969,381 @@
       }
     }
 
+
+    /* Financial organization extensions */
+    .organization-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .organization-panel {
+      padding: 20px;
+    }
+
+    .organization-panel .dashboard-panel-header {
+      margin-bottom: 14px;
+    }
+
+    .health-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 11px;
+    }
+
+    .health-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 15px;
+      background: var(--surface-soft);
+    }
+
+    .health-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .health-card strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.15rem;
+      letter-spacing: -0.03em;
+    }
+
+    .health-card small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.35;
+    }
+
+    .essential-breakdown {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .essential-breakdown-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 13px;
+      background: var(--surface);
+    }
+
+    .essential-breakdown-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 750;
+    }
+
+    .essential-breakdown-item strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 1rem;
+    }
+
+    .goals-list,
+    .upcoming-list,
+    .insights-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .goal-item,
+    .upcoming-item,
+    .insight-item {
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 13px 14px;
+      background: var(--surface-soft);
+    }
+
+    .goal-item-header,
+    .upcoming-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .goal-copy,
+    .upcoming-copy {
+      min-width: 0;
+    }
+
+    .goal-name,
+    .upcoming-title {
+      font-weight: 800;
+    }
+
+    .goal-meta,
+    .upcoming-meta {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .goal-values,
+    .upcoming-amount {
+      flex-shrink: 0;
+      text-align: right;
+      font-weight: 800;
+    }
+
+    .goal-values small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .goal-track,
+    .plan-track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      margin-top: 10px;
+      background: #e9eef7;
+    }
+
+    .goal-fill,
+    .plan-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--reserve);
+      transition: width 0.25s ease;
+    }
+
+    .goal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 9px;
+    }
+
+    .insight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.45;
+    }
+
+    .insight-icon {
+      flex-shrink: 0;
+      font-size: 1.05rem;
+    }
+
+    .planning-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .planning-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 15px;
+      background: var(--surface-soft);
+    }
+
+    .planning-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .planning-card span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 750;
+    }
+
+    .planning-card strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 1.08rem;
+    }
+
+    .planning-difference {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      font-weight: 750;
+    }
+
+    .month-close-status {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .month-close-copy strong,
+    .month-close-copy span {
+      display: block;
+    }
+
+    .month-close-copy span {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .month-close-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 13px;
+    }
+
+    .month-close-metric {
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 10px;
+      background: var(--surface-soft);
+    }
+
+    .month-close-metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .month-close-metric strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.94rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+
+    .status-open {
+      background: var(--warning-soft);
+      color: var(--warning);
+    }
+
+    .status-closed {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .status-stale {
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .category-classification-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .category-classification-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 170px;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 12px;
+      background: var(--surface-soft);
+    }
+
+    .category-classification-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      font-weight: 750;
+    }
+
+    .classification-badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 3px 7px;
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 0.7rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .classification-badge.nonessential {
+      background: #fff7ed;
+      color: #c2410c;
+    }
+
+    .empty-organization {
+      border: 1px dashed var(--border);
+      border-radius: 13px;
+      padding: 18px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.84rem;
+    }
+
+    .deadline-warning {
+      color: var(--warning);
+    }
+
+    @media (max-width: 1080px) {
+      .health-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 800px) {
+      .organization-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .health-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .health-grid,
+      .planning-grid,
+      .essential-breakdown,
+      .month-close-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .goal-item-header,
+      .upcoming-item,
+      .month-close-status {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .goal-values,
+      .upcoming-amount {
+        text-align: left;
+      }
+
+      .category-classification-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -2141,6 +2516,87 @@
           </article>
         </section>
 
+
+        <section class="panel dashboard-wide-panel" aria-label="Saúde financeira">
+          <div class="dashboard-panel-header">
+            <div>
+              <h3>Saúde financeira</h3>
+              <p id="healthPeriodLabel">Indicadores do mês selecionado e do seu histórico recente.</p>
+            </div>
+            <button class="button button-secondary button-small" id="classifyCategoriesButton" type="button">Classificar categorias</button>
+          </div>
+          <div class="health-grid">
+            <div class="health-card">
+              <span>Taxa de economia</span>
+              <strong id="healthSavingsRate">0%</strong>
+              <small>Reserva do mês ÷ renda total.</small>
+            </div>
+            <div class="health-card">
+              <span>Comprometimento</span>
+              <strong id="healthCommitmentRate">0%</strong>
+              <small>Gastos do mês ÷ renda total.</small>
+            </div>
+            <div class="health-card">
+              <span>Gastos essenciais</span>
+              <strong id="healthEssentialRate">0%</strong>
+              <small>Participação dos gastos classificados como essenciais.</small>
+            </div>
+            <div class="health-card">
+              <span>Média de gastos</span>
+              <strong id="healthAverageExpenses">R$ 0,00</strong>
+              <small>Média dos últimos 3 meses até o mês selecionado.</small>
+            </div>
+            <div class="health-card">
+              <span>Meses de reserva</span>
+              <strong id="healthReserveRunway">0,0</strong>
+              <small>Reserva acumulada ÷ média mensal de gastos.</small>
+            </div>
+          </div>
+          <div class="essential-breakdown">
+            <div class="essential-breakdown-item">
+              <span>Essenciais no mês</span>
+              <strong id="essentialExpensesValue">R$ 0,00</strong>
+            </div>
+            <div class="essential-breakdown-item">
+              <span>Não essenciais no mês</span>
+              <strong id="nonessentialExpensesValue">R$ 0,00</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="organization-grid">
+          <article class="panel organization-panel">
+            <div class="dashboard-panel-header">
+              <div>
+                <h3>Metas financeiras</h3>
+                <p>Acompanhe objetivos e direcione novas reservas para cada meta.</p>
+              </div>
+              <button class="button button-reserve button-small" id="addGoalButton" type="button">＋ Nova meta</button>
+            </div>
+            <div class="goals-list" id="goalsList"></div>
+          </article>
+
+          <article class="panel organization-panel">
+            <div class="dashboard-panel-header">
+              <div>
+                <h3>Próximos gastos</h3>
+                <p>Compromissos previstos para os próximos 45 dias.</p>
+              </div>
+            </div>
+            <div class="upcoming-list" id="upcomingExpensesList"></div>
+          </article>
+        </section>
+
+        <section class="panel dashboard-wide-panel">
+          <div class="dashboard-panel-header">
+            <div>
+              <h3 id="insightsTitle">Insights do mês</h3>
+              <p>Análises automáticas calculadas localmente, sem IA ou envio de dados.</p>
+            </div>
+          </div>
+          <div class="insights-list" id="automaticInsightsList"></div>
+        </section>
+
         <section class="panel dashboard-wide-panel">
           <div class="dashboard-panel-header">
             <div>
@@ -2246,6 +2702,77 @@
         <div class="progress-track" aria-hidden="true">
           <div class="progress-fill" id="budgetProgress"></div>
         </div>
+      </section>
+
+
+      <section class="organization-grid" aria-label="Planejamento e fechamento mensal">
+        <article class="panel organization-panel">
+          <div class="dashboard-panel-header">
+            <div>
+              <h3>Planejado x realizado</h3>
+              <p id="monthlyPlanSubtitle">Defina quanto pretende gastar e reservar neste mês.</p>
+            </div>
+            <button class="button button-secondary button-small" id="editMonthlyPlanButton" type="button">Editar planejamento</button>
+          </div>
+          <div class="planning-grid">
+            <div class="planning-card">
+              <div class="planning-card-header">
+                <div>
+                  <span>Gastos</span>
+                  <strong id="plannedExpensesComparison">R$ 0,00 / R$ 0,00</strong>
+                </div>
+                <span id="plannedExpensesPercent">Sem plano</span>
+              </div>
+              <div class="plan-track"><div class="plan-fill" id="plannedExpensesFill" style="width:0%"></div></div>
+              <div class="planning-difference" id="plannedExpensesDifference">Defina um valor planejado para acompanhar.</div>
+            </div>
+            <div class="planning-card">
+              <div class="planning-card-header">
+                <div>
+                  <span>Reserva</span>
+                  <strong id="plannedReserveComparison">R$ 0,00 / R$ 0,00</strong>
+                </div>
+                <span id="plannedReservePercent">Sem plano</span>
+              </div>
+              <div class="plan-track"><div class="plan-fill" id="plannedReserveFill" style="width:0%"></div></div>
+              <div class="planning-difference" id="plannedReserveDifference">Defina uma meta de reserva para acompanhar.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel organization-panel">
+          <div class="dashboard-panel-header">
+            <div>
+              <h3>Fechamento mensal</h3>
+              <p>Registre um retrato do mês para acompanhar sua evolução.</p>
+            </div>
+            <span class="status-pill status-open" id="monthCloseStatus">Mês aberto</span>
+          </div>
+          <div class="month-close-status">
+            <div class="month-close-copy">
+              <strong id="monthCloseHeadline">Este mês ainda não foi fechado.</strong>
+              <span id="monthCloseDescription">Ao fechar, salvaremos um resumo dos principais números.</span>
+            </div>
+            <div class="dialog-actions-right">
+              <button class="button button-secondary button-small" id="reopenMonthButton" type="button" hidden>Reabrir</button>
+              <button class="button button-primary button-small" id="closeMonthButton" type="button">Fechar mês</button>
+            </div>
+          </div>
+          <div class="month-close-metrics" id="monthCloseMetrics" hidden>
+            <div class="month-close-metric">
+              <span>Receitas</span>
+              <strong id="closedIncomeValue">R$ 0,00</strong>
+            </div>
+            <div class="month-close-metric">
+              <span>Gastos</span>
+              <strong id="closedExpensesValue">R$ 0,00</strong>
+            </div>
+            <div class="month-close-metric">
+              <span>Economia</span>
+              <strong id="closedSavingsRate">0%</strong>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section class="selection-summary" id="selectionSummary" aria-live="polite" hidden>
@@ -2535,6 +3062,14 @@
             <label for="reserveDateInput">Data da reserva</label>
             <input class="field-control" id="reserveDateInput" type="date" required>
           </div>
+
+          <div class="field field-full">
+            <label for="reserveGoalInput">Vincular a uma meta, opcional</label>
+            <select class="field-control" id="reserveGoalInput">
+              <option value="">Reserva geral, sem meta específica</option>
+            </select>
+            <span class="field-hint">O valor contará automaticamente no progresso da meta selecionada.</span>
+          </div>
         </div>
       </div>
 
@@ -2577,6 +3112,105 @@
         <div class="dialog-actions-right">
           <button class="button button-secondary" id="cancelIncomeButton" type="button">Cancelar</button>
           <button class="button button-primary" type="submit">Salvar salário</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+
+  <dialog id="monthlyPlanDialog">
+    <form id="monthlyPlanForm">
+      <div class="dialog-header">
+        <div>
+          <h2>Planejamento mensal</h2>
+          <p id="monthlyPlanDialogSubtitle">Defina metas simples para o mês selecionado.</p>
+        </div>
+        <button class="icon-button" id="closeMonthlyPlanDialogButton" type="button" aria-label="Fechar">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="salary-month-context">
+          <span>Mês em planejamento</span>
+          <strong id="monthlyPlanDialogMonth">Mês atual</strong>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="plannedExpensesInput">Gastos planejados</label>
+            <input class="field-control" id="plannedExpensesInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00">
+            <span class="field-hint">Quanto pretende gastar no total neste mês.</span>
+          </div>
+          <div class="field">
+            <label for="plannedReserveInput">Reserva planejada</label>
+            <input class="field-control" id="plannedReserveInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00">
+            <span class="field-hint">Quanto pretende separar para reservas neste mês.</span>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <button class="button button-ghost" id="clearMonthlyPlanButton" type="button">Remover planejamento</button>
+        <div class="dialog-actions-right">
+          <button class="button button-secondary" id="cancelMonthlyPlanButton" type="button">Cancelar</button>
+          <button class="button button-primary" type="submit">Salvar planejamento</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="goalDialog">
+    <form id="goalForm">
+      <div class="dialog-header">
+        <div>
+          <h2 id="goalDialogTitle">Nova meta financeira</h2>
+          <p>Crie um objetivo e acompanhe o progresso pelas reservas vinculadas.</p>
+        </div>
+        <button class="icon-button" id="closeGoalDialogButton" type="button" aria-label="Fechar">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="field field-full">
+            <label for="goalNameInput">Nome da meta</label>
+            <input class="field-control" id="goalNameInput" type="text" maxlength="60" placeholder="Exemplo: Reserva de emergência" required>
+          </div>
+          <div class="field">
+            <label for="goalTargetInput">Valor objetivo</label>
+            <input class="field-control" id="goalTargetInput" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0,00" required>
+          </div>
+          <div class="field">
+            <label for="goalStartingInput">Valor inicial, opcional</label>
+            <input class="field-control" id="goalStartingInput" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00">
+          </div>
+          <div class="field field-full">
+            <label for="goalDeadlineInput">Prazo, opcional</label>
+            <input class="field-control" id="goalDeadlineInput" type="month">
+            <span class="field-hint">Você pode deixar vazio se a meta não tiver uma data específica.</span>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-actions">
+        <button class="button button-danger" id="deleteGoalButton" type="button">Excluir</button>
+        <div class="dialog-actions-right">
+          <button class="button button-secondary" id="cancelGoalButton" type="button">Cancelar</button>
+          <button class="button button-reserve" type="submit">Salvar meta</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="categoryClassificationDialog">
+    <form id="categoryClassificationForm">
+      <div class="dialog-header">
+        <div>
+          <h2>Classificar categorias</h2>
+          <p>Escolha quais gastos são essenciais e quais são não essenciais.</p>
+        </div>
+        <button class="icon-button" id="closeCategoryClassificationDialogButton" type="button" aria-label="Fechar">×</button>
+      </div>
+      <div class="dialog-body">
+        <div class="category-classification-list" id="categoryClassificationList"></div>
+      </div>
+      <div class="dialog-actions">
+        <div class="dialog-actions-right">
+          <button class="button button-secondary" id="cancelCategoryClassificationButton" type="button">Cancelar</button>
+          <button class="button button-primary" type="submit">Salvar classificações</button>
         </div>
       </div>
     </form>
@@ -2642,15 +3276,29 @@
       "#a16207"
     ];
 
+    const DEFAULT_CATEGORY_CLASSIFICATIONS = {
+      "Moradia": "essential",
+      "Transporte": "essential",
+      "Lazer": "nonessential",
+      "Cartão de Crédito": "nonessential",
+      "Educação": "essential",
+      "Saúde": "essential",
+      "Outros": "nonessential"
+    };
+
     const defaultState = () => ({
-      version: 4,
+      version: 5,
       salaryCents: 0,
       salaryOverrides: {},
       incomes: [],
       reserves: [],
       expenses: [],
       recurringRules: [],
-      recurringOverrides: {}
+      recurringOverrides: {},
+      monthlyPlans: {},
+      goals: [],
+      monthClosures: {},
+      categoryClassifications: {}
     });
 
     let state = loadState();
@@ -2666,6 +3314,7 @@
     let editContext = null;
     let incomeEditContext = null;
     let reserveEditContext = null;
+    let goalEditId = null;
     let deleteContext = null;
     let toastTimer = null;
 
@@ -2696,6 +3345,18 @@
     const cashflowChartScale = document.getElementById("cashflowChartScale");
     const reserveEvolutionChart = document.getElementById("reserveEvolutionChart");
     const reserveChartCaption = document.getElementById("reserveChartCaption");
+    const healthPeriodLabel = document.getElementById("healthPeriodLabel");
+    const healthSavingsRate = document.getElementById("healthSavingsRate");
+    const healthCommitmentRate = document.getElementById("healthCommitmentRate");
+    const healthEssentialRate = document.getElementById("healthEssentialRate");
+    const healthAverageExpenses = document.getElementById("healthAverageExpenses");
+    const healthReserveRunway = document.getElementById("healthReserveRunway");
+    const essentialExpensesValue = document.getElementById("essentialExpensesValue");
+    const nonessentialExpensesValue = document.getElementById("nonessentialExpensesValue");
+    const goalsList = document.getElementById("goalsList");
+    const upcomingExpensesList = document.getElementById("upcomingExpensesList");
+    const insightsTitle = document.getElementById("insightsTitle");
+    const automaticInsightsList = document.getElementById("automaticInsightsList");
 
     const monthTitle = document.getElementById("monthTitle");
     const monthPicker = document.getElementById("monthPicker");
@@ -2715,6 +3376,24 @@
     const budgetDescription = document.getElementById("budgetDescription");
     const budgetPercentage = document.getElementById("budgetPercentage");
     const budgetProgress = document.getElementById("budgetProgress");
+    const monthlyPlanSubtitle = document.getElementById("monthlyPlanSubtitle");
+    const plannedExpensesComparison = document.getElementById("plannedExpensesComparison");
+    const plannedExpensesPercent = document.getElementById("plannedExpensesPercent");
+    const plannedExpensesFill = document.getElementById("plannedExpensesFill");
+    const plannedExpensesDifference = document.getElementById("plannedExpensesDifference");
+    const plannedReserveComparison = document.getElementById("plannedReserveComparison");
+    const plannedReservePercent = document.getElementById("plannedReservePercent");
+    const plannedReserveFill = document.getElementById("plannedReserveFill");
+    const plannedReserveDifference = document.getElementById("plannedReserveDifference");
+    const monthCloseStatus = document.getElementById("monthCloseStatus");
+    const monthCloseHeadline = document.getElementById("monthCloseHeadline");
+    const monthCloseDescription = document.getElementById("monthCloseDescription");
+    const monthCloseMetrics = document.getElementById("monthCloseMetrics");
+    const closedIncomeValue = document.getElementById("closedIncomeValue");
+    const closedExpensesValue = document.getElementById("closedExpensesValue");
+    const closedSavingsRate = document.getElementById("closedSavingsRate");
+    const closeMonthButton = document.getElementById("closeMonthButton");
+    const reopenMonthButton = document.getElementById("reopenMonthButton");
     const transactionsBody = document.getElementById("transactionsBody");
     const transactionsTableWrap = document.getElementById("transactionsTableWrap");
     const emptyState = document.getElementById("emptyState");
@@ -2774,6 +3453,7 @@
     const reserveDescriptionInput = document.getElementById("reserveDescriptionInput");
     const reserveAmountInput = document.getElementById("reserveAmountInput");
     const reserveDateInput = document.getElementById("reserveDateInput");
+    const reserveGoalInput = document.getElementById("reserveGoalInput");
     const deleteFromReserveEditButton = document.getElementById("deleteFromReserveEditButton");
 
     const incomeDialog = document.getElementById("incomeDialog");
@@ -2785,6 +3465,25 @@
     const salaryDefaultCheckbox = document.getElementById("salaryDefaultCheckbox");
     const salaryDefaultHint = document.getElementById("salaryDefaultHint");
     const resetSalaryOverrideButton = document.getElementById("resetSalaryOverrideButton");
+
+    const monthlyPlanDialog = document.getElementById("monthlyPlanDialog");
+    const monthlyPlanForm = document.getElementById("monthlyPlanForm");
+    const monthlyPlanDialogMonth = document.getElementById("monthlyPlanDialogMonth");
+    const plannedExpensesInput = document.getElementById("plannedExpensesInput");
+    const plannedReserveInput = document.getElementById("plannedReserveInput");
+
+    const goalDialog = document.getElementById("goalDialog");
+    const goalForm = document.getElementById("goalForm");
+    const goalDialogTitle = document.getElementById("goalDialogTitle");
+    const goalNameInput = document.getElementById("goalNameInput");
+    const goalTargetInput = document.getElementById("goalTargetInput");
+    const goalStartingInput = document.getElementById("goalStartingInput");
+    const goalDeadlineInput = document.getElementById("goalDeadlineInput");
+    const deleteGoalButton = document.getElementById("deleteGoalButton");
+
+    const categoryClassificationDialog = document.getElementById("categoryClassificationDialog");
+    const categoryClassificationForm = document.getElementById("categoryClassificationForm");
+    const categoryClassificationList = document.getElementById("categoryClassificationList");
 
     const deleteDialog = document.getElementById("deleteDialog");
     const deleteDialogSubtitle = document.getElementById("deleteDialogSubtitle");
@@ -2855,6 +3554,28 @@
       document.getElementById("cancelReserveButton").addEventListener("click", () => reserveDialog.close());
       document.getElementById("closeIncomeDialogButton").addEventListener("click", () => incomeDialog.close());
       document.getElementById("cancelIncomeButton").addEventListener("click", () => incomeDialog.close());
+
+      document.getElementById("editMonthlyPlanButton").addEventListener("click", openMonthlyPlanDialog);
+      document.getElementById("closeMonthlyPlanDialogButton").addEventListener("click", () => monthlyPlanDialog.close());
+      document.getElementById("cancelMonthlyPlanButton").addEventListener("click", () => monthlyPlanDialog.close());
+      document.getElementById("clearMonthlyPlanButton").addEventListener("click", clearMonthlyPlan);
+      monthlyPlanForm.addEventListener("submit", handleMonthlyPlanSubmit);
+
+      document.getElementById("addGoalButton").addEventListener("click", openNewGoalDialog);
+      document.getElementById("closeGoalDialogButton").addEventListener("click", () => goalDialog.close());
+      document.getElementById("cancelGoalButton").addEventListener("click", () => goalDialog.close());
+      deleteGoalButton.addEventListener("click", deleteCurrentGoal);
+      goalForm.addEventListener("submit", handleGoalSubmit);
+      goalsList.addEventListener("click", handleGoalListClick);
+
+      document.getElementById("classifyCategoriesButton").addEventListener("click", openCategoryClassificationDialog);
+      document.getElementById("closeCategoryClassificationDialogButton").addEventListener("click", () => categoryClassificationDialog.close());
+      document.getElementById("cancelCategoryClassificationButton").addEventListener("click", () => categoryClassificationDialog.close());
+      categoryClassificationForm.addEventListener("submit", handleCategoryClassificationSubmit);
+
+      closeMonthButton.addEventListener("click", closeCurrentMonth);
+      reopenMonthButton.addEventListener("click", reopenCurrentMonth);
+
       document.getElementById("closeDeleteDialogButton").addEventListener("click", () => deleteDialog.close());
       document.getElementById("cancelDeleteButton").addEventListener("click", () => deleteDialog.close());
 
@@ -3057,6 +3778,8 @@
       renderTransactions();
       renderBreakdown();
       renderSelectionSummary();
+      renderMonthlyPlanning();
+      renderMonthClosure();
       renderDashboard();
       setupBanner.classList.toggle("visible", state.salaryCents <= 0);
     }
@@ -3157,7 +3880,7 @@
           <div class="income-date">${escapeHtml(formatDate(item.date))}</div>
           <div class="income-details">
             <div class="income-title">${escapeHtml(item.description)}</div>
-            <div class="income-subtitle">Reserva financeira</div>
+            <div class="income-subtitle">${escapeHtml(getReserveSubtitle(item))}</div>
           </div>
           <div class="reserve-amount">${escapeHtml(formatCurrency(item.amountCents))}</div>
           <div class="income-actions">
@@ -3211,12 +3934,13 @@
             </td>
             <td>
               <div class="transaction-title">${escapeHtml(item.description)}</div>
-              <div class="transaction-subtitle">${escapeHtml(item.category)} · ${escapeHtml(typeTag.label)}</div>
+              <div class="transaction-subtitle">${escapeHtml(item.category)} · ${getCategoryClassificationLabel(item.category)} · ${escapeHtml(typeTag.label)}</div>
             </td>
             <td>
               <span class="category-chip">
                 <span class="category-dot" style="--dot-color: ${categoryColor}"></span>
                 ${escapeHtml(item.category)}
+                <span class="classification-badge ${getCategoryClassification(item.category) === "nonessential" ? "nonessential" : ""}">${getCategoryClassificationLabel(item.category)}</span>
               </span>
             </td>
             <td><span class="tag ${typeTag.className}">${escapeHtml(typeTag.label)}</span></td>
@@ -3315,6 +4039,7 @@
               <span class="category-chip">
                 <span class="category-dot" style="--dot-color: ${color}"></span>
                 ${escapeHtml(item.category)}
+                <span class="classification-badge ${getCategoryClassification(item.category) === "nonessential" ? "nonessential" : ""}">${getCategoryClassificationLabel(item.category)}</span>
               </span>
               <strong>${escapeHtml(formatCurrency(item.total))}</strong>
             </div>
@@ -3393,6 +4118,8 @@
       document.getElementById("saveReserveButton").textContent = "Salvar reserva";
       deleteFromReserveEditButton.style.visibility = "hidden";
       reserveDateInput.value = suggestedDateForCurrentMonth();
+      populateReserveGoalOptions();
+      reserveGoalInput.value = "";
       reserveDialog.showModal();
       setTimeout(() => reserveDescriptionInput.focus(), 30);
     }
@@ -3406,6 +4133,8 @@
       reserveDescriptionInput.value = item.description;
       reserveAmountInput.value = (item.amountCents / 100).toFixed(2);
       reserveDateInput.value = item.date;
+      populateReserveGoalOptions();
+      reserveGoalInput.value = state.goals.some((goal) => goal.id === item.goalId) ? item.goalId : "";
       reserveDialog.showModal();
       setTimeout(() => reserveDescriptionInput.focus(), 30);
     }
@@ -3416,6 +4145,7 @@
       const description = reserveDescriptionInput.value.trim();
       const amountCents = getInputCents(reserveAmountInput);
       const date = reserveDateInput.value;
+      const goalId = state.goals.some((goal) => goal.id === reserveGoalInput.value) ? reserveGoalInput.value : "";
 
       if (!description || amountCents <= 0 || !isValidDateString(date)) {
         showToast("Revise os campos da reserva antes de salvar.");
@@ -3425,13 +4155,14 @@
       if (reserveEditContext) {
         const reserve = state.reserves.find((candidate) => candidate.id === reserveEditContext.item.id);
         if (!reserve) return;
-        Object.assign(reserve, { description, amountCents, date });
+        Object.assign(reserve, { description, amountCents, date, goalId });
       } else {
         state.reserves.push({
           id: createId(),
           description,
           amountCents,
           date,
+          goalId,
           createdAt: new Date().toISOString()
         });
       }
@@ -3968,6 +4699,8 @@
         if (rule.endMonth) years.add(Number(rule.endMonth.slice(0, 4)));
       });
       Object.keys(state.salaryOverrides || {}).forEach((monthKey) => years.add(Number(monthKey.slice(0, 4))));
+      Object.keys(state.monthlyPlans || {}).forEach((monthKey) => years.add(Number(monthKey.slice(0, 4))));
+      Object.keys(state.monthClosures || {}).forEach((monthKey) => years.add(Number(monthKey.slice(0, 4))));
 
       const validYears = [...years].filter(Number.isFinite);
       const minYear = Math.min(currentYear - 3, ...validYears);
@@ -4074,6 +4807,10 @@
 
       renderDonutDashboard();
       renderFocusMonthSummary();
+      renderFinancialHealth();
+      renderGoals();
+      renderUpcomingExpenses();
+      renderAutomaticInsights();
       renderCashflowChart(yearMetrics);
       renderReserveEvolutionChart(yearMetrics, openingReserveCents);
     }
@@ -4377,7 +5114,7 @@
 
     function normalizeImportedState(candidate) {
       return {
-        version: 4,
+        version: 5,
         salaryCents: Number.isFinite(candidate.salaryCents) ? Math.max(0, Math.round(candidate.salaryCents)) : 0,
         salaryOverrides: candidate.salaryOverrides && typeof candidate.salaryOverrides === "object"
           ? Object.fromEntries(Object.entries(candidate.salaryOverrides).map(([monthKey, value]) => [monthKey, Math.max(0, Math.round(Number(value) || 0))]))
@@ -4386,7 +5123,13 @@
         reserves: Array.isArray(candidate.reserves) ? candidate.reserves.filter(Boolean) : [],
         expenses: candidate.expenses.filter(Boolean),
         recurringRules: candidate.recurringRules.filter(Boolean),
-        recurringOverrides: candidate.recurringOverrides || {}
+        recurringOverrides: candidate.recurringOverrides || {},
+        monthlyPlans: candidate.monthlyPlans && typeof candidate.monthlyPlans === "object" ? candidate.monthlyPlans : {},
+        goals: Array.isArray(candidate.goals) ? candidate.goals.filter(Boolean) : [],
+        monthClosures: candidate.monthClosures && typeof candidate.monthClosures === "object" ? candidate.monthClosures : {},
+        categoryClassifications: candidate.categoryClassifications && typeof candidate.categoryClassifications === "object"
+          ? candidate.categoryClassifications
+          : {}
       };
     }
 
@@ -4457,6 +5200,572 @@
         hash = ((hash << 5) - hash + normalized.charCodeAt(index)) | 0;
       }
       return CUSTOM_CATEGORY_COLORS[Math.abs(hash) % CUSTOM_CATEGORY_COLORS.length] || CATEGORY_COLORS.Outros;
+    }
+
+
+    function getCategoryClassification(category) {
+      const normalized = normalizeCategoryName(category) || "Outros";
+      const saved = state.categoryClassifications?.[normalized];
+      if (saved === "essential" || saved === "nonessential") return saved;
+      return DEFAULT_CATEGORY_CLASSIFICATIONS[normalized] || "nonessential";
+    }
+
+    function getCategoryClassificationLabel(category) {
+      return getCategoryClassification(category) === "essential" ? "Essencial" : "Não essencial";
+    }
+
+    function getExpenseClassificationTotals(monthKey) {
+      return getItemsForMonth(monthKey).reduce((totals, item) => {
+        const key = getCategoryClassification(item.category) === "essential" ? "essentialCents" : "nonessentialCents";
+        totals[key] += item.amountCents;
+        return totals;
+      }, { essentialCents: 0, nonessentialCents: 0 });
+    }
+
+    function openCategoryClassificationDialog() {
+      const categories = getAvailableCategories();
+      categoryClassificationList.innerHTML = categories.map((category) => {
+        const classification = getCategoryClassification(category);
+        return `
+          <div class="category-classification-row">
+            <div class="category-classification-name">
+              <span class="category-dot" style="--dot-color:${getCategoryColor(category)}"></span>
+              <span>${escapeHtml(category)}</span>
+            </div>
+            <select class="field-control" data-category-classification="${escapeHtml(category)}" aria-label="Classificação de ${escapeHtml(category)}">
+              <option value="essential" ${classification === "essential" ? "selected" : ""}>Essencial</option>
+              <option value="nonessential" ${classification === "nonessential" ? "selected" : ""}>Não essencial</option>
+            </select>
+          </div>`;
+      }).join("");
+      categoryClassificationDialog.showModal();
+    }
+
+    function handleCategoryClassificationSubmit(event) {
+      event.preventDefault();
+      categoryClassificationList.querySelectorAll("[data-category-classification]").forEach((select) => {
+        const category = normalizeCategoryName(select.dataset.categoryClassification);
+        if (!category) return;
+        state.categoryClassifications[category] = select.value === "essential" ? "essential" : "nonessential";
+      });
+      saveState();
+      categoryClassificationDialog.close();
+      render();
+      showToast("Classificação das categorias atualizada.");
+    }
+
+    function getMonthPlan(monthKey) {
+      const plan = state.monthlyPlans?.[monthKey] || {};
+      return {
+        expenseCents: Math.max(0, Math.round(Number(plan.expenseCents) || 0)),
+        reserveCents: Math.max(0, Math.round(Number(plan.reserveCents) || 0))
+      };
+    }
+
+    function openMonthlyPlanDialog() {
+      const plan = getMonthPlan(currentMonth);
+      monthlyPlanDialogMonth.textContent = formatMonth(currentMonth);
+      plannedExpensesInput.value = plan.expenseCents > 0 ? (plan.expenseCents / 100).toFixed(2) : "";
+      plannedReserveInput.value = plan.reserveCents > 0 ? (plan.reserveCents / 100).toFixed(2) : "";
+      monthlyPlanDialog.showModal();
+      setTimeout(() => plannedExpensesInput.focus(), 30);
+    }
+
+    function handleMonthlyPlanSubmit(event) {
+      event.preventDefault();
+      const expenseCents = getInputCents(plannedExpensesInput, true);
+      const reserveCents = getInputCents(plannedReserveInput, true);
+      if (expenseCents <= 0 && reserveCents <= 0) {
+        delete state.monthlyPlans[currentMonth];
+      } else {
+        state.monthlyPlans[currentMonth] = { expenseCents, reserveCents };
+      }
+      saveState();
+      monthlyPlanDialog.close();
+      render();
+      showToast("Planejamento mensal salvo.");
+    }
+
+    function clearMonthlyPlan() {
+      if (!state.monthlyPlans[currentMonth]) {
+        monthlyPlanDialog.close();
+        return;
+      }
+      delete state.monthlyPlans[currentMonth];
+      saveState();
+      monthlyPlanDialog.close();
+      render();
+      showToast("Planejamento mensal removido.");
+    }
+
+    function renderMonthlyPlanning() {
+      const plan = getMonthPlan(currentMonth);
+      const metrics = getMonthFinancials(currentMonth);
+      monthlyPlanSubtitle.textContent = `Planejamento de ${formatMonth(currentMonth).toLowerCase()}.`;
+
+      renderPlanMetric(
+        metrics.expenseCents,
+        plan.expenseCents,
+        plannedExpensesComparison,
+        plannedExpensesPercent,
+        plannedExpensesFill,
+        plannedExpensesDifference,
+        "gastos"
+      );
+      renderPlanMetric(
+        metrics.reserveCents,
+        plan.reserveCents,
+        plannedReserveComparison,
+        plannedReservePercent,
+        plannedReserveFill,
+        plannedReserveDifference,
+        "reserva"
+      );
+    }
+
+    function renderPlanMetric(actualCents, plannedCents, comparisonElement, percentElement, fillElement, differenceElement, type) {
+      comparisonElement.textContent = `${formatCurrency(actualCents)} / ${formatCurrency(plannedCents)}`;
+      if (plannedCents <= 0) {
+        percentElement.textContent = "Sem plano";
+        fillElement.style.width = "0%";
+        differenceElement.textContent = type === "gastos"
+          ? "Defina um valor planejado para acompanhar."
+          : "Defina uma meta de reserva para acompanhar.";
+        differenceElement.classList.remove("positive", "negative");
+        return;
+      }
+
+      const percentage = (actualCents / plannedCents) * 100;
+      const difference = plannedCents - actualCents;
+      percentElement.textContent = `${formatPercentage(percentage)}%`;
+      fillElement.style.width = `${Math.min(100, Math.max(0, percentage)).toFixed(2)}%`;
+
+      differenceElement.classList.remove("positive", "negative");
+      if (type === "gastos") {
+        if (difference >= 0) {
+          differenceElement.textContent = `${formatCurrency(difference)} ainda disponíveis dentro do planejado.`;
+          differenceElement.classList.add("positive");
+        } else {
+          differenceElement.textContent = `${formatCurrency(Math.abs(difference))} acima do planejado.`;
+          differenceElement.classList.add("negative");
+        }
+        fillElement.style.background = percentage > 100 ? "#dc2626" : percentage >= 80 ? "#f59e0b" : "var(--primary)";
+      } else {
+        if (difference > 0) {
+          differenceElement.textContent = `Faltam ${formatCurrency(difference)} para atingir a reserva planejada.`;
+        } else {
+          differenceElement.textContent = `Meta de reserva atingida${difference < 0 ? `, ${formatCurrency(Math.abs(difference))} acima do plano` : ""}.`;
+          differenceElement.classList.add("positive");
+        }
+        fillElement.style.background = "var(--reserve)";
+      }
+    }
+
+    function createMonthClosureSnapshot(monthKey) {
+      const metrics = getMonthFinancials(monthKey);
+      const categories = Object.entries(metrics.expenseByCategory).sort((a, b) => b[1] - a[1]);
+      const classification = getExpenseClassificationTotals(monthKey);
+      return {
+        incomeCents: metrics.incomeCents,
+        expenseCents: metrics.expenseCents,
+        reserveCents: metrics.reserveCents,
+        availableCents: metrics.availableCents,
+        savingsRate: metrics.incomeCents > 0 ? (metrics.reserveCents / metrics.incomeCents) * 100 : 0,
+        topCategory: categories[0]?.[0] || "",
+        topCategoryCents: categories[0]?.[1] || 0,
+        essentialCents: classification.essentialCents,
+        nonessentialCents: classification.nonessentialCents
+      };
+    }
+
+    function closureSnapshotChanged(snapshot, current) {
+      if (!snapshot) return true;
+      return ["incomeCents", "expenseCents", "reserveCents", "availableCents", "essentialCents", "nonessentialCents"]
+        .some((key) => Math.round(Number(snapshot[key]) || 0) !== Math.round(Number(current[key]) || 0))
+        || snapshot.topCategory !== current.topCategory;
+    }
+
+    function closeCurrentMonth() {
+      if (currentMonth > getCurrentMonthKey()) {
+        showToast("Não é possível fechar um mês futuro.");
+        return;
+      }
+      const currentSnapshot = createMonthClosureSnapshot(currentMonth);
+      const existing = state.monthClosures[currentMonth];
+      const action = existing ? "atualizar o fechamento" : "fechar";
+      if (!window.confirm(`Deseja ${action} de ${formatMonth(currentMonth)}?`)) return;
+      state.monthClosures[currentMonth] = {
+        closedAt: new Date().toISOString(),
+        snapshot: currentSnapshot
+      };
+      saveState();
+      render();
+      showToast(existing ? "Fechamento mensal atualizado." : "Mês fechado com sucesso.");
+    }
+
+    function reopenCurrentMonth() {
+      if (!state.monthClosures[currentMonth]) return;
+      if (!window.confirm(`Deseja reabrir ${formatMonth(currentMonth)}? O resumo salvo será removido.`)) return;
+      delete state.monthClosures[currentMonth];
+      saveState();
+      render();
+      showToast("Mês reaberto.");
+    }
+
+    function renderMonthClosure() {
+      const closure = state.monthClosures?.[currentMonth];
+      const isFutureMonth = currentMonth > getCurrentMonthKey();
+      if (!closure) {
+        monthCloseStatus.textContent = isFutureMonth ? "Mês futuro" : "Mês aberto";
+        monthCloseStatus.className = "status-pill status-open";
+        monthCloseHeadline.textContent = isFutureMonth ? "Este mês ainda está no futuro." : "Este mês ainda não foi fechado.";
+        monthCloseDescription.textContent = isFutureMonth
+          ? "Use o planejamento para preparar o mês e faça o fechamento quando ele chegar."
+          : "Ao fechar, salvaremos um resumo dos principais números.";
+        monthCloseMetrics.hidden = true;
+        reopenMonthButton.hidden = true;
+        closeMonthButton.textContent = "Fechar mês";
+        closeMonthButton.disabled = isFutureMonth;
+        return;
+      }
+
+      closeMonthButton.disabled = false;
+      const currentSnapshot = createMonthClosureSnapshot(currentMonth);
+      const changed = closureSnapshotChanged(closure.snapshot, currentSnapshot);
+      const closedDate = closure.closedAt ? formatDateTime(closure.closedAt) : "data não informada";
+      monthCloseStatus.textContent = changed ? "Dados alterados" : "Mês fechado";
+      monthCloseStatus.className = `status-pill ${changed ? "status-stale" : "status-closed"}`;
+      monthCloseHeadline.textContent = changed ? "Existem alterações após o fechamento." : `Fechado em ${closedDate}.`;
+      monthCloseDescription.textContent = changed
+        ? `O retrato salvo é de ${closedDate}. Atualize o fechamento para registrar os números atuais.`
+        : `Resumo salvo para comparação futura. Maior categoria: ${closure.snapshot?.topCategory || "sem gastos"}.`;
+      monthCloseMetrics.hidden = false;
+      reopenMonthButton.hidden = false;
+      closeMonthButton.textContent = changed ? "Atualizar fechamento" : "Atualizar";
+      closedIncomeValue.textContent = formatCurrency(closure.snapshot?.incomeCents || 0);
+      closedExpensesValue.textContent = formatCurrency(closure.snapshot?.expenseCents || 0);
+      closedSavingsRate.textContent = `${formatPercentage(closure.snapshot?.savingsRate || 0)}%`;
+    }
+
+    function getGoalById(goalId) {
+      return state.goals.find((goal) => goal.id === goalId) || null;
+    }
+
+    function getGoalProgressCents(goal) {
+      const linkedCents = state.reserves
+        .filter((reserve) => reserve.goalId === goal.id)
+        .reduce((sum, reserve) => sum + Math.max(0, Math.round(Number(reserve.amountCents) || 0)), 0);
+      return Math.max(0, Math.round(Number(goal.startingCents) || 0)) + linkedCents;
+    }
+
+    function populateReserveGoalOptions() {
+      const currentValue = reserveGoalInput.value;
+      reserveGoalInput.innerHTML = '<option value="">Reserva geral, sem meta específica</option>' + state.goals
+        .slice()
+        .sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "pt-BR", { sensitivity: "base" }))
+        .map((goal) => `<option value="${escapeHtml(goal.id)}">${escapeHtml(goal.name)}</option>`)
+        .join("");
+      reserveGoalInput.value = state.goals.some((goal) => goal.id === currentValue) ? currentValue : "";
+    }
+
+    function getReserveSubtitle(item) {
+      const goal = getGoalById(item.goalId);
+      return goal ? `Reserva financeira · Meta: ${goal.name}` : "Reserva financeira";
+    }
+
+    function openNewGoalDialog() {
+      goalEditId = null;
+      goalForm.reset();
+      goalDialogTitle.textContent = "Nova meta financeira";
+      deleteGoalButton.style.visibility = "hidden";
+      goalDialog.showModal();
+      setTimeout(() => goalNameInput.focus(), 30);
+    }
+
+    function openEditGoalDialog(goal) {
+      goalEditId = goal.id;
+      goalForm.reset();
+      goalDialogTitle.textContent = "Editar meta financeira";
+      deleteGoalButton.style.visibility = "visible";
+      goalNameInput.value = goal.name || "";
+      goalTargetInput.value = ((goal.targetCents || 0) / 100).toFixed(2);
+      goalStartingInput.value = goal.startingCents > 0 ? (goal.startingCents / 100).toFixed(2) : "";
+      goalDeadlineInput.value = goal.deadlineMonth || "";
+      goalDialog.showModal();
+      setTimeout(() => goalNameInput.focus(), 30);
+    }
+
+    function handleGoalSubmit(event) {
+      event.preventDefault();
+      const name = goalNameInput.value.trim().slice(0, 60);
+      const targetCents = getInputCents(goalTargetInput);
+      const startingCents = getInputCents(goalStartingInput, true);
+      const deadlineMonth = goalDeadlineInput.value || "";
+
+      if (!name || targetCents <= 0) {
+        showToast("Informe o nome e o valor objetivo da meta.");
+        return;
+      }
+
+      if (goalEditId) {
+        const goal = getGoalById(goalEditId);
+        if (!goal) return;
+        Object.assign(goal, { name, targetCents, startingCents, deadlineMonth });
+      } else {
+        state.goals.push({
+          id: createId(),
+          name,
+          targetCents,
+          startingCents,
+          deadlineMonth,
+          createdAt: new Date().toISOString()
+        });
+      }
+
+      saveState();
+      goalDialog.close();
+      goalEditId = null;
+      render();
+      showToast("Meta financeira salva.");
+    }
+
+    function deleteCurrentGoal() {
+      const goal = getGoalById(goalEditId);
+      if (!goal) return;
+      if (!window.confirm(`Excluir a meta "${goal.name}"? As reservas vinculadas continuarão salvas como reserva geral.`)) return;
+      state.goals = state.goals.filter((item) => item.id !== goal.id);
+      state.reserves.forEach((reserve) => {
+        if (reserve.goalId === goal.id) reserve.goalId = "";
+      });
+      saveState();
+      goalDialog.close();
+      goalEditId = null;
+      render();
+      showToast("Meta excluída.");
+    }
+
+    function handleGoalListClick(event) {
+      const button = event.target.closest("button[data-goal-action]");
+      if (!button) return;
+      const goal = getGoalById(button.dataset.goalId);
+      if (!goal) return;
+      if (button.dataset.goalAction === "edit") openEditGoalDialog(goal);
+      if (button.dataset.goalAction === "delete") {
+        goalEditId = goal.id;
+        deleteCurrentGoal();
+      }
+    }
+
+    function renderGoals() {
+      if (state.goals.length === 0) {
+        goalsList.innerHTML = '<div class="empty-organization">Nenhuma meta criada ainda. Crie uma meta e vincule suas próximas reservas a ela.</div>';
+        return;
+      }
+
+      goalsList.innerHTML = state.goals.map((goal) => {
+        const progressCents = getGoalProgressCents(goal);
+        const targetCents = Math.max(1, Math.round(Number(goal.targetCents) || 0));
+        const percentage = Math.min(100, (progressCents / targetCents) * 100);
+        const remainingCents = Math.max(0, targetCents - progressCents);
+        const deadline = goal.deadlineMonth ? formatMonth(goal.deadlineMonth) : "Sem prazo";
+        const isLate = Boolean(goal.deadlineMonth && goal.deadlineMonth < getCurrentMonthKey() && remainingCents > 0);
+        return `
+          <div class="goal-item">
+            <div class="goal-item-header">
+              <div class="goal-copy">
+                <div class="goal-name">${escapeHtml(goal.name)}</div>
+                <div class="goal-meta ${isLate ? "deadline-warning" : ""}">${escapeHtml(deadline)} · ${formatPercentage(percentage)}% concluído</div>
+              </div>
+              <div class="goal-values">
+                ${escapeHtml(formatCurrency(progressCents))}
+                <small>de ${escapeHtml(formatCurrency(targetCents))}</small>
+              </div>
+            </div>
+            <div class="goal-track"><div class="goal-fill" style="width:${percentage.toFixed(2)}%"></div></div>
+            <div class="goal-meta">${remainingCents > 0 ? `Faltam ${escapeHtml(formatCurrency(remainingCents))}` : "Meta atingida 🎉"}</div>
+            <div class="goal-actions">
+              <button class="button button-secondary button-small" type="button" data-goal-action="edit" data-goal-id="${escapeHtml(goal.id)}">Editar</button>
+              <button class="button button-ghost button-small" type="button" data-goal-action="delete" data-goal-id="${escapeHtml(goal.id)}">Excluir</button>
+            </div>
+          </div>`;
+      }).join("");
+    }
+
+    function getUpcomingExpenseItems(daysAhead = 45) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const end = new Date(today);
+      end.setDate(end.getDate() + daysAhead);
+      const todayKey = toLocalDateKey(today);
+      const endKey = toLocalDateKey(end);
+      const startMonth = todayKey.slice(0, 7);
+      const endMonth = endKey.slice(0, 7);
+      const months = [];
+      let monthKey = startMonth;
+      while (monthKey <= endMonth) {
+        months.push(monthKey);
+        monthKey = addMonthsToMonthKey(monthKey, 1);
+      }
+      return months
+        .flatMap((key) => getItemsForMonth(key))
+        .filter((item) => item.date >= todayKey && item.date <= endKey)
+        .sort(sortByDateThenDescription)
+        .slice(0, 8);
+    }
+
+    function renderUpcomingExpenses() {
+      const items = getUpcomingExpenseItems(45);
+      if (items.length === 0) {
+        upcomingExpensesList.innerHTML = '<div class="empty-organization">Nenhum gasto futuro registrado para os próximos 45 dias.</div>';
+        return;
+      }
+      const todayKey = toLocalDateKey(new Date());
+      upcomingExpensesList.innerHTML = items.map((item) => {
+        const days = daysBetweenDateKeys(todayKey, item.date);
+        const when = days === 0 ? "Hoje" : days === 1 ? "Amanhã" : `Em ${days} dias`;
+        return `
+          <div class="upcoming-item">
+            <div class="upcoming-copy">
+              <div class="upcoming-title">${escapeHtml(item.description)}</div>
+              <div class="upcoming-meta">${escapeHtml(formatDate(item.date))} · ${escapeHtml(when)} · ${escapeHtml(item.category)} · ${escapeHtml(getTypeTag(item).label)}</div>
+            </div>
+            <div class="upcoming-amount">${escapeHtml(formatCurrency(item.amountCents))}</div>
+          </div>`;
+      }).join("");
+    }
+
+    function getTrailingMonths(monthKey, count) {
+      const result = [];
+      for (let offset = count - 1; offset >= 0; offset -= 1) {
+        result.push(addMonthsToMonthKey(monthKey, -offset));
+      }
+      return result;
+    }
+
+    function renderFinancialHealth() {
+      const metrics = getMonthFinancials(currentMonth);
+      const classification = getExpenseClassificationTotals(currentMonth);
+      const savingsRate = metrics.incomeCents > 0 ? (metrics.reserveCents / metrics.incomeCents) * 100 : 0;
+      const commitmentRate = metrics.incomeCents > 0 ? (metrics.expenseCents / metrics.incomeCents) * 100 : 0;
+      const essentialRate = metrics.expenseCents > 0 ? (classification.essentialCents / metrics.expenseCents) * 100 : 0;
+      const trailingMetrics = getTrailingMonths(currentMonth, 3).map(getMonthFinancials);
+      const activeTrailing = trailingMetrics.filter((item) => item.incomeCents > 0 || item.expenseCents > 0 || item.reserveCents > 0);
+      const averageExpenses = activeTrailing.length > 0
+        ? Math.round(activeTrailing.reduce((sum, item) => sum + item.expenseCents, 0) / activeTrailing.length)
+        : 0;
+      const totalReserve = getTotalReserveCentsThroughMonth(currentMonth);
+      const runway = averageExpenses > 0 ? totalReserve / averageExpenses : 0;
+
+      healthPeriodLabel.textContent = `Indicadores de ${formatMonth(currentMonth).toLowerCase()} e média dos últimos 3 meses.`;
+      healthSavingsRate.textContent = `${formatPercentage(savingsRate)}%`;
+      healthCommitmentRate.textContent = `${formatPercentage(commitmentRate)}%`;
+      healthEssentialRate.textContent = `${formatPercentage(essentialRate)}%`;
+      healthAverageExpenses.textContent = formatCurrency(averageExpenses);
+      healthReserveRunway.textContent = runway.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      essentialExpensesValue.textContent = formatCurrency(classification.essentialCents);
+      nonessentialExpensesValue.textContent = formatCurrency(classification.nonessentialCents);
+
+      healthSavingsRate.classList.toggle("dashboard-positive", savingsRate >= 10);
+      healthSavingsRate.classList.toggle("dashboard-negative", metrics.incomeCents > 0 && savingsRate < 5);
+      healthCommitmentRate.classList.toggle("dashboard-negative", commitmentRate > 100);
+    }
+
+    function generateAutomaticInsights(monthKey) {
+      const metrics = getMonthFinancials(monthKey);
+      const previousMonth = addMonthsToMonthKey(monthKey, -1);
+      const previous = getMonthFinancials(previousMonth);
+      const plan = getMonthPlan(monthKey);
+      const classification = getExpenseClassificationTotals(monthKey);
+      const insights = [];
+
+      if (metrics.incomeCents <= 0 && metrics.expenseCents <= 0) {
+        return [{ icon: "💡", text: "Adicione receitas e gastos para começar a receber insights automáticos sobre o mês." }];
+      }
+
+      if (metrics.expenseCents > 0 && previous.expenseCents > 0) {
+        const change = ((metrics.expenseCents - previous.expenseCents) / previous.expenseCents) * 100;
+        if (Math.abs(change) >= 5) {
+          insights.push({
+            icon: change > 0 ? "📈" : "📉",
+            text: `Seus gastos estão ${formatPercentage(Math.abs(change))}% ${change > 0 ? "maiores" : "menores"} que em ${formatMonth(previousMonth).toLowerCase()}.`
+          });
+        }
+      }
+
+      if (metrics.incomeCents > 0) {
+        const savingsRate = (metrics.reserveCents / metrics.incomeCents) * 100;
+        insights.push({
+          icon: savingsRate >= 10 ? "✅" : "🎯",
+          text: `Você reservou ${formatPercentage(savingsRate)}% da sua renda neste mês, total de ${formatCurrency(metrics.reserveCents)}.`
+        });
+      }
+
+      const categories = Object.entries(metrics.expenseByCategory).sort((a, b) => b[1] - a[1]);
+      if (categories.length > 0 && metrics.expenseCents > 0) {
+        const [category, amount] = categories[0];
+        const share = (amount / metrics.expenseCents) * 100;
+        insights.push({
+          icon: "🏷️",
+          text: `${category} é sua maior categoria no mês, com ${formatCurrency(amount)}, equivalente a ${formatPercentage(share)}% dos gastos.`
+        });
+      }
+
+      if (plan.expenseCents > 0) {
+        const difference = plan.expenseCents - metrics.expenseCents;
+        insights.push({
+          icon: difference >= 0 ? "🧭" : "⚠️",
+          text: difference >= 0
+            ? `Você ainda tem ${formatCurrency(difference)} de margem dentro do gasto planejado para o mês.`
+            : `Os gastos estão ${formatCurrency(Math.abs(difference))} acima do valor planejado.`
+        });
+      }
+
+      if (metrics.expenseCents > 0 && classification.nonessentialCents > 0) {
+        const nonessentialRate = (classification.nonessentialCents / metrics.expenseCents) * 100;
+        insights.push({
+          icon: "🔎",
+          text: `Gastos não essenciais representam ${formatPercentage(nonessentialRate)}% do total, ${formatCurrency(classification.nonessentialCents)} no mês.`
+        });
+      }
+
+      return insights.slice(0, 5);
+    }
+
+    function renderAutomaticInsights() {
+      insightsTitle.textContent = `Insights de ${formatMonth(currentMonth)}`;
+      const insights = generateAutomaticInsights(currentMonth);
+      automaticInsightsList.innerHTML = insights.map((insight) => `
+        <div class="insight-item">
+          <span class="insight-icon" aria-hidden="true">${insight.icon}</span>
+          <span>${escapeHtml(insight.text)}</span>
+        </div>
+      `).join("");
+    }
+
+    function toLocalDateKey(date) {
+      const local = new Date(date);
+      const year = local.getFullYear();
+      const month = String(local.getMonth() + 1).padStart(2, "0");
+      const day = String(local.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function daysBetweenDateKeys(startKey, endKey) {
+      const start = new Date(`${startKey}T00:00:00`);
+      const end = new Date(`${endKey}T00:00:00`);
+      return Math.max(0, Math.round((end - start) / 86400000));
+    }
+
+    function formatDateTime(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "data não informada";
+      return new Intl.DateTimeFormat("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(date);
     }
 
     function getSelectedExpenseType() {
