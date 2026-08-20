@@ -2025,7 +2025,7 @@
 
     .essential-breakdown {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
       margin-top: 14px;
     }
@@ -2290,6 +2290,54 @@
       color: #c2410c;
     }
 
+    .classification-badge.unclassified {
+      background: #f2f4f7;
+      color: #667085;
+    }
+
+    .drag-handle {
+      display: inline-grid;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      place-items: center;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: #98a2b3;
+      cursor: grab;
+      font-size: 1rem;
+      font-weight: 900;
+      line-height: 1;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .drag-handle:hover,
+    .drag-handle:focus-visible {
+      background: var(--surface-soft);
+      color: var(--text);
+    }
+
+    .drag-handle:active {
+      cursor: grabbing;
+    }
+
+    .sortable-date {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    [data-sort-id].sortable-dragging {
+      opacity: 0.42;
+    }
+
+    [data-sort-id].sortable-drop-target {
+      outline: 2px solid rgba(37, 99, 235, 0.42);
+      outline-offset: -2px;
+    }
+
     .empty-organization {
       border: 1px dashed var(--border);
       border-radius: 13px;
@@ -2523,7 +2571,7 @@
               <h3>Saúde financeira</h3>
               <p id="healthPeriodLabel">Indicadores do mês selecionado e do seu histórico recente.</p>
             </div>
-            <button class="button button-secondary button-small" id="classifyCategoriesButton" type="button">Classificar categorias</button>
+            <button class="button button-secondary button-small" id="classifyCategoriesButton" type="button" hidden>Classificar categorias</button>
           </div>
           <div class="health-grid">
             <div class="health-card">
@@ -2560,6 +2608,10 @@
             <div class="essential-breakdown-item">
               <span>Não essenciais no mês</span>
               <strong id="nonessentialExpensesValue">R$ 0,00</strong>
+            </div>
+            <div class="essential-breakdown-item">
+              <span>Não classificados</span>
+              <strong id="unclassifiedExpensesValue">R$ 0,00</strong>
             </div>
           </div>
         </section>
@@ -2799,7 +2851,7 @@
         <div class="section-heading">
           <div>
             <h2>Receitas extras do mês</h2>
-            <p>Registre valores recebidos além do salário fixo.</p>
+            <p>Registre valores recebidos além do salário fixo. Arraste ⋮⋮ para reordenar.</p>
           </div>
           <label class="bulk-select" id="selectAllIncomesLabel">
             <input id="selectAllIncomesCheckbox" type="checkbox">
@@ -2817,7 +2869,7 @@
         <div class="section-heading">
           <div>
             <h2>Reservas do mês</h2>
-            <p>Registre valores separados para sua reserva financeira.</p>
+            <p>Registre valores separados para sua reserva financeira. Arraste ⋮⋮ para reordenar.</p>
           </div>
         </div>
         <div class="income-list" id="reserveList"></div>
@@ -2832,7 +2884,7 @@
           <div class="section-heading">
             <div>
               <h2>Gastos do mês</h2>
-              <p>Inclua, edite ou exclua seus lançamentos.</p>
+              <p>Inclua, edite, classifique e arraste ⋮⋮ para reordenar seus lançamentos.</p>
             </div>
             <label class="bulk-select" id="selectAllExpensesLabel">
               <input id="selectAllExpensesCheckbox" type="checkbox">
@@ -2949,6 +3001,16 @@
             <label for="customCategoryInput">Nome da categoria</label>
             <input class="field-control" id="customCategoryInput" type="text" maxlength="40" placeholder="Exemplo: Pets">
             <span class="field-hint">Ao selecionar Outros, informe o nome que deseja usar para esta categoria.</span>
+          </div>
+
+          <div class="field">
+            <label for="necessityInput">Classificação</label>
+            <select class="field-control" id="necessityInput" required>
+              <option value="">Selecione</option>
+              <option value="essential">Essencial</option>
+              <option value="nonessential">Não essencial</option>
+            </select>
+            <span class="field-hint">Você decide manualmente a classificação deste gasto.</span>
           </div>
 
           <div class="field">
@@ -3287,7 +3349,7 @@
     };
 
     const defaultState = () => ({
-      version: 5,
+      version: 6,
       salaryCents: 0,
       salaryOverrides: {},
       incomes: [],
@@ -3298,7 +3360,8 @@
       monthlyPlans: {},
       goals: [],
       monthClosures: {},
-      categoryClassifications: {}
+      categoryClassifications: {},
+      manualOrder: { expenses: {}, incomes: {}, reserves: {} }
     });
 
     let state = loadState();
@@ -3353,6 +3416,7 @@
     const healthReserveRunway = document.getElementById("healthReserveRunway");
     const essentialExpensesValue = document.getElementById("essentialExpensesValue");
     const nonessentialExpensesValue = document.getElementById("nonessentialExpensesValue");
+    const unclassifiedExpensesValue = document.getElementById("unclassifiedExpensesValue");
     const goalsList = document.getElementById("goalsList");
     const upcomingExpensesList = document.getElementById("upcomingExpensesList");
     const insightsTitle = document.getElementById("insightsTitle");
@@ -3425,6 +3489,7 @@
     const categoryInput = document.getElementById("categoryInput");
     const customCategoryField = document.getElementById("customCategoryField");
     const customCategoryInput = document.getElementById("customCategoryInput");
+    const necessityInput = document.getElementById("necessityInput");
     const amountInput = document.getElementById("amountInput");
     const amountLabel = document.getElementById("amountLabel");
     const dateInput = document.getElementById("dateInput");
@@ -3692,6 +3757,10 @@
         }
       });
 
+      setupSortableContainer(transactionsBody, "expenses");
+      setupSortableContainer(incomeList, "incomes");
+      setupSortableContainer(reserveList, "reserves");
+
       deleteSingleChoice.addEventListener("click", () => executeDelete("single"));
       deleteFutureChoice.addEventListener("click", () => executeDelete("future"));
 
@@ -3767,9 +3836,9 @@
     function render() {
       monthTitle.textContent = formatMonth(currentMonth);
       monthPicker.value = currentMonth;
-      currentItems = getItemsForMonth(currentMonth).sort(sortByDateThenDescription);
-      currentIncomeItems = getIncomeItemsForMonth(currentMonth).sort(sortByDateThenDescription);
-      currentReserveItems = getReserveItemsForMonth(currentMonth).sort(sortByDateThenDescription);
+      currentItems = sortItemsWithManualOrder(getItemsForMonth(currentMonth), "expenses", currentMonth, (item) => item.displayId);
+      currentIncomeItems = sortItemsWithManualOrder(getIncomeItemsForMonth(currentMonth), "incomes", currentMonth, (item) => item.id);
+      currentReserveItems = sortItemsWithManualOrder(getReserveItemsForMonth(currentMonth), "reserves", currentMonth, (item) => item.id);
       pruneSelection();
       refreshCategoryFilterOptions();
       renderSummary();
@@ -3847,8 +3916,9 @@
       incomeList.innerHTML = currentIncomeItems.map((item) => {
         const selected = selectedIncomeIds.has(item.id);
         return `
-        <div class="income-row${selected ? " selection-selected" : ""}">
-          <div class="income-date">
+        <div class="income-row${selected ? " selection-selected" : ""}" data-sort-id="${escapeHtml(item.id)}" data-sort-type="incomes">
+          <div class="income-date sortable-date">
+            <button class="drag-handle" type="button" draggable="true" data-drag-handle data-sort-id="${escapeHtml(item.id)}" data-sort-type="incomes" aria-label="Reordenar receita ${escapeHtml(item.description)}" title="Arraste para reordenar">⋮⋮</button>
             <label class="item-selector">
               <input type="checkbox" data-select-income="${escapeHtml(item.id)}" ${selected ? "checked" : ""} aria-label="Selecionar receita ${escapeHtml(item.description)}">
               <span>${escapeHtml(formatDate(item.date))}</span>
@@ -3876,8 +3946,11 @@
       reserveEmpty.classList.toggle("visible", !hasReserve);
 
       reserveList.innerHTML = currentReserveItems.map((item) => `
-        <div class="income-row">
-          <div class="income-date">${escapeHtml(formatDate(item.date))}</div>
+        <div class="income-row" data-sort-id="${escapeHtml(item.id)}" data-sort-type="reserves">
+          <div class="income-date sortable-date">
+            <button class="drag-handle" type="button" draggable="true" data-drag-handle data-sort-id="${escapeHtml(item.id)}" data-sort-type="reserves" aria-label="Reordenar reserva ${escapeHtml(item.description)}" title="Arraste para reordenar">⋮⋮</button>
+            <span>${escapeHtml(formatDate(item.date))}</span>
+          </div>
           <div class="income-details">
             <div class="income-title">${escapeHtml(item.description)}</div>
             <div class="income-subtitle">${escapeHtml(getReserveSubtitle(item))}</div>
@@ -3925,22 +3998,25 @@
         const categoryColor = getCategoryColor(item.category);
         const selected = selectedExpenseIds.has(item.displayId);
         return `
-          <tr class="${selected ? "selection-selected" : ""}">
+          <tr class="${selected ? "selection-selected" : ""}" data-sort-id="${escapeHtml(item.displayId)}" data-sort-type="expenses">
             <td>
-              <label class="item-selector">
+              <div class="sortable-date">
+                <button class="drag-handle" type="button" draggable="true" data-drag-handle data-sort-id="${escapeHtml(item.displayId)}" data-sort-type="expenses" aria-label="Reordenar gasto ${escapeHtml(item.description)}" title="Arraste para reordenar">⋮⋮</button>
+                <label class="item-selector">
                 <input type="checkbox" data-select-expense="${escapeHtml(item.displayId)}" ${selected ? "checked" : ""} aria-label="Selecionar gasto ${escapeHtml(item.description)}">
-                <span>${escapeHtml(formatDate(item.date))}</span>
-              </label>
+                  <span>${escapeHtml(formatDate(item.date))}</span>
+                </label>
+              </div>
             </td>
             <td>
               <div class="transaction-title">${escapeHtml(item.description)}</div>
-              <div class="transaction-subtitle">${escapeHtml(item.category)} · ${getCategoryClassificationLabel(item.category)} · ${escapeHtml(typeTag.label)}</div>
+              <div class="transaction-subtitle">${escapeHtml(item.category)} · ${escapeHtml(getExpenseClassificationLabel(item))} · ${escapeHtml(typeTag.label)}</div>
             </td>
             <td>
               <span class="category-chip">
                 <span class="category-dot" style="--dot-color: ${categoryColor}"></span>
                 ${escapeHtml(item.category)}
-                <span class="classification-badge ${getCategoryClassification(item.category) === "nonessential" ? "nonessential" : ""}">${getCategoryClassificationLabel(item.category)}</span>
+                <span class="classification-badge ${getExpenseClassificationClass(item)}">${escapeHtml(getExpenseClassificationLabel(item))}</span>
               </span>
             </td>
             <td><span class="tag ${typeTag.className}">${escapeHtml(typeTag.label)}</span></td>
@@ -4039,7 +4115,6 @@
               <span class="category-chip">
                 <span class="category-dot" style="--dot-color: ${color}"></span>
                 ${escapeHtml(item.category)}
-                <span class="classification-badge ${getCategoryClassification(item.category) === "nonessential" ? "nonessential" : ""}">${getCategoryClassificationLabel(item.category)}</span>
               </span>
               <strong>${escapeHtml(formatCurrency(item.total))}</strong>
             </div>
@@ -4183,6 +4258,7 @@
       document.getElementById("typeSingle").checked = true;
       categoryInput.value = CATEGORIES[0];
       customCategoryInput.value = "";
+      necessityInput.value = "";
       updateCustomCategoryField();
       dateInput.value = suggestedDateForCurrentMonth();
       dateInput.min = "";
@@ -4212,6 +4288,7 @@
       const isStandardCategory = CATEGORIES.includes(item.category);
       categoryInput.value = isStandardCategory ? item.category : "Outros";
       customCategoryInput.value = isStandardCategory ? "" : item.category;
+      necessityInput.value = getExpenseClassification(item) === "unclassified" ? "" : getExpenseClassification(item);
       updateCustomCategoryField();
       amountInput.value = (item.amountCents / 100).toFixed(2);
       dateInput.value = item.date;
@@ -4307,18 +4384,21 @@
       const category = selectedCategory === "Outros"
         ? customCategory || (editContext?.item.category === "Outros" ? "Outros" : "")
         : selectedCategory;
+      const necessity = normalizeExpenseNecessity(necessityInput.value);
       const amountCents = getInputCents(amountInput);
       const date = dateInput.value;
 
-      if (!description || !CATEGORIES.includes(selectedCategory) || !category || amountCents <= 0 || !isValidDateString(date)) {
+      if (!description || !CATEGORIES.includes(selectedCategory) || !category || necessity === "unclassified" || amountCents <= 0 || !isValidDateString(date)) {
         showToast(selectedCategory === "Outros" && !category
           ? "Informe o nome da categoria personalizada."
-          : "Revise os campos obrigatórios antes de salvar.");
+          : necessity === "unclassified"
+            ? "Escolha se o gasto é Essencial ou Não essencial."
+            : "Revise os campos obrigatórios antes de salvar.");
         return;
       }
 
       if (editContext) {
-        saveEditedExpense({ description, category, amountCents, date });
+        saveEditedExpense({ description, category, necessity, amountCents, date });
         return;
       }
 
@@ -4330,6 +4410,7 @@
           kind: "single",
           description,
           category,
+          necessity,
           amountCents,
           date,
           createdAt: new Date().toISOString()
@@ -4342,7 +4423,7 @@
           showToast("Informe uma quantidade de parcelas entre 2 e 120.");
           return;
         }
-        createInstallmentSeries({ description, category, totalCents: amountCents, date, count });
+        createInstallmentSeries({ description, category, necessity, totalCents: amountCents, date, count });
       }
 
       if (type === "recurring") {
@@ -4359,6 +4440,7 @@
           kind: "recurring",
           description,
           category,
+          necessity,
           amountCents,
           day: Number(date.slice(8, 10)),
           startMonth,
@@ -4404,6 +4486,7 @@
             .forEach((expense) => {
               expense.description = values.description;
               expense.category = values.category;
+              expense.necessity = values.necessity;
               expense.amountCents = values.amountCents;
               if (dateChanged) {
                 expense.date = dateForMonth(expense.date.slice(0, 7), newDay);
@@ -4423,6 +4506,7 @@
             deleted: false,
             description: values.description,
             category: values.category,
+            necessity: values.necessity,
             amountCents: values.amountCents,
             date: values.date
           };
@@ -4437,7 +4521,7 @@
       showToast("Alterações salvas com sucesso.");
     }
 
-    function createInstallmentSeries({ description, category, totalCents, date, count }) {
+    function createInstallmentSeries({ description, category, necessity, totalCents, date, count }) {
       const seriesId = createId();
       const baseAmount = Math.floor(totalCents / count);
       const remainder = totalCents - baseAmount * count;
@@ -4449,6 +4533,7 @@
           kind: "installment",
           description,
           category,
+          necessity,
           amountCents: baseAmount + (index < remainder ? 1 : 0),
           date: addMonthsToDate(date, index),
           installmentIndex: index + 1,
@@ -4480,6 +4565,7 @@
         kind: "recurring",
         description: values.description,
         category: values.category,
+        necessity: values.necessity,
         amountCents: values.amountCents,
         day: values.date === item.date ? oldRule.day : Number(values.date.slice(8, 10)),
         startMonth: item.occurrenceMonth,
@@ -4633,6 +4719,7 @@
             occurrenceMonth: monthKey,
             description: override?.description ?? rule.description,
             category: override?.category ?? rule.category,
+            necessity: override?.necessity ?? rule.necessity ?? "",
             amountCents: override?.amountCents ?? rule.amountCents,
             date: override?.date ?? dateForMonth(monthKey, rule.day)
           };
@@ -5114,7 +5201,7 @@
 
     function normalizeImportedState(candidate) {
       return {
-        version: 5,
+        version: 6,
         salaryCents: Number.isFinite(candidate.salaryCents) ? Math.max(0, Math.round(candidate.salaryCents)) : 0,
         salaryOverrides: candidate.salaryOverrides && typeof candidate.salaryOverrides === "object"
           ? Object.fromEntries(Object.entries(candidate.salaryOverrides).map(([monthKey, value]) => [monthKey, Math.max(0, Math.round(Number(value) || 0))]))
@@ -5129,7 +5216,8 @@
         monthClosures: candidate.monthClosures && typeof candidate.monthClosures === "object" ? candidate.monthClosures : {},
         categoryClassifications: candidate.categoryClassifications && typeof candidate.categoryClassifications === "object"
           ? candidate.categoryClassifications
-          : {}
+          : {},
+        manualOrder: normalizeManualOrder(candidate.manualOrder)
       };
     }
 
@@ -5203,55 +5291,211 @@
     }
 
 
-    function getCategoryClassification(category) {
-      const normalized = normalizeCategoryName(category) || "Outros";
-      const saved = state.categoryClassifications?.[normalized];
-      if (saved === "essential" || saved === "nonessential") return saved;
-      return DEFAULT_CATEGORY_CLASSIFICATIONS[normalized] || "nonessential";
+    function normalizeExpenseNecessity(value) {
+      return value === "essential" || value === "nonessential" ? value : "unclassified";
     }
 
-    function getCategoryClassificationLabel(category) {
-      return getCategoryClassification(category) === "essential" ? "Essencial" : "Não essencial";
+    function getExpenseClassification(item) {
+      return normalizeExpenseNecessity(item?.necessity);
+    }
+
+    function getExpenseClassificationLabel(item) {
+      const classification = getExpenseClassification(item);
+      if (classification === "essential") return "Essencial";
+      if (classification === "nonessential") return "Não essencial";
+      return "Não classificado";
+    }
+
+    function getExpenseClassificationClass(item) {
+      const classification = getExpenseClassification(item);
+      return classification === "nonessential" ? "nonessential" : classification === "unclassified" ? "unclassified" : "";
     }
 
     function getExpenseClassificationTotals(monthKey) {
       return getItemsForMonth(monthKey).reduce((totals, item) => {
-        const key = getCategoryClassification(item.category) === "essential" ? "essentialCents" : "nonessentialCents";
-        totals[key] += item.amountCents;
+        const classification = getExpenseClassification(item);
+        if (classification === "essential") totals.essentialCents += item.amountCents;
+        else if (classification === "nonessential") totals.nonessentialCents += item.amountCents;
+        else totals.unclassifiedCents += item.amountCents;
         return totals;
-      }, { essentialCents: 0, nonessentialCents: 0 });
+      }, { essentialCents: 0, nonessentialCents: 0, unclassifiedCents: 0 });
     }
 
     function openCategoryClassificationDialog() {
-      const categories = getAvailableCategories();
-      categoryClassificationList.innerHTML = categories.map((category) => {
-        const classification = getCategoryClassification(category);
-        return `
-          <div class="category-classification-row">
-            <div class="category-classification-name">
-              <span class="category-dot" style="--dot-color:${getCategoryColor(category)}"></span>
-              <span>${escapeHtml(category)}</span>
-            </div>
-            <select class="field-control" data-category-classification="${escapeHtml(category)}" aria-label="Classificação de ${escapeHtml(category)}">
-              <option value="essential" ${classification === "essential" ? "selected" : ""}>Essencial</option>
-              <option value="nonessential" ${classification === "nonessential" ? "selected" : ""}>Não essencial</option>
-            </select>
-          </div>`;
-      }).join("");
-      categoryClassificationDialog.showModal();
+      showToast("A classificação agora é definida manualmente em cada gasto.");
     }
 
     function handleCategoryClassificationSubmit(event) {
       event.preventDefault();
-      categoryClassificationList.querySelectorAll("[data-category-classification]").forEach((select) => {
-        const category = normalizeCategoryName(select.dataset.categoryClassification);
-        if (!category) return;
-        state.categoryClassifications[category] = select.value === "essential" ? "essential" : "nonessential";
-      });
-      saveState();
       categoryClassificationDialog.close();
+    }
+
+    function normalizeManualOrder(value) {
+      const source = value && typeof value === "object" ? value : {};
+      const normalizeGroup = (group) => {
+        if (!group || typeof group !== "object") return {};
+        return Object.fromEntries(Object.entries(group).map(([monthKey, ids]) => [
+          monthKey,
+          Array.isArray(ids) ? [...new Set(ids.map(String).filter(Boolean))] : []
+        ]));
+      };
+      return {
+        expenses: normalizeGroup(source.expenses),
+        incomes: normalizeGroup(source.incomes),
+        reserves: normalizeGroup(source.reserves)
+      };
+    }
+
+    function sortItemsWithManualOrder(items, type, monthKey, getId) {
+      const base = [...items].sort(sortByDateThenDescription);
+      const stored = state.manualOrder?.[type]?.[monthKey];
+      if (!Array.isArray(stored) || stored.length === 0) return base;
+      const positions = new Map(stored.map((id, index) => [String(id), index]));
+      return base.sort((a, b) => {
+        const aPos = positions.has(String(getId(a))) ? positions.get(String(getId(a))) : Number.POSITIVE_INFINITY;
+        const bPos = positions.has(String(getId(b))) ? positions.get(String(getId(b))) : Number.POSITIVE_INFINITY;
+        if (aPos !== bPos) return aPos - bPos;
+        return sortByDateThenDescription(a, b);
+      });
+    }
+
+    function getSortableContext(type) {
+      if (type === "expenses") {
+        return {
+          allIds: currentItems.map((item) => item.displayId),
+          visibleIds: getVisibleExpenseItems().map((item) => item.displayId)
+        };
+      }
+      if (type === "incomes") {
+        const ids = currentIncomeItems.map((item) => item.id);
+        return { allIds: ids, visibleIds: ids };
+      }
+      const ids = currentReserveItems.map((item) => item.id);
+      return { allIds: ids, visibleIds: ids };
+    }
+
+    function reorderVisibleItems(type, draggedId, targetId, placeAfter = false) {
+      if (!draggedId || !targetId || draggedId === targetId) return;
+      const { allIds, visibleIds } = getSortableContext(type);
+      if (!visibleIds.includes(draggedId) || !visibleIds.includes(targetId)) return;
+
+      const reorderedVisible = visibleIds.filter((id) => id !== draggedId);
+      let targetIndex = reorderedVisible.indexOf(targetId);
+      if (targetIndex < 0) return;
+      if (placeAfter) targetIndex += 1;
+      reorderedVisible.splice(targetIndex, 0, draggedId);
+
+      const visibleSet = new Set(visibleIds);
+      let visibleIndex = 0;
+      const merged = allIds.map((id) => visibleSet.has(id) ? reorderedVisible[visibleIndex++] : id);
+
+      state.manualOrder[type] ||= {};
+      state.manualOrder[type][currentMonth] = merged;
+      saveState();
       render();
-      showToast("Classificação das categorias atualizada.");
+    }
+
+    function clearSortableHighlights(container) {
+      container.querySelectorAll(".sortable-dragging, .sortable-drop-target").forEach((element) => {
+        element.classList.remove("sortable-dragging", "sortable-drop-target");
+      });
+    }
+
+    function setupSortableContainer(container, type) {
+      let draggedId = "";
+      let touchState = null;
+
+      container.addEventListener("dragstart", (event) => {
+        const handle = event.target.closest(`[data-drag-handle][data-sort-type="${type}"]`);
+        if (!handle) return;
+        draggedId = handle.dataset.sortId || "";
+        const row = handle.closest("[data-sort-id]");
+        row?.classList.add("sortable-dragging");
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("text/plain", draggedId);
+      });
+
+      container.addEventListener("dragover", (event) => {
+        if (!draggedId) return;
+        const target = event.target.closest(`[data-sort-id][data-sort-type="${type}"]`);
+        if (!target || target.dataset.sortId === draggedId) return;
+        event.preventDefault();
+        container.querySelectorAll(".sortable-drop-target").forEach((element) => element.classList.remove("sortable-drop-target"));
+        target.classList.add("sortable-drop-target");
+      });
+
+      container.addEventListener("drop", (event) => {
+        if (!draggedId) return;
+        const target = event.target.closest(`[data-sort-id][data-sort-type="${type}"]`);
+        if (!target) return;
+        event.preventDefault();
+        const rect = target.getBoundingClientRect();
+        const placeAfter = event.clientY > rect.top + rect.height / 2;
+        const targetId = target.dataset.sortId;
+        clearSortableHighlights(container);
+        reorderVisibleItems(type, draggedId, targetId, placeAfter);
+        draggedId = "";
+      });
+
+      container.addEventListener("dragend", () => {
+        draggedId = "";
+        clearSortableHighlights(container);
+      });
+
+      container.addEventListener("keydown", (event) => {
+        const handle = event.target.closest(`[data-drag-handle][data-sort-type="${type}"]`);
+        if (!handle || !["ArrowUp", "ArrowDown"].includes(event.key)) return;
+        event.preventDefault();
+        const { visibleIds } = getSortableContext(type);
+        const id = handle.dataset.sortId;
+        const index = visibleIds.indexOf(id);
+        const targetIndex = event.key === "ArrowUp" ? index - 1 : index + 1;
+        if (index < 0 || targetIndex < 0 || targetIndex >= visibleIds.length) return;
+        reorderVisibleItems(type, id, visibleIds[targetIndex], event.key === "ArrowDown");
+      });
+
+      container.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse") return;
+        const handle = event.target.closest(`[data-drag-handle][data-sort-type="${type}"]`);
+        if (!handle) return;
+        touchState = {
+          pointerId: event.pointerId,
+          draggedId: handle.dataset.sortId || "",
+          startY: event.clientY,
+          targetId: "",
+          placeAfter: false,
+          active: false
+        };
+        handle.setPointerCapture?.(event.pointerId);
+      });
+
+      container.addEventListener("pointermove", (event) => {
+        if (!touchState || touchState.pointerId !== event.pointerId) return;
+        if (!touchState.active && Math.abs(event.clientY - touchState.startY) < 7) return;
+        touchState.active = true;
+        event.preventDefault();
+        const element = document.elementFromPoint(event.clientX, event.clientY);
+        const target = element?.closest?.(`[data-sort-id][data-sort-type="${type}"]`);
+        if (!target || target.dataset.sortId === touchState.draggedId) return;
+        container.querySelectorAll(".sortable-drop-target").forEach((node) => node.classList.remove("sortable-drop-target"));
+        target.classList.add("sortable-drop-target");
+        const rect = target.getBoundingClientRect();
+        touchState.targetId = target.dataset.sortId;
+        touchState.placeAfter = event.clientY > rect.top + rect.height / 2;
+      });
+
+      const finishTouchSort = (event) => {
+        if (!touchState || touchState.pointerId !== event.pointerId) return;
+        const stateToApply = touchState;
+        touchState = null;
+        clearSortableHighlights(container);
+        if (stateToApply.active && stateToApply.targetId) {
+          reorderVisibleItems(type, stateToApply.draggedId, stateToApply.targetId, stateToApply.placeAfter);
+        }
+      };
+
+      container.addEventListener("pointerup", finishTouchSort);
+      container.addEventListener("pointercancel", finishTouchSort);
     }
 
     function getMonthPlan(monthKey) {
@@ -5374,13 +5618,14 @@
         topCategory: categories[0]?.[0] || "",
         topCategoryCents: categories[0]?.[1] || 0,
         essentialCents: classification.essentialCents,
-        nonessentialCents: classification.nonessentialCents
+        nonessentialCents: classification.nonessentialCents,
+        unclassifiedCents: classification.unclassifiedCents
       };
     }
 
     function closureSnapshotChanged(snapshot, current) {
       if (!snapshot) return true;
-      return ["incomeCents", "expenseCents", "reserveCents", "availableCents", "essentialCents", "nonessentialCents"]
+      return ["incomeCents", "expenseCents", "reserveCents", "availableCents", "essentialCents", "nonessentialCents", "unclassifiedCents"]
         .some((key) => Math.round(Number(snapshot[key]) || 0) !== Math.round(Number(current[key]) || 0))
         || snapshot.topCategory !== current.topCategory;
     }
@@ -5627,7 +5872,7 @@
           <div class="upcoming-item">
             <div class="upcoming-copy">
               <div class="upcoming-title">${escapeHtml(item.description)}</div>
-              <div class="upcoming-meta">${escapeHtml(formatDate(item.date))} · ${escapeHtml(when)} · ${escapeHtml(item.category)} · ${escapeHtml(getTypeTag(item).label)}</div>
+              <div class="upcoming-meta">${escapeHtml(formatDate(item.date))} · ${escapeHtml(when)} · ${escapeHtml(item.category)} · ${escapeHtml(getExpenseClassificationLabel(item))} · ${escapeHtml(getTypeTag(item).label)}</div>
             </div>
             <div class="upcoming-amount">${escapeHtml(formatCurrency(item.amountCents))}</div>
           </div>`;
@@ -5664,6 +5909,7 @@
       healthReserveRunway.textContent = runway.toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
       essentialExpensesValue.textContent = formatCurrency(classification.essentialCents);
       nonessentialExpensesValue.textContent = formatCurrency(classification.nonessentialCents);
+      unclassifiedExpensesValue.textContent = formatCurrency(classification.unclassifiedCents);
 
       healthSavingsRate.classList.toggle("dashboard-positive", savingsRate >= 10);
       healthSavingsRate.classList.toggle("dashboard-negative", metrics.incomeCents > 0 && savingsRate < 5);
@@ -5725,6 +5971,13 @@
         insights.push({
           icon: "🔎",
           text: `Gastos não essenciais representam ${formatPercentage(nonessentialRate)}% do total, ${formatCurrency(classification.nonessentialCents)} no mês.`
+        });
+      }
+
+      if (classification.unclassifiedCents > 0) {
+        insights.push({
+          icon: "🏷️",
+          text: `Você ainda tem ${formatCurrency(classification.unclassifiedCents)} em gastos sem classificação manual neste mês.`
         });
       }
 
